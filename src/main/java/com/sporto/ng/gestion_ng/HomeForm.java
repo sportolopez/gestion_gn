@@ -17,6 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.JLayeredPane;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.FlowLayout;
 
 /**
  *
@@ -29,6 +30,12 @@ public class HomeForm extends javax.swing.JFrame {
 	private JMenuItem mntmProductos;
 	private JMenuItem mntmClientes;
 	private JMenuItem mntmPedidos;
+	private JPanel altaProducto;
+	private JLabel lblFechaDeVencimiento;
+	private JLabel lblCodigoLabel;
+	private JTextField textFieldCodigo;
+	private JTextField textFieldFechaDeVencimiento;
+	private JLabel lblDescripcin;
 	private JTextField textField;
 
     /**
@@ -67,15 +74,36 @@ public class HomeForm extends javax.swing.JFrame {
         );
         
         JPanel panelProductos = new JPanel();
-        panelProductos.setBounds(0, 0, 600, 350);
+        FlowLayout flowLayout_1 = (FlowLayout) panelProductos.getLayout();
+        flowLayout_1.setAlignment(FlowLayout.LEFT);
+        panelProductos.setBounds(0, 0, 500, 400);
         layeredPane.add(panelProductos);
         
-        JLabel lblCodigoLabel = new JLabel("Código");
-        panelProductos.add(lblCodigoLabel);
+        altaProducto = new JPanel();
+        FlowLayout flowLayout = (FlowLayout) altaProducto.getLayout();
+        flowLayout.setAlignment(FlowLayout.TRAILING);
+        panelProductos.add(altaProducto);
+        
+        lblCodigoLabel = new JLabel("Código");
+        altaProducto.add(lblCodigoLabel);
+        
+        textFieldCodigo = new JTextField();
+        textFieldCodigo.setColumns(10);
+        altaProducto.add(textFieldCodigo);
+        
+        lblFechaDeVencimiento = new JLabel("Fecha de vencimiento");
+        altaProducto.add(lblFechaDeVencimiento);
+        
+        textFieldFechaDeVencimiento = new JTextField();
+        textFieldFechaDeVencimiento.setColumns(10);
+        altaProducto.add(textFieldFechaDeVencimiento);
+        
+        lblDescripcin = new JLabel("Descripción");
+        altaProducto.add(lblDescripcin);
         
         textField = new JTextField();
         textField.setColumns(10);
-        panelProductos.add(textField);
+        altaProducto.add(textField);
         getContentPane().setLayout(layout);
 
         pack();

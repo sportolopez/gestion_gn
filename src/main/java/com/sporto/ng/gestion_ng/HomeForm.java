@@ -18,6 +18,11 @@ import javax.swing.JLayeredPane;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.FlowLayout;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -30,13 +35,14 @@ public class HomeForm extends javax.swing.JFrame {
 	private JMenuItem mntmProductos;
 	private JMenuItem mntmClientes;
 	private JMenuItem mntmPedidos;
-	private JPanel altaProducto;
 	private JLabel lblFechaDeVencimiento;
 	private JLabel lblCodigoLabel;
 	private JTextField textFieldCodigo;
-	private JTextField textFieldFechaDeVencimiento;
+	private JTextField textFieldStock;
 	private JLabel lblDescripcin;
-	private JTextField textField;
+	private JTextField textFieldFechaDeVencimiento;
+	private JTextField textFieldDescripcion;
+	private JLabel lblStock;
 
     /**
      * Creates new form HomeForm
@@ -74,36 +80,55 @@ public class HomeForm extends javax.swing.JFrame {
         );
         
         JPanel panelProductos = new JPanel();
-        FlowLayout flowLayout_1 = (FlowLayout) panelProductos.getLayout();
-        flowLayout_1.setAlignment(FlowLayout.LEFT);
-        panelProductos.setBounds(0, 0, 500, 400);
+        panelProductos.setBounds(0, 11, 500, 400);
         layeredPane.add(panelProductos);
-        
-        altaProducto = new JPanel();
-        FlowLayout flowLayout = (FlowLayout) altaProducto.getLayout();
-        flowLayout.setAlignment(FlowLayout.TRAILING);
-        panelProductos.add(altaProducto);
+        panelProductos.setLayout(new FormLayout(new ColumnSpec[] {
+        		FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+        		ColumnSpec.decode("150px"),
+        		FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
+        		ColumnSpec.decode("200px:grow"),},
+        	new RowSpec[] {
+        		FormSpecs.LINE_GAP_ROWSPEC,
+        		RowSpec.decode("20px"),
+        		FormSpecs.LINE_GAP_ROWSPEC,
+        		RowSpec.decode("20px"),
+        		FormSpecs.RELATED_GAP_ROWSPEC,
+        		FormSpecs.DEFAULT_ROWSPEC,
+        		FormSpecs.RELATED_GAP_ROWSPEC,
+        		FormSpecs.DEFAULT_ROWSPEC,
+        		FormSpecs.RELATED_GAP_ROWSPEC,
+        		FormSpecs.DEFAULT_ROWSPEC,
+        		FormSpecs.RELATED_GAP_ROWSPEC,
+        		FormSpecs.DEFAULT_ROWSPEC,}));
         
         lblCodigoLabel = new JLabel("Código");
-        altaProducto.add(lblCodigoLabel);
+        panelProductos.add(lblCodigoLabel, "2, 2, right, default");
         
         textFieldCodigo = new JTextField();
+        textFieldCodigo.setText("Codigo");
+        panelProductos.add(textFieldCodigo, "4, 2");
         textFieldCodigo.setColumns(10);
-        altaProducto.add(textFieldCodigo);
         
         lblFechaDeVencimiento = new JLabel("Fecha de vencimiento");
-        altaProducto.add(lblFechaDeVencimiento);
+        panelProductos.add(lblFechaDeVencimiento, "2, 6, right, default");
         
         textFieldFechaDeVencimiento = new JTextField();
+        panelProductos.add(textFieldFechaDeVencimiento, "4, 6");
         textFieldFechaDeVencimiento.setColumns(10);
-        altaProducto.add(textFieldFechaDeVencimiento);
+        
+        lblStock = new JLabel("Stock");
+        panelProductos.add(lblStock, "2, 8, right, default");
+        
+        textFieldStock = new JTextField();
+        panelProductos.add(textFieldStock, "4, 8");
+        textFieldStock.setColumns(10);
         
         lblDescripcin = new JLabel("Descripción");
-        altaProducto.add(lblDescripcin);
+        panelProductos.add(lblDescripcin, "2, 12, right, default");
         
-        textField = new JTextField();
-        textField.setColumns(10);
-        altaProducto.add(textField);
+        textFieldDescripcion = new JTextField();
+        panelProductos.add(textFieldDescripcion, "4, 12");
+        textFieldDescripcion.setColumns(10);
         getContentPane().setLayout(layout);
 
         pack();

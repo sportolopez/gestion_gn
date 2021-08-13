@@ -6,9 +6,15 @@
 package com.sporto.ng.gestion_ng.model;
 
 import java.util.Date;
+import java.util.Map;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,13 +36,14 @@ import lombok.Setter;
 public class Producto {
     
 	@Id
-	private int idProducto;
+	private int id;
     private int stock;
     private String descripcion;
     private boolean activo;
     private Date fechaVencimiento;
-    private Float precioAmba;
-    private Float precioVip;
-    private Float precioInterior;
-    private Float precioGeneral;
+    @ElementCollection
+    @CollectionTable(name = "precio", joinColumns = @JoinColumn(name = "id_producto"))
+    @Column(name = "precio")
+    @MapKeyColumn(name = "lista")
+    private Map<String,Double> precios;
 }

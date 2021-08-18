@@ -69,18 +69,18 @@ public class HomeForm extends javax.swing.JFrame {
         	layout.createParallelGroup(Alignment.TRAILING)
         		.addGroup(Alignment.LEADING, layout.createSequentialGroup()
         			.addContainerGap()
-        			.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+        			.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
         			.addContainerGap())
         );
         layout.setVerticalGroup(
         	layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(layout.createSequentialGroup()
-        			.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+        			.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
         			.addContainerGap())
         );
         
         JPanel panelProductos = new JPanel();
-        panelProductos.setBounds(0, 11, 500, 400);
+        panelProductos.setBounds(0, 11, 800, 589);
         layeredPane.add(panelProductos);
         panelProductos.setLayout(new FormLayout(new ColumnSpec[] {
         		FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
@@ -136,10 +136,10 @@ public class HomeForm extends javax.swing.JFrame {
         menuBar = new JMenuBar();
         setJMenuBar(menuBar);
         
-        mntmProductos = new JMenuItem("Productos");
+        mntmProductos = new JMenuItem("Productos (F1)");
         menuBar.add(mntmProductos);
         
-        mntmClientes = new JMenuItem("Clientes");
+        mntmClientes = new JMenuItem("Clientes (F2)");
         menuBar.add(mntmClientes);
         
         mntmPedidos = new JMenuItem("Pedidos");

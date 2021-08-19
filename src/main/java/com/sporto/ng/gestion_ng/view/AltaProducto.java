@@ -1,4 +1,4 @@
-package com.sporto.ng.gestion_ng;
+package com.sporto.ng.gestion_ng.view;
 
 import java.awt.EventQueue;
 
@@ -10,6 +10,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.JTextPane;
+import javax.swing.JButton;
 
 public class AltaProducto extends JDialog  {
 
@@ -20,10 +24,9 @@ public class AltaProducto extends JDialog  {
 	private JTextField textFechaVencimiento;
 	private JLabel lblStock;
 	private JTextField textFieldStock;
-	private JLabel lblDescripcion;
-	private JTextField textFieldDescripcion;
 	private JPanel mainPanel;
 	private JTable table;
+	private JScrollPane scrollPane;
 	/**
 	 * Launch the application.
 	 */
@@ -44,53 +47,55 @@ public class AltaProducto extends JDialog  {
 	 * Create the frame.
 	 */
 	public AltaProducto() {
+		setTitle("Producto");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 348, 300);
 		panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
         panelProductos.setLayout(null);
 		
         lblCodigoLabel = new JLabel("Código");
-        lblCodigoLabel.setBounds(159, 13, 33, 14);
+        lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblCodigoLabel.setBounds(10, 14, 70, 14);
         panelProductos.add(lblCodigoLabel);
         
         textFieldCodigo = new JTextField();
-        textFieldCodigo.setBounds(196, 10, 233, 20);
-        textFieldCodigo.setText("Codigo");
+        textFieldCodigo.setBounds(90, 11, 86, 20);
         panelProductos.add(textFieldCodigo);
         textFieldCodigo.setColumns(10);
         
-        lblFechaDeVencimiento = new JLabel("Fecha de vencimiento");
-        lblFechaDeVencimiento.setBounds(88, 38, 104, 14);
+        lblFechaDeVencimiento = new JLabel("Vencimiento");
+        lblFechaDeVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblFechaDeVencimiento.setBounds(10, 67, 70, 14);
         panelProductos.add(lblFechaDeVencimiento);
         
         textFechaVencimiento = new JTextField();
-        textFechaVencimiento.setBounds(196, 35, 233, 20);
+        textFechaVencimiento.setToolTipText("12/12/1983");
+        textFechaVencimiento.setBounds(90, 64, 86, 20);
         panelProductos.add(textFechaVencimiento);
         textFechaVencimiento.setColumns(10);
         
         lblStock = new JLabel("Stock");
-        lblStock.setBounds(166, 64, 26, 14);
+        lblStock.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblStock.setBounds(10, 39, 70, 14);
         panelProductos.add(lblStock);
         
         textFieldStock = new JTextField();
-        textFieldStock.setBounds(196, 61, 233, 20);
+        textFieldStock.setBounds(90, 36, 86, 20);
         textFieldStock.setColumns(10);
         panelProductos.add(textFieldStock);
         
-        lblDescripcion = new JLabel("Descripción");
-        lblDescripcion.setBounds(138, 90, 54, 14);
-        panelProductos.add(lblDescripcion);
-        
-        textFieldDescripcion = new JTextField();
-        textFieldDescripcion.setBounds(196, 87, 233, 20);
-        textFieldDescripcion.setColumns(10);
-        panelProductos.add(textFieldDescripcion);
+        scrollPane = new JScrollPane();
+        scrollPane.setBounds(39, 92, 279, 91);
+        panelProductos.add(scrollPane);
         
         table = new JTable();
+        scrollPane.setViewportView(table);
         table.setModel(new DefaultTableModel(
         	new Object[][] {
+        		{null, null},
+        		{null, null},
         		{null, null},
         		{null, null},
         		{null, null},
@@ -107,7 +112,17 @@ public class AltaProducto extends JDialog  {
         		return columnTypes[columnIndex];
         	}
         });
-        table.setBounds(31, 122, 342, 100);
-        panelProductos.add(table);
+        
+        JTextPane textPaneDescripcion = new JTextPane();
+        textPaneDescripcion.setBounds(186, 13, 132, 68);
+        panelProductos.add(textPaneDescripcion);
+        
+        JButton btnNewButton = new JButton("Guardar");
+        btnNewButton.setBounds(229, 226, 89, 23);
+        panelProductos.add(btnNewButton);
+        
+        JButton btnNewButton_1 = new JButton("Cancelar");
+        btnNewButton_1.setBounds(130, 226, 89, 23);
+        panelProductos.add(btnNewButton_1);
 	}
 }

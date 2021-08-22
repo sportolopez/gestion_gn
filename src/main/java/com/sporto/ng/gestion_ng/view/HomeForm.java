@@ -20,7 +20,6 @@ import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_ng.dao.ProductoDao;
@@ -30,10 +29,10 @@ import com.sporto.ng.gestion_ng.dao.ProductoDao;
  * @author sebap
  */
 @Component
-public class HomeForm extends javax.swing.JFrame {
+public class HomeForm extends javax.swing.JFrame   {
 	
 	private JPanel panelClientes;
-	private JPanel panelProductos = new ProductosPanel();
+	private JPanel panelProductos;
 	private JScrollPane scrollPane_1;
 	private JTextField textField_1;
 	private JLabel lblClientes;
@@ -42,15 +41,18 @@ public class HomeForm extends javax.swing.JFrame {
 	private JButton btnNuevoProducto_1;
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
-
+	ProductoDao dao;
 
 	/**
 	 * Creates new form HomeForm
 	 */
-	public HomeForm() {
+	@Autowired
+	public HomeForm(ProductoDao dao,JPanel panelProductos) {
+		this.dao = dao;
+		this.panelProductos = panelProductos;
 		initComponents();
 	}
-
+	
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,12 +97,12 @@ public class HomeForm extends javax.swing.JFrame {
 						.addGroup(layout.createSequentialGroup()
 							.addComponent(btnNewButton_2)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnNewButton_3, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(btnNewButton_3, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)))
 					.addContainerGap())
 		);
 		layout.setVerticalGroup(
-			layout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, layout.createSequentialGroup()
+			layout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(layout.createSequentialGroup()
 					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btnNewButton_2)
@@ -143,7 +145,7 @@ public class HomeForm extends javax.swing.JFrame {
 		btnImportar_1.setBounds(376, 59, 89, 23);
 		panelClientes.add(btnImportar_1);
 
-		btnNuevoProducto_1 = new JButton("Nuevo Producto");
+		btnNuevoProducto_1 = new JButton("Nuevo");
 		btnNuevoProducto_1.setBounds(475, 59, 109, 23);
 		panelClientes.add(btnNuevoProducto_1);
 		getContentPane().setLayout(layout);
@@ -154,40 +156,42 @@ public class HomeForm extends javax.swing.JFrame {
 	/**
 	 * @param args the command line arguments
 	 */
-	public static void main(String args[]) {
+//	public static void main(String args[]) {
+//
+//		SpringApplication.run(HomeForm.class, args);
+//		/* Set the Nimbus look and feel */
+//		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+//		// (optional) ">
+//		/*
+//		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+//		 * look and feel. For details see
+//		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+//		 */
+//		try {
+//			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//				if ("Nimbus".equals(info.getName())) {
+//					javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//					break;
+//				}
+//			}
+//		} catch (ClassNotFoundException ex) {
+//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//		} catch (InstantiationException ex) {
+//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//		} catch (IllegalAccessException ex) {
+//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//		}
+//		// </editor-fold>
+//
+//		/* Create and display the form */
+//		java.awt.EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				new HomeForm().setVisible(true);
+//			}
+//		});
+//	}
 
-		SpringApplication.run(HomeForm.class, args);
-		/* Set the Nimbus look and feel */
-		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-		// (optional) ">
-		/*
-		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-		 * look and feel. For details see
-		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-		 */
-		try {
-			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-		}
-		// </editor-fold>
-
-		/* Create and display the form */
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new HomeForm().setVisible(true);
-			}
-		});
-	}
+	
 }

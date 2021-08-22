@@ -3,19 +3,19 @@ package gestion_ng;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.sporto.ng.gestion_ng.MyApplication;
 import com.sporto.ng.gestion_ng.dao.ProductoDao;
 import com.sporto.ng.gestion_ng.model.Lista;
 import com.sporto.ng.gestion_ng.model.Producto;
-import com.sporto.ng.gestion_ng.view.HomeForm;
-import com.sporto.ng.gestion_ng.model.Precio;
 
-@SpringBootTest(classes = HomeForm.class)
+@SpringBootTest(classes = MyApplication.class)
 class ProductoTest {
 
 	@Autowired
@@ -23,21 +23,22 @@ class ProductoTest {
 	
 	@Test
 	void test() {
-//		Lista build = Lista.builder().nombre("Gremio").build();
-//		Precio build2 = Precio.builder().precio(new Long(1234)).lista(build).build();
-//		Collection<Precio> precios;
-//		Producto unProducto = Producto.builder()
-//				.descripcion("prueba")
-//				.activo(true)
-//				.fechaVencimiento(Calendar.getInstance().getTime())
-//				.idProducto(123456789)
-//				.precios(precios).build() ;
-//		productoDao.save(unProducto );
-//		Iterable<Producto> findAll = productoDao.findAll();
-//		for (Producto producto : findAll) {
-//			System.out.println(producto);
-//		}
-//		assertEquals(1, productoDao.count());
+		Lista build = Lista.builder().nombre("Gremio").build();
+		Map<String, Double> precios = new HashMap<String, Double>();
+		precios.put("CABA", Double.valueOf(200.22));
+		Producto unProducto = Producto.builder()
+				.descripcion("prueba")
+				.activo(true)
+				.fechaVencimiento(Calendar.getInstance().getTime())
+				.id(1234111).precios(precios).build() ;
+		
+		productoDao.save(unProducto );
+		Iterable<Producto> findAll = productoDao.findAll();
+		for (Producto producto : findAll) {
+			System.out.println(producto);
+			System.out.println(producto.getPrecios().get("CABA"));
+		}
+		assertEquals(1, productoDao.count());
 	}
 
 }

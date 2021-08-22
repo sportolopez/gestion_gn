@@ -12,6 +12,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
@@ -41,9 +42,12 @@ public class Producto {
     private String descripcion;
     private boolean activo;
     private Date fechaVencimiento;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "precio", joinColumns = @JoinColumn(name = "id_producto"))
-    @Column(name = "precio")
     @MapKeyColumn(name = "lista")
+    @Column(name = "precio")
     private Map<String,Double> precios;
+    
+    
+    
 }

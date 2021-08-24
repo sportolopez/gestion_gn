@@ -1,5 +1,6 @@
 package com.sporto.ng.gestion_ng.view;
 
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,32 +8,33 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_ng.view.controller.ProductoController;
+import com.sporto.ng.gestion_ng.view.modal.AltaProductoDialog;
 import com.sporto.ng.gestion_ng.view.model.ButtonColumn;
 import com.sporto.ng.gestion_ng.view.model.ProductoTableModel;
+import javax.swing.border.EtchedBorder;
 
 @Component
 public class ProductosPanel extends JPanel {
 
 	@Autowired
 	public ProductosPanel(ProductoController controller) {
+		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		this.setLayout(null);
-		this.setBounds(0, 50, 625, 550);
+		this.setBounds(0, 0, 654, 299);
 
 		JScrollPane scrollPaneProductos = new JScrollPane();
-		scrollPaneProductos.setBounds(10, 91, 574, 194);
+		scrollPaneProductos.setBounds(10, 91, 634, 194);
 		this.add(scrollPaneProductos);
 
 		JTable tableProductos = new JTable();
@@ -85,7 +87,7 @@ public class ProductosPanel extends JPanel {
 		JButton btnNuevoProducto = new JButton("Nuevo");
 		btnNuevoProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AltaProducto().setVisible(true);
+				new AltaProductoDialog().setVisible(true);
 			}
 		});
 		btnNuevoProducto.setBounds(475, 59, 109, 23);

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_ng.dao.ProductoDao;
 import com.sporto.ng.gestion_ng.model.Producto;
-import com.sporto.ng.gestion_ng.view.AltaProducto;
+import com.sporto.ng.gestion_ng.view.modal.AltaProductoDialog;
 import com.sporto.ng.gestion_ng.view.model.ProductoTableModel;
 
 @Component
@@ -40,7 +40,7 @@ public class ProductoController {
 
 	public void editarProducto(Integer idProducto) {
 		Optional<Producto> findById = dao.findById(idProducto);
-		new AltaProducto(findById.get()).setVisible(true);
+		new AltaProductoDialog(findById.get()).setVisible(true);
 		
 	}
 

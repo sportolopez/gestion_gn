@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.sporto.ng.gestion_ng.MyApplication;
+import com.sporto.ng.gestion_ng.GestionNG;
 import com.sporto.ng.gestion_ng.dao.ProductoDao;
 import com.sporto.ng.gestion_ng.model.Lista;
 import com.sporto.ng.gestion_ng.model.Producto;
 
-@SpringBootTest(classes = MyApplication.class)
+@SpringBootTest(classes = GestionNG.class)
 class ProductoTest {
 
 	@Autowired

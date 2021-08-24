@@ -5,7 +5,7 @@
  */
 package com.sporto.ng.gestion_ng.view;
 
-import java.awt.Font;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -33,15 +34,10 @@ public class HomeForm extends javax.swing.JFrame   {
 	
 	private JPanel panelClientes;
 	private JPanel panelProductos;
-	private JScrollPane scrollPane_1;
-	private JTextField textField_1;
-	private JLabel lblClientes;
-	private JButton btnNewButton_1;
-	private JButton btnImportar_1;
-	private JButton btnNuevoProducto_1;
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
-	ProductoDao dao;
+	private ProductoDao dao;
+	private JSeparator separator;
 
 	/**
 	 * Creates new form HomeForm
@@ -50,6 +46,7 @@ public class HomeForm extends javax.swing.JFrame   {
 	public HomeForm(ProductoDao dao,JPanel panelProductos) {
 		this.dao = dao;
 		this.panelProductos = panelProductos;
+		
 		initComponents();
 	}
 	
@@ -67,7 +64,7 @@ public class HomeForm extends javax.swing.JFrame   {
 
 		JLayeredPane layeredPane = new JLayeredPane();
 		
-				btnNewButton_2 = new JButton("Productos(F1)");
+				btnNewButton_2 = new JButton("Productos");
 				btnNewButton_2.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						layeredPane.removeAll();
@@ -77,7 +74,8 @@ public class HomeForm extends javax.swing.JFrame   {
 					}
 				});
 		
-				btnNewButton_3 = new JButton("Clientes (F2)");
+				btnNewButton_3 = new JButton("Clientes");
+				btnNewButton_3.setEnabled(false);
 				btnNewButton_3.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						layeredPane.removeAll();
@@ -86,112 +84,100 @@ public class HomeForm extends javax.swing.JFrame   {
 						layeredPane.revalidate();
 					}
 				});
+		
+		JButton btnNewButton_3_1 = new JButton("Pedidos");
+		btnNewButton_3_1.setEnabled(false);
+		
+		JButton btnNewButton_3_1_1 = new JButton("Caja");
+		btnNewButton_3_1_1.setEnabled(false);
+		
+		JButton btnProveedores = new JButton("Proveedores");
+		btnProveedores.setEnabled(false);
+		
+		JButton btnAdmin = new JButton("Admin");
+		btnAdmin.setEnabled(false);
+		
+		separator = new JSeparator();
 
 		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
 		layout.setHorizontalGroup(
 			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(layout.createParallelGroup(Alignment.LEADING)
-						.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+					.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addGroup(layout.createSequentialGroup()
 							.addComponent(btnNewButton_2)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnNewButton_3, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap())
+							.addComponent(btnNewButton_3, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnNewButton_3_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnNewButton_3_1_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnProveedores, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnAdmin, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
+						.addComponent(layeredPane))
+					.addGap(128))
 		);
 		layout.setVerticalGroup(
-			layout.createParallelGroup(Alignment.TRAILING)
+			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+					.addContainerGap()
+					.addGroup(layout.createParallelGroup(Alignment.LEADING)
 						.addComponent(btnNewButton_2)
-						.addComponent(btnNewButton_3))
+						.addComponent(btnNewButton_3)
+						.addComponent(btnNewButton_3_1)
+						.addComponent(btnNewButton_3_1_1)
+						.addComponent(btnProveedores)
+						.addComponent(btnAdmin))
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 562, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
+					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 335, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(166, Short.MAX_VALUE))
 		);
 
 
 		
 		layeredPane.add(panelProductos);
+		layeredPane.setLayout(null);
 
 		
 
-		panelClientes = new JPanel();
-		panelClientes.setLayout(null);
-		panelClientes.setBounds(0, 50, 625, 539);
-		layeredPane.add(panelClientes);
+//		panelClientes = new JPanel();
+//		panelClientes.setLayout(null);
+//		panelClientes.setBounds(0, 0, 646, 334);
+//		layeredPane.add(panelClientes);
 
-		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 91, 574, 194);
-		panelClientes.add(scrollPane_1);
-
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(10, 60, 254, 20);
-		panelClientes.add(textField_1);
-
-		lblClientes = new JLabel("Clientes");
-		lblClientes.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblClientes.setBounds(10, 11, 125, 20);
-		panelClientes.add(lblClientes);
-
-		btnNewButton_1 = new JButton("Buscar");
-		btnNewButton_1.setBounds(277, 59, 89, 23);
-		panelClientes.add(btnNewButton_1);
-
-		btnImportar_1 = new JButton("Importar");
-		btnImportar_1.setBounds(376, 59, 89, 23);
-		panelClientes.add(btnImportar_1);
-
-		btnNuevoProducto_1 = new JButton("Nuevo");
-		btnNuevoProducto_1.setBounds(475, 59, 109, 23);
-		panelClientes.add(btnNuevoProducto_1);
+//		scrollPane_1 = new JScrollPane();
+//		scrollPane_1.setBounds(10, 91, 574, 194);
+//		panelClientes.add(scrollPane_1);
+//
+//		textField_1 = new JTextField();
+//		textField_1.setColumns(10);
+//		textField_1.setBounds(10, 60, 254, 20);
+//		panelClientes.add(textField_1);
+//
+//		lblClientes = new JLabel("Clientes");
+//		lblClientes.setFont(new Font("Tahoma", Font.BOLD, 20));
+//		lblClientes.setBounds(10, 11, 125, 20);
+//		panelClientes.add(lblClientes);
+//
+//		btnNewButton_1 = new JButton("Buscar");
+//		btnNewButton_1.setBounds(277, 59, 89, 23);
+//		panelClientes.add(btnNewButton_1);
+//
+//		btnImportar_1 = new JButton("Importar");
+//		btnImportar_1.setBounds(376, 59, 89, 23);
+//		panelClientes.add(btnImportar_1);
+//
+//		btnNuevoProducto_1 = new JButton("Nuevo");
+//		btnNuevoProducto_1.setBounds(475, 59, 109, 23);
+//		panelClientes.add(btnNuevoProducto_1);
 		getContentPane().setLayout(layout);
-
+		setPreferredSize(new Dimension(695, 450));
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
-
-	/**
-	 * @param args the command line arguments
-	 */
-//	public static void main(String args[]) {
-//
-//		SpringApplication.run(HomeForm.class, args);
-//		/* Set the Nimbus look and feel */
-//		// <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-//		// (optional) ">
-//		/*
-//		 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-//		 * look and feel. For details see
-//		 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-//		 */
-//		try {
-//			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//				if ("Nimbus".equals(info.getName())) {
-//					javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//					break;
-//				}
-//			}
-//		} catch (ClassNotFoundException ex) {
-//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//		} catch (InstantiationException ex) {
-//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//		} catch (IllegalAccessException ex) {
-//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//			java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//		}
-//		// </editor-fold>
-//
-//		/* Create and display the form */
-//		java.awt.EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				new HomeForm().setVisible(true);
-//			}
-//		});
-//	}
-
-	
 }

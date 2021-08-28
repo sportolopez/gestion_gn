@@ -3,10 +3,13 @@ package com.sporto.ng.gestion_ng.view;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,27 +18,22 @@ import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.sporto.ng.gestion_ng.view.modal.ProductoDialog;
 import com.sporto.ng.gestion_ng.view.model.ButtonColumn;
 import com.sporto.ng.gestion_ng.view.model.ProductoTableModel;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@Component
 @Getter
 @Setter
-public class ProductosPanel extends JPanel {
+public class ProductoPanel extends JPanel {
 
 	private ProductoTableModel productoTableModel;
 	private ButtonColumn buttonEditar;
 	private JButton btnNuevoProducto;
-	
-	@Autowired
-	public ProductosPanel() {
+	private JButton btnImportar;
+
+	public ProductoPanel(JFrame parent) {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		this.setLayout(null);
 		this.setBounds(0, 0, 654, 299);
@@ -56,7 +54,7 @@ public class ProductosPanel extends JPanel {
 				((DefaultTableModel) table.getModel()).removeRow(modelRow);
 			}
 		};
-		
+
 		Action botonEditar = null;
 		buttonEditar = new ButtonColumn(tableProductos, botonEditar, 3);
 		new ButtonColumn(tableProductos, botonDelete, 4);
@@ -77,7 +75,7 @@ public class ProductosPanel extends JPanel {
 		btnBuscarProducto.setBounds(277, 59, 89, 23);
 		this.add(btnBuscarProducto);
 
-		JButton btnImportar = new JButton("Importar");
+		btnImportar = new JButton("Importar");
 		btnImportar.setBounds(376, 59, 89, 23);
 		this.add(btnImportar);
 

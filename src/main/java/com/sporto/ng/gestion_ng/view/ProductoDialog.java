@@ -1,4 +1,4 @@
-package com.sporto.ng.gestion_ng.view.modal;
+package com.sporto.ng.gestion_ng.view;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,7 +24,6 @@ import com.sporto.ng.gestion_ng.model.Producto;
 
 import lombok.Getter;
 
-@Component
 @Getter
 public class ProductoDialog extends JDialog {
 

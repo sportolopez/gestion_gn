@@ -12,41 +12,36 @@ import java.awt.event.ActionListener;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.sporto.ng.gestion_ng.dao.ProductoDao;
+import lombok.Getter;
 
 /**
  *
  * @author sebap
  */
+@SuppressWarnings("serial")
 @Component
+@Getter
 public class HomeForm extends javax.swing.JFrame   {
 	
 	private JPanel panelClientes;
-	private JPanel panelProductos;
+	private ProductoPanel productosPanel;
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
-	private ProductoDao dao;
 	private JSeparator separator;
 
 	/**
 	 * Creates new form HomeForm
 	 */
-	@Autowired
-	public HomeForm(ProductoDao dao,JPanel panelProductos) {
-		this.dao = dao;
-		this.panelProductos = panelProductos;
-		
+	public HomeForm() {
+		this.productosPanel = new ProductoPanel(this);
 		initComponents();
 	}
 	
@@ -68,7 +63,7 @@ public class HomeForm extends javax.swing.JFrame   {
 				btnNewButton_2.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						layeredPane.removeAll();
-						layeredPane.add(panelProductos);
+						layeredPane.add(productosPanel);
 						layeredPane.repaint();
 						layeredPane.revalidate();
 					}
@@ -141,7 +136,7 @@ public class HomeForm extends javax.swing.JFrame   {
 
 
 		
-		layeredPane.add(panelProductos);
+		layeredPane.add(productosPanel);
 		layeredPane.setLayout(null);
 
 		

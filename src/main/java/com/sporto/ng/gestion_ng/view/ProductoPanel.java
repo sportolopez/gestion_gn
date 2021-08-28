@@ -82,6 +82,7 @@ public class ProductoPanel extends JPanel {
 		btnNuevoProducto = new JButton("Nuevo");
 		btnNuevoProducto.setBounds(475, 59, 109, 23);
 		this.add(btnNuevoProducto);
+
 	}
 
 }

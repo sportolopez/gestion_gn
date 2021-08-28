@@ -20,9 +20,13 @@ import javax.swing.table.DefaultTableModel;
 
 import org.springframework.stereotype.Component;
 
+import com.sporto.ng.gestion_ng.dao.ListaDao;
+import com.sporto.ng.gestion_ng.model.Lista;
 import com.sporto.ng.gestion_ng.model.Producto;
 
 import lombok.Getter;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 @Getter
 public class ProductoDialog extends JDialog {
@@ -34,12 +38,11 @@ public class ProductoDialog extends JDialog {
 	private JTextField textFechaVencimiento;
 	private JLabel lblStock;
 	private JTextField textFieldStock;
-	private JTable table;
+	private JTable tablePrecios;
 	private JScrollPane scrollPane;
 	private JButton btnGuardar;
 	private JTextArea textAreaDescripcion;
 	private DateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
-	private JButton btnAgregarPrecio;
 
 	/**
 	 * Create the frame.
@@ -53,7 +56,7 @@ public class ProductoDialog extends JDialog {
 
 	}
 
-	public void cargarCampos(Producto unProducto) {
+	public void cargarCampos(Producto unProducto, Iterable<Lista> iterable) {
 		this.textFieldCodigo.setText(String.valueOf(unProducto.getId()));
 		textFieldCodigo.setEnabled(false);
 		this.textFieldStock.setText(String.valueOf(unProducto.getStock()));
@@ -61,10 +64,11 @@ public class ProductoDialog extends JDialog {
 		if (fechaVencimiento != null)
 			this.textFechaVencimiento.setText(formatoFecha.format(fechaVencimiento));
 		Set<Entry<String, Double>> precios = unProducto.getPreciosSet();
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		DefaultTableModel model = (DefaultTableModel) tablePrecios.getModel();
+		model.setRowCount(0);
+
 		for (Entry<String, Double> unPrecio : precios) {
 			model.addRow(new Object[] { unPrecio.getKey(), unPrecio.getValue() });
-
 		}
 		textAreaDescripcion.setText(unProducto.getDescripcion());
 	}
@@ -72,7 +76,7 @@ public class ProductoDialog extends JDialog {
 	private void initComponents() {
 		setTitle("Producto");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 434, 258);
+		setBounds(100, 100, 375, 322);
 		panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
@@ -113,61 +117,58 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(textFieldStock);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(202, 10, 159, 91);
+		scrollPane.setBounds(31, 109, 317, 91);
 		panelProductos.add(scrollPane);
 
-		table = new JTable();
-		scrollPane.setViewportView(table);
-		table.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Lista", "Precio" }) {
+		tablePrecios = new JTable();
+		scrollPane.setViewportView(tablePrecios);
+		tablePrecios.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Lista", "Precio" }) {
 			Class[] columnTypes = new Class[] { String.class, Float.class };
 
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			
+			boolean[] columnEditables = new boolean[] { false, true };
+
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
 		});
 
+	
 		btnGuardar = new JButton("Guardar");
 
-		btnGuardar.setBounds(229, 192, 89, 23);
+		btnGuardar.setBounds(259, 249, 89, 23);
 		panelProductos.add(btnGuardar);
 
 		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setBounds(130, 192, 89, 23);
+		btnNewButton_1.setBounds(31, 249, 89, 23);
 		panelProductos.add(btnNewButton_1);
 
 		JLabel lblDescripcion = new JLabel("Descripción");
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcion.setBounds(10, 124, 70, 14);
+		lblDescripcion.setBounds(173, 17, 70, 14);
 		panelProductos.add(lblDescripcion);
-
-		btnAgregarPrecio = new JButton("+");
-		btnAgregarPrecio.setBounds(371, 41, 41, 23);
-		panelProductos.add(btnAgregarPrecio);
 
 		textAreaDescripcion = new JTextArea();
 		textAreaDescripcion.setRows(5);
 		textAreaDescripcion.setColumns(10);
-		textAreaDescripcion.setBounds(90, 119, 271, 45);
+		textAreaDescripcion.setBounds(186, 42, 162, 45);
 		panelProductos.add(textAreaDescripcion);
-
-		JButton btnNewButton_2_1 = new JButton("-");
-		btnNewButton_2_1.setBounds(371, 69, 41, 23);
-		panelProductos.add(btnNewButton_2_1);
 
 	}
 
-	public Producto getProducto()  {
+	public Producto getProducto() {
 		try {
-			return Producto.builder()
-				.fechaVencimiento(formatoFecha.parse(textFechaVencimiento.getText()))
-				.descripcion(textAreaDescripcion.getText())
-				.activo(true)
-				.id(Integer.parseInt(textFieldCodigo.getText()))
-				.stock(Integer.parseInt(textFieldStock.getText())).build();
+			return Producto.builder().fechaVencimiento(formatoFecha.parse(textFechaVencimiento.getText()))
+					.descripcion(textAreaDescripcion.getText()).activo(true)
+					.id(Integer.parseInt(textFieldCodigo.getText())).stock(Integer.parseInt(textFieldStock.getText()))
+					.build();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		
+
 	}
 
 	public void limpiarCampos() {

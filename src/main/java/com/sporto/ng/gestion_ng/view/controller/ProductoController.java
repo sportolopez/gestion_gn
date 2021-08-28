@@ -14,6 +14,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -22,7 +23,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sporto.ng.gestion_ng.dao.ListaDao;
 import com.sporto.ng.gestion_ng.dao.ProductoDao;
+import com.sporto.ng.gestion_ng.model.Lista;
 import com.sporto.ng.gestion_ng.model.Producto;
 import com.sporto.ng.gestion_ng.model.Producto.ProductoBuilder;
 import com.sporto.ng.gestion_ng.view.HomeForm;
@@ -36,14 +39,16 @@ public class ProductoController {
 	private ProductoPanel productosPanel;
 	private ProductoDialog productoDialog;
 	private ProductoDao dao;
+	private ListaDao listaDao;
 	private HomeForm homeForm;
 
 	@Autowired
-	public ProductoController(ProductoDao dao, HomeForm homeForm) {
+	public ProductoController(ProductoDao dao, HomeForm homeForm,ListaDao listaDao) {
 		super();
 		this.dao = dao;
 		this.productoDialog = new ProductoDialog();
 		this.homeForm = homeForm;
+		this.listaDao = listaDao;
 		this.productosPanel = homeForm.getProductosPanel();
 		productoDialog.getBtnGuardar().addActionListener(e -> saveProducto());
 		productosPanel.getButtonEditar().setAction(new AbstractAction() {
@@ -56,18 +61,18 @@ public class ProductoController {
 			}
 		});
 		productosPanel.getBtnNuevoProducto().addActionListener(e -> nuevoProducto());
-		productoDialog.getBtnAgregarPrecio().addActionListener(e -> nuevoPrecio());
 		productosPanel.getBtnImportar().addActionListener(e -> importarExcel());
 		cargarListaInicial();
 	}
 
-	private Object nuevoPrecio() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	private void nuevoProducto() {
 		productoDialog.limpiarCampos();
+		DefaultTableModel model = (DefaultTableModel) productoDialog.getTablePrecios().getModel();
+		Iterable<Lista> findAll = listaDao.findAll();
+		for (Lista lista : findAll) {
+			model.addRow(new Object[] {lista.getNombre(),0});
+			
+		}
 		productoDialog.setVisible(true);
 	}
 
@@ -85,7 +90,7 @@ public class ProductoController {
 
 	public void editarProducto(Integer idProducto) {
 		Optional<Producto> findById = dao.findById(idProducto);
-		productoDialog.cargarCampos(findById.get());
+		productoDialog.cargarCampos(findById.get(),listaDao.findAll());
 		productoDialog.setVisible(true);
 
 	}

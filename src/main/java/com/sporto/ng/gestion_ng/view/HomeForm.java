@@ -42,6 +42,10 @@ public class HomeForm extends javax.swing.JFrame   {
 	 */
 	public HomeForm() {
 		this.productosPanel = new ProductoPanel(this);
+		productosPanel.getBtnNuevoProducto().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		initComponents();
 	}
 	

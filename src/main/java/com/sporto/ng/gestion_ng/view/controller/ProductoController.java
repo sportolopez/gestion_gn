@@ -1,6 +1,8 @@
 package com.sporto.ng.gestion_ng.view.controller;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +15,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -43,7 +48,7 @@ public class ProductoController {
 	private HomeForm homeForm;
 
 	@Autowired
-	public ProductoController(ProductoDao dao, HomeForm homeForm,ListaDao listaDao) {
+	public ProductoController(ProductoDao dao, HomeForm homeForm, ListaDao listaDao) {
 		super();
 		this.dao = dao;
 		this.productoDialog = new ProductoDialog();
@@ -60,18 +65,50 @@ public class ProductoController {
 
 			}
 		});
+
+		AbstractAction actionBorrar = new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				int idProducto = Integer
+						.valueOf(((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0).toString());
+				int input = JOptionPane.showConfirmDialog(homeForm,
+						"¿Confirmar el borrado del producto " + idProducto + "?","Eliminar producto",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+				if (input == 0) {
+					dao.deleteById(idProducto);
+					((DefaultTableModel) table.getModel()).removeRow(modelRow);
+				}
+			}
+		};
+		
+		productosPanel.getButtonEliminar().setAction(actionBorrar);
+
 		productosPanel.getBtnNuevoProducto().addActionListener(e -> nuevoProducto());
 		productosPanel.getBtnImportar().addActionListener(e -> importarExcel());
+		
+		//productosPanel.getBtnBuscarProducto().addActionListener(e -> buscar());
+		productosPanel.getTextFieldBuscadorProductos().addKeyListener(new KeyAdapter() {
+		    public void keyReleased(KeyEvent e) {
+		    	productosPanel.filtrar();
+		    }
+		});
 		cargarListaInicial();
 	}
+
+	
+	private void buscar() {
+		productosPanel.filtrar();
+	}
+
 
 	private void nuevoProducto() {
 		productoDialog.limpiarCampos();
 		DefaultTableModel model = (DefaultTableModel) productoDialog.getTablePrecios().getModel();
 		Iterable<Lista> findAll = listaDao.findAll();
 		for (Lista lista : findAll) {
-			model.addRow(new Object[] {lista.getNombre(),0});
-			
+			model.addRow(new Object[] { lista.getNombre(), 0 });
+
 		}
 		productoDialog.setVisible(true);
 	}
@@ -90,15 +127,17 @@ public class ProductoController {
 
 	public void editarProducto(Integer idProducto) {
 		Optional<Producto> findById = dao.findById(idProducto);
-		productoDialog.cargarCampos(findById.get(),listaDao.findAll());
+		productoDialog.cargarCampos(findById.get(), listaDao.findAll());
 		productoDialog.setVisible(true);
 
 	}
 
 	private void saveProducto() {
+		if(productoDialog.validar()) {
 		dao.save(productoDialog.getProducto());
 		productoDialog.setVisible(false);
 		cargarListaInicial();
+		}
 	}
 
 	public void importarExcel() {
@@ -107,7 +146,7 @@ public class ProductoController {
 		if (option == JFileChooser.APPROVE_OPTION) {
 			try {
 				int procesarExcel = procesarExcel(fileChooser.getSelectedFile());
-				JOptionPane.showMessageDialog(homeForm, "Se procesaron "+procesarExcel+" registros");
+				JOptionPane.showMessageDialog(homeForm, "Se procesaron " + procesarExcel + " registros");
 				cargarListaInicial();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -145,9 +184,12 @@ public class ProductoController {
 
 			Map<String, Double> preciosMap = new HashMap<String, Double>();
 
-			if (!Double.isNaN(rowProducto.getCell(4).getNumericCellValue())) {
-				preciosMap.put(listaPecios.get(4), rowProducto.getCell(4).getNumericCellValue());
+			for(int i=4;i<(4+listaPecios.size());++i) {
+				if (!Double.isNaN(rowProducto.getCell(i).getNumericCellValue())) {
+					preciosMap.put(listaPecios.get(i), rowProducto.getCell(i).getNumericCellValue());
+				}
 			}
+			
 
 			builder.precios(preciosMap);
 

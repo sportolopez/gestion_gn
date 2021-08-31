@@ -1,32 +1,39 @@
 package com.sporto.ng.gestion_ng.view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
 
-import org.springframework.stereotype.Component;
-
-import com.sporto.ng.gestion_ng.dao.ListaDao;
 import com.sporto.ng.gestion_ng.model.Lista;
 import com.sporto.ng.gestion_ng.model.Producto;
+import com.sporto.ng.gestion_ng.view.validations.FechaVerifier;
+import com.sporto.ng.gestion_ng.view.validations.NumeroVerifier;
+import com.sporto.ng.gestion_ng.view.validations.TextoVerifier;
 
 import lombok.Getter;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 @Getter
 public class ProductoDialog extends JDialog {
@@ -41,8 +48,9 @@ public class ProductoDialog extends JDialog {
 	private JTable tablePrecios;
 	private JScrollPane scrollPane;
 	private JButton btnGuardar;
-	private JTextArea textAreaDescripcion;
-	private DateFormat formatoFecha = new SimpleDateFormat("dd-MM-yyyy");
+	private JTextField textAreaDescripcion;
+	private DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+	private java.util.Set<String> camposInvalidos = new HashSet<String>();
 
 	/**
 	 * Create the frame.
@@ -53,7 +61,7 @@ public class ProductoDialog extends JDialog {
 	public ProductoDialog() {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		initComponents();
-
+		configValidations();
 	}
 
 	public void cargarCampos(Producto unProducto, Iterable<Lista> iterable) {
@@ -76,48 +84,55 @@ public class ProductoDialog extends JDialog {
 	private void initComponents() {
 		setTitle("Producto");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 375, 322);
+		setBounds(100, 100, 447, 350);
 		panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
 		panelProductos.setLayout(null);
 
 		lblCodigoLabel = new JLabel("Código");
-		lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCodigoLabel.setBounds(31, 17, 49, 14);
+		lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblCodigoLabel);
 
 		textFieldCodigo = new JTextField();
-		textFieldCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCodigo.setBounds(90, 14, 86, 20);
-		panelProductos.add(textFieldCodigo);
+		textFieldCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCodigo.setColumns(10);
-
+		panelProductos.add(textFieldCodigo);
+		
 		lblFechaDeVencimiento = new JLabel("Vencimiento");
+		lblFechaDeVencimiento.setBounds(10, 45, 70, 14);
 		lblFechaDeVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblFechaDeVencimiento.setBounds(10, 73, 70, 14);
 		panelProductos.add(lblFechaDeVencimiento);
 
-		textFechaVencimiento = new JTextField();
+		MaskFormatter mascara;
+		try {
+			mascara = new MaskFormatter("##/##/####");
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
+
+		textFechaVencimiento = new JFormattedTextField(mascara);
+		textFechaVencimiento.setBounds(90, 42, 86, 20);
 		textFechaVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFechaVencimiento.setToolTipText("12/12/1983");
-		textFechaVencimiento.setBounds(90, 70, 86, 20);
+		textFechaVencimiento.setToolTipText("DD/MM/AAAA");
 		panelProductos.add(textFechaVencimiento);
 		textFechaVencimiento.setColumns(10);
 
 		lblStock = new JLabel("Stock");
+		lblStock.setBounds(205, 45, 49, 14);
 		lblStock.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblStock.setBounds(31, 45, 49, 14);
 		panelProductos.add(lblStock);
 
 		textFieldStock = new JTextField();
+		textFieldStock.setBounds(264, 42, 86, 20);
 		textFieldStock.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldStock.setBounds(90, 42, 86, 20);
 		textFieldStock.setColumns(10);
 		panelProductos.add(textFieldStock);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(31, 109, 317, 91);
+		scrollPane.setBounds(31, 86, 374, 141);
 		panelProductos.add(scrollPane);
 
 		tablePrecios = new JTable();
@@ -128,7 +143,7 @@ public class ProductoDialog extends JDialog {
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
-			
+
 			boolean[] columnEditables = new boolean[] { false, true };
 
 			public boolean isCellEditable(int row, int column) {
@@ -136,35 +151,60 @@ public class ProductoDialog extends JDialog {
 			}
 		});
 
-	
 		btnGuardar = new JButton("Guardar");
-
-		btnGuardar.setBounds(259, 249, 89, 23);
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnGuardar.setBounds(316, 261, 89, 23);
 		panelProductos.add(btnGuardar);
 
 		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setBounds(31, 249, 89, 23);
+		btnNewButton_1.setBounds(215, 261, 89, 23);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
 		panelProductos.add(btnNewButton_1);
 
 		JLabel lblDescripcion = new JLabel("Descripción");
+		lblDescripcion.setBounds(184, 17, 70, 14);
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcion.setBounds(173, 17, 70, 14);
 		panelProductos.add(lblDescripcion);
 
-		textAreaDescripcion = new JTextArea();
-		textAreaDescripcion.setRows(5);
+		textAreaDescripcion = new JTextField();
+		textAreaDescripcion.setBounds(264, 12, 143, 19);
 		textAreaDescripcion.setColumns(10);
-		textAreaDescripcion.setBounds(186, 42, 162, 45);
 		panelProductos.add(textAreaDescripcion);
 
+	}
+	
+	private void configValidations() {
+		textFechaVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos));
+		textFieldCodigo.setInputVerifier(new NumeroVerifier("Código", camposInvalidos));
+		textFieldStock.setInputVerifier(new NumeroVerifier("Stock", camposInvalidos));
+		textAreaDescripcion.setInputVerifier(new TextoVerifier("Descripción", camposInvalidos));
+	}
+
+	private void setTabOrder() {
 	}
 
 	public Producto getProducto() {
 		try {
-			return Producto.builder().fechaVencimiento(formatoFecha.parse(textFechaVencimiento.getText()))
+
+			Map<String, Double> preciosMap = new HashMap<String, Double>();
+
+			for (int count = 0; count < tablePrecios.getRowCount(); count++) {
+				preciosMap.put(tablePrecios.getValueAt(count, 0).toString(),
+						Double.parseDouble(tablePrecios.getValueAt(count, 1).toString()));
+			}
+
+			Producto build = Producto.builder().fechaVencimiento(formatoFecha.parse(textFechaVencimiento.getText()))
 					.descripcion(textAreaDescripcion.getText()).activo(true)
 					.id(Integer.parseInt(textFieldCodigo.getText())).stock(Integer.parseInt(textFieldStock.getText()))
-					.build();
+					.precios(preciosMap).build();
+			return build;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -172,9 +212,22 @@ public class ProductoDialog extends JDialog {
 	}
 
 	public void limpiarCampos() {
+		textFieldCodigo.setEnabled(true);
 		textFechaVencimiento.setText("");
 		textAreaDescripcion.setText("");
 		textFieldCodigo.setText("");
 		textFieldStock.setText("");
+		((DefaultTableModel) tablePrecios.getModel()).setRowCount(0);
+	}
+
+	public boolean validar() {
+		
+		if (camposInvalidos.size() > 0) {
+			JOptionPane.showMessageDialog(new JFrame(), "Campos invalidos:" + camposInvalidos, "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+
 	}
 }

@@ -1,7 +1,11 @@
 package com.sporto.ng.gestion_ng.view;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
@@ -23,7 +28,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
@@ -66,7 +73,7 @@ public class ProductoDialog extends JDialog {
 
 	public void cargarCampos(Producto unProducto, Iterable<Lista> iterable) {
 		this.textFieldCodigo.setText(String.valueOf(unProducto.getId()));
-		textFieldCodigo.setEnabled(false);
+		textFieldCodigo.setEditable(false);
 		this.textFieldStock.setText(String.valueOf(unProducto.getStock()));
 		Date fechaVencimiento = unProducto.getFechaVencimiento();
 		if (fechaVencimiento != null)
@@ -100,7 +107,7 @@ public class ProductoDialog extends JDialog {
 		textFieldCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCodigo.setColumns(10);
 		panelProductos.add(textFieldCodigo);
-		
+
 		lblFechaDeVencimiento = new JLabel("Vencimiento");
 		lblFechaDeVencimiento.setBounds(10, 45, 70, 14);
 		lblFechaDeVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -138,7 +145,7 @@ public class ProductoDialog extends JDialog {
 		tablePrecios = new JTable();
 		scrollPane.setViewportView(tablePrecios);
 		tablePrecios.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Lista", "Precio" }) {
-			Class[] columnTypes = new Class[] { String.class, Float.class };
+			Class[] columnTypes = new Class[] { String.class, Double.class };
 
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
@@ -150,6 +157,27 @@ public class ProductoDialog extends JDialog {
 				return columnEditables[column];
 			}
 		});
+		JTextField textBox = new JTextField();
+		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
+//		textBox.addKeyListener(new KeyAdapter() {
+//			public void keyTyped(KeyEvent e) {
+//				
+//				
+//				if (!Character.isDigit(e.getKeyChar()) ||  && e.getKeyChar() != KeyEvent.VK_BACK_SPACE) {
+//					textBox.setEditable(false);
+//					textBox.setBackground(Color.WHITE);
+//				} else {
+//					textBox.setEditable(true);
+//				}
+//			}
+//			
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				// TODO Auto-generated method stub
+//				super.keyReleased(e);
+//			}
+//			
+//		});
 
 		btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
@@ -179,7 +207,7 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(textAreaDescripcion);
 
 	}
-	
+
 	private void configValidations() {
 		textFechaVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos));
 		textFieldCodigo.setInputVerifier(new NumeroVerifier("Código", camposInvalidos));
@@ -221,7 +249,7 @@ public class ProductoDialog extends JDialog {
 	}
 
 	public boolean validar() {
-		
+
 		if (camposInvalidos.size() > 0) {
 			JOptionPane.showMessageDialog(new JFrame(), "Campos invalidos:" + camposInvalidos, "Error",
 					JOptionPane.ERROR_MESSAGE);

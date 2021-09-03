@@ -2,6 +2,7 @@ package com.sporto.ng.gestion_ng.view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -66,6 +67,7 @@ public class ProductoDialog extends JDialog {
 	 */
 
 	public ProductoDialog() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\sebap\\git\\gestion_ng\\src\\main\\resources\\logo gn-02.png"));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		initComponents();
 		configValidations();
@@ -240,7 +242,7 @@ public class ProductoDialog extends JDialog {
 	}
 
 	public void limpiarCampos() {
-		textFieldCodigo.setEnabled(true);
+		textFieldCodigo.setEditable(true);
 		textFechaVencimiento.setText("");
 		textAreaDescripcion.setText("");
 		textFieldCodigo.setText("");

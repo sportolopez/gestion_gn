@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.Getter;
+import java.awt.Toolkit;
 
 /**
  *
@@ -41,6 +42,8 @@ public class HomeForm extends javax.swing.JFrame   {
 	 * Creates new form HomeForm
 	 */
 	public HomeForm() {
+		setTitle("Distribuidora GN");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\sebap\\git\\gestion_ng\\src\\main\\resources\\logo gn-02.png"));
 		this.productosPanel = new ProductoPanel(this);
 		productosPanel.getBtnNuevoProducto().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

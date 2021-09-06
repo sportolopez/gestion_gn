@@ -1,7 +1,6 @@
 package gestion_ng;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,11 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.sporto.ng.gestion_ng.GestionNG;
-import com.sporto.ng.gestion_ng.dao.ProductoDao;
-import com.sporto.ng.gestion_ng.model.Lista;
-import com.sporto.ng.gestion_ng.model.Producto;
-import com.sporto.ng.gestion_ng.model.Producto.ProductoBuilder;
+import com.sporto.ng.gestion_gn.GestionNG;
+import com.sporto.ng.gestion_gn.dao.ProductoDao;
+import com.sporto.ng.gestion_gn.model.Lista;
+import com.sporto.ng.gestion_gn.model.Producto;
+import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
 
 @SpringBootTest(classes = GestionNG.class)
 class ProductoTest {

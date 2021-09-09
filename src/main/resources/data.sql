@@ -1,0 +1,1 @@
+INSERT INTO `lista` VALUES ('AMBA'),('GENERAL'),('INTERIOR'),('VIP');

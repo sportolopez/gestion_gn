@@ -74,33 +74,32 @@ public class ProductoController {
 				int idProducto = Integer
 						.valueOf(((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0).toString());
 				int input = JOptionPane.showConfirmDialog(homeForm,
-						"¿Confirmar el borrado del producto " + idProducto + "?","Eliminar producto",JOptionPane.OK_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE);
+						"¿Confirmar el borrado del producto " + idProducto + "?", "Eliminar producto",
+						JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 				if (input == 0) {
 					dao.deleteById(idProducto);
 					((DefaultTableModel) table.getModel()).removeRow(modelRow);
 				}
 			}
 		};
-		
+
 		productosPanel.getButtonEliminar().setAction(actionBorrar);
 
 		productosPanel.getBtnNuevoProducto().addActionListener(e -> nuevoProducto());
 		productosPanel.getBtnImportar().addActionListener(e -> importarExcel());
-		
-		//productosPanel.getBtnBuscarProducto().addActionListener(e -> buscar());
+
+		// productosPanel.getBtnBuscarProducto().addActionListener(e -> buscar());
 		productosPanel.getTextFieldBuscadorProductos().addKeyListener(new KeyAdapter() {
-		    public void keyReleased(KeyEvent e) {
-		    	productosPanel.filtrar();
-		    }
+			public void keyReleased(KeyEvent e) {
+				productosPanel.filtrar();
+			}
 		});
 		cargarListaInicial();
 	}
 
-	
 	private void buscar() {
 		productosPanel.filtrar();
 	}
-
 
 	private void nuevoProducto() {
 		productoDialog.limpiarCampos();
@@ -119,8 +118,7 @@ public class ProductoController {
 		Iterable<Producto> findAll = dao.findAll();
 		for (Producto producto : findAll) {
 
-			prodctoTableModel.addRow(new Object[] { producto.getId(), producto.getDescripcion(), producto.getStock(),
-					"Editar", "Eliminar" });
+			prodctoTableModel.addProducto(producto);
 		}
 
 	}
@@ -133,10 +131,10 @@ public class ProductoController {
 	}
 
 	private void saveProducto() {
-		if(productoDialog.validar()) {
-		dao.save(productoDialog.getProducto());
-		productoDialog.setVisible(false);
-		cargarListaInicial();
+		if (productoDialog.validar()) {
+			dao.save(productoDialog.getProducto());
+			productoDialog.setVisible(false);
+			cargarListaInicial();
 		}
 	}
 
@@ -176,20 +174,31 @@ public class ProductoController {
 		while (iterator.hasNext()) {
 			Row rowProducto = iterator.next();
 			ProductoBuilder builder = Producto.builder();
-			builder.id((int) rowProducto.getCell(0).getNumericCellValue());
 			builder.activo(true);
-			builder.descripcion(rowProducto.getCell(1).getStringCellValue());
-			builder.stock((int) rowProducto.getCell(2).getNumericCellValue());
-			builder.fechaVencimiento(rowProducto.getCell(3).getDateCellValue());
-
+			builder.id((int) rowProducto.getCell(0).getNumericCellValue());
+			builder.categoria(rowProducto.getCell(1).getStringCellValue());
+			builder.descripcion(rowProducto.getCell(2).getStringCellValue());
+			Cell cell = rowProducto.getCell(3);
+			if (cell != null) {
+				double numericCellValue = cell.getNumericCellValue();
+				builder.stock((int) numericCellValue);
+			} else {
+				builder.stock(0);
+			}
+			Cell cellFecha = rowProducto.getCell(4);
+			if (cellFecha != null) {
+				builder.fechaVencimiento(cellFecha.getDateCellValue());
+			}
 			Map<String, Double> preciosMap = new HashMap<String, Double>();
 
-			for(int i=4;i<(4+listaPecios.size());++i) {
-				if (!Double.isNaN(rowProducto.getCell(i).getNumericCellValue())) {
-					preciosMap.put(listaPecios.get(i), rowProducto.getCell(i).getNumericCellValue());
+			for (int i = 5; i < (5 + listaPecios.size()); ++i) {
+				Cell cellPrecio = rowProducto.getCell(i);
+				if (cellPrecio != null && !Double.isNaN(cellPrecio.getNumericCellValue())) {
+					preciosMap.put(listaPecios.get(i), cellPrecio.getNumericCellValue());
+				} else {
+					preciosMap.put(listaPecios.get(i), (double) 0);
 				}
 			}
-			
 
 			builder.precios(preciosMap);
 

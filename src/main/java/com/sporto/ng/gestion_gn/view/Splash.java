@@ -10,6 +10,7 @@ import javax.swing.JProgressBar;
 
 import org.jboss.logging.Logger.Level;
 import org.slf4j.Logger;
+import javax.swing.JTextArea;
 
 public class Splash extends JFrame {
 
@@ -17,7 +18,6 @@ public class Splash extends JFrame {
 	private ImageIcon img;
 	private static JProgressBar pbar;
 	Thread t = null;
-
 	public Splash() {
 		super("Splash");
 		setSize(631, 500);
@@ -26,18 +26,18 @@ public class Splash extends JFrame {
 		setUndecorated(true);
 		img = new ImageIcon(getClass().getResource("/logo gn-02.png"));
 		imglabel = new JLabel(img);
-		add(imglabel);
-		setLayout(null);
+		getContentPane().add(imglabel);
+		getContentPane().setLayout(null);
 		pbar = new JProgressBar();
 		pbar.setMinimum(0);
 		pbar.setMaximum(100);
 		pbar.setStringPainted(true);
 		pbar.setForeground(Color.LIGHT_GRAY);
 		imglabel.setBounds(0, 0, 631, 500);
-		add(pbar);
+		getContentPane().add(pbar);
 		pbar.setPreferredSize(new Dimension(500, 30));
 		pbar.setBounds(0, 500, 631, 20);
-
+		
 		Thread t = new Thread() {
 
 			public void run() {
@@ -55,4 +55,5 @@ public class Splash extends JFrame {
 		};
 		t.start();
 	}
+	
 }

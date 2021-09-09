@@ -59,6 +59,8 @@ public class ProductoDialog extends JDialog {
 	private JTextField textAreaDescripcion;
 	private DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 	private java.util.Set<String> camposInvalidos = new HashSet<String>();
+	private JLabel lblCategoria;
+	private JTextField textFieldCategoria;
 
 	/**
 	 * Create the frame.
@@ -93,7 +95,7 @@ public class ProductoDialog extends JDialog {
 	private void initComponents() {
 		setTitle("Producto");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 447, 350);
+		setBounds(100, 100, 376, 355);
 		panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
@@ -130,7 +132,7 @@ public class ProductoDialog extends JDialog {
 		textFechaVencimiento.setColumns(10);
 
 		lblStock = new JLabel("Stock");
-		lblStock.setBounds(205, 45, 49, 14);
+		lblStock.setBounds(181, 45, 70, 14);
 		lblStock.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblStock);
 
@@ -141,7 +143,7 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(textFieldStock);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(31, 86, 374, 141);
+		scrollPane.setBounds(31, 111, 319, 141);
 		panelProductos.add(scrollPane);
 
 		tablePrecios = new JTable();
@@ -159,38 +161,19 @@ public class ProductoDialog extends JDialog {
 				return columnEditables[column];
 			}
 		});
-		JTextField textBox = new JTextField();
 		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
-//		textBox.addKeyListener(new KeyAdapter() {
-//			public void keyTyped(KeyEvent e) {
-//				
-//				
-//				if (!Character.isDigit(e.getKeyChar()) ||  && e.getKeyChar() != KeyEvent.VK_BACK_SPACE) {
-//					textBox.setEditable(false);
-//					textBox.setBackground(Color.WHITE);
-//				} else {
-//					textBox.setEditable(true);
-//				}
-//			}
-//			
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//				// TODO Auto-generated method stub
-//				super.keyReleased(e);
-//			}
-//			
-//		});
+
 
 		btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnGuardar.setBounds(316, 261, 89, 23);
+		btnGuardar.setBounds(261, 279, 89, 23);
 		panelProductos.add(btnGuardar);
 
 		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setBounds(215, 261, 89, 23);
+		btnNewButton_1.setBounds(160, 279, 89, 23);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -199,14 +182,24 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(btnNewButton_1);
 
 		JLabel lblDescripcion = new JLabel("Descripción");
-		lblDescripcion.setBounds(184, 17, 70, 14);
+		lblDescripcion.setBounds(10, 73, 70, 14);
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblDescripcion);
 
 		textAreaDescripcion = new JTextField();
-		textAreaDescripcion.setBounds(264, 12, 143, 19);
+		textAreaDescripcion.setBounds(90, 70, 260, 19);
 		textAreaDescripcion.setColumns(10);
 		panelProductos.add(textAreaDescripcion);
+		
+		lblCategoria = new JLabel("Categoria");
+		lblCategoria.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCategoria.setBounds(181, 17, 70, 14);
+		panelProductos.add(lblCategoria);
+		
+		textFieldCategoria = new JTextField();
+		textFieldCategoria.setColumns(10);
+		textFieldCategoria.setBounds(264, 14, 86, 20);
+		panelProductos.add(textFieldCategoria);
 
 	}
 
@@ -215,9 +208,6 @@ public class ProductoDialog extends JDialog {
 		textFieldCodigo.setInputVerifier(new NumeroVerifier("Código", camposInvalidos));
 		textFieldStock.setInputVerifier(new NumeroVerifier("Stock", camposInvalidos));
 		textAreaDescripcion.setInputVerifier(new TextoVerifier("Descripción", camposInvalidos));
-	}
-
-	private void setTabOrder() {
 	}
 
 	public Producto getProducto() {
@@ -233,7 +223,7 @@ public class ProductoDialog extends JDialog {
 			Producto build = Producto.builder().fechaVencimiento(formatoFecha.parse(textFechaVencimiento.getText()))
 					.descripcion(textAreaDescripcion.getText()).activo(true)
 					.id(Integer.parseInt(textFieldCodigo.getText())).stock(Integer.parseInt(textFieldStock.getText()))
-					.precios(preciosMap).build();
+					.precios(preciosMap).categoria(textFieldCategoria.getText()).build();
 			return build;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -247,6 +237,7 @@ public class ProductoDialog extends JDialog {
 		textAreaDescripcion.setText("");
 		textFieldCodigo.setText("");
 		textFieldStock.setText("");
+		textFieldCategoria.setText("");
 		((DefaultTableModel) tablePrecios.getModel()).setRowCount(0);
 	}
 

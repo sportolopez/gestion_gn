@@ -5,6 +5,8 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import com.sporto.ng.gestion_gn.config.Constants;
+
 import lombok.Setter;
 
 /**
@@ -51,6 +53,8 @@ public class ButtonColumn extends AbstractCellEditor
 
 		renderButton = new JButton();
 		editButton = new JButton();
+		editButton.getFont();
+		renderButton.setFont(Constants.FUENTE);
 		editButton.setFocusPainted( false );
 		editButton.addActionListener( this );
 		originalBorder = editButton.getBorder();
@@ -58,6 +62,7 @@ public class ButtonColumn extends AbstractCellEditor
 
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(column).setCellRenderer( this );
+		columnModel.getColumn(column).setPreferredWidth(15);
 		columnModel.getColumn(column).setCellEditor( this );
 		table.addMouseListener( this );
 	}

@@ -20,6 +20,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sporto.ng.gestion_gn.config.Constants;
+
 import lombok.Getter;
 import java.awt.Toolkit;
 
@@ -42,9 +44,18 @@ public class HomeForm extends javax.swing.JFrame   {
 	 * Creates new form HomeForm
 	 */
 	public HomeForm() {
+		setResizable(false); 
 		setTitle("Distribuidora GN");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\sebap\\git\\gestion_gn\\src\\main\\resources\\logo gn-02.png"));
 		this.productosPanel = new ProductoPanel(this);
+		productosPanel.getBtnImportar().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		productosPanel.getTableProductos().setSize(1268, 0);
+		productosPanel.getBtnNuevoProducto().setLocation(1172, 59);
+		productosPanel.getBtnImportar().setLocation(1073, 59);
+		productosPanel.setBounds(0, 0, 1314, 500);
 		productosPanel.getBtnNuevoProducto().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -106,22 +117,26 @@ public class HomeForm extends javax.swing.JFrame   {
 			layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGroup(layout.createParallelGroup(Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
-							.addComponent(btnNewButton_2)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnNewButton_3, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnNewButton_3_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnNewButton_3_1_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnProveedores, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnAdmin, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
-						.addComponent(layeredPane))
-					.addGap(128))
+							.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+							.addContainerGap())
+						.addGroup(layout.createSequentialGroup()
+							.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(separator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addGroup(layout.createSequentialGroup()
+									.addComponent(btnNewButton_2)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnNewButton_3, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnNewButton_3_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnNewButton_3_1_1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnProveedores, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnAdmin, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)))
+							.addGap(128))))
 		);
 		layout.setVerticalGroup(
 			layout.createParallelGroup(Alignment.LEADING)
@@ -137,8 +152,8 @@ public class HomeForm extends javax.swing.JFrame   {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 335, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(166, Short.MAX_VALUE))
+					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 
 
@@ -146,40 +161,8 @@ public class HomeForm extends javax.swing.JFrame   {
 		layeredPane.add(productosPanel);
 		layeredPane.setLayout(null);
 
-		
-
-//		panelClientes = new JPanel();
-//		panelClientes.setLayout(null);
-//		panelClientes.setBounds(0, 0, 646, 334);
-//		layeredPane.add(panelClientes);
-
-//		scrollPane_1 = new JScrollPane();
-//		scrollPane_1.setBounds(10, 91, 574, 194);
-//		panelClientes.add(scrollPane_1);
-//
-//		textField_1 = new JTextField();
-//		textField_1.setColumns(10);
-//		textField_1.setBounds(10, 60, 254, 20);
-//		panelClientes.add(textField_1);
-//
-//		lblClientes = new JLabel("Clientes");
-//		lblClientes.setFont(new Font("Tahoma", Font.BOLD, 20));
-//		lblClientes.setBounds(10, 11, 125, 20);
-//		panelClientes.add(lblClientes);
-//
-//		btnNewButton_1 = new JButton("Buscar");
-//		btnNewButton_1.setBounds(277, 59, 89, 23);
-//		panelClientes.add(btnNewButton_1);
-//
-//		btnImportar_1 = new JButton("Importar");
-//		btnImportar_1.setBounds(376, 59, 89, 23);
-//		panelClientes.add(btnImportar_1);
-//
-//		btnNuevoProducto_1 = new JButton("Nuevo");
-//		btnNuevoProducto_1.setBounds(475, 59, 109, 23);
-//		panelClientes.add(btnNuevoProducto_1);
 		getContentPane().setLayout(layout);
-		setPreferredSize(new Dimension(695, 450));
+		setPreferredSize(new Dimension(1350, 600));
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 }

@@ -20,6 +20,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 
+import com.sporto.ng.gestion_gn.config.Constants;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +46,7 @@ public class Producto {
 	@Id
 	private int id;
 	private int stock;
+	private String categoria;
 	private String descripcion;
 	private boolean activo;
 	private Date fechaVencimiento;
@@ -54,10 +57,29 @@ public class Producto {
 	private Map<String, Double> precios;
 
 	public Set<Entry<String, Double>> getPreciosSet() {
-    	if(precios!= null)
-    		return precios.entrySet();
-    	else
-    		return new HashSet<Entry<String, Double>>();
-    }
+		if (precios != null)
+			return precios.entrySet();
+		else
+			return new HashSet<Entry<String, Double>>();
+	}
+
+	public String getPreciosString() {
+		StringBuffer sb = new StringBuffer();
+		for (Entry<String, Double> iterable_element : precios.entrySet()) {
+			sb.append(iterable_element.getKey());
+			sb.append(": ");
+			sb.append(iterable_element.getValue());
+			sb.append(" ");
+		}
+		return sb.toString();
+	}
+	
+	public String getFechaString() {
+		if(fechaVencimiento == null) {
+			return "";
+		}else
+			return Constants.FORMATO_FECHA.format(getFechaVencimiento());
+	}
+	
 
 }

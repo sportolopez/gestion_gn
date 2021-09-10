@@ -6,9 +6,14 @@
 package com.sporto.ng.gestion_gn.view;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -17,13 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.sporto.ng.gestion_gn.config.Constants;
-
 import lombok.Getter;
-import java.awt.Toolkit;
 
 /**
  *
@@ -42,20 +43,22 @@ public class HomeForm extends javax.swing.JFrame   {
 
 	/**
 	 * Creates new form HomeForm
+	 * @throws IOException 
 	 */
-	public HomeForm() {
+	public HomeForm() throws IOException {
 		setResizable(false); 
 		setTitle("Distribuidora GN");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\sebap\\git\\gestion_gn\\src\\main\\resources\\logo gn-02.png"));
+		URL resource = getClass().getClassLoader().getResource("icono.png");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		this.productosPanel = new ProductoPanel(this);
+		productosPanel.setBounds(0, 0, 1490, 580);
 		productosPanel.getBtnImportar().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		productosPanel.getTableProductos().setSize(1268, 0);
-		productosPanel.getBtnNuevoProducto().setLocation(1172, 59);
-		productosPanel.getBtnImportar().setLocation(1073, 59);
-		productosPanel.setBounds(0, 0, 1314, 500);
+		productosPanel.getBtnNuevoProducto().setLocation(1359, 30);
+		productosPanel.getBtnImportar().setLocation(1260, 30);
 		productosPanel.getBtnNuevoProducto().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -119,7 +122,7 @@ public class HomeForm extends javax.swing.JFrame   {
 					.addContainerGap()
 					.addGroup(layout.createParallelGroup(Alignment.LEADING)
 						.addGroup(layout.createSequentialGroup()
-							.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+							.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 1524, Short.MAX_VALUE)
 							.addContainerGap())
 						.addGroup(layout.createSequentialGroup()
 							.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
@@ -152,8 +155,8 @@ public class HomeForm extends javax.swing.JFrame   {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(separator, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(layeredPane, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+					.addContainerGap())
 		);
 
 
@@ -162,7 +165,7 @@ public class HomeForm extends javax.swing.JFrame   {
 		layeredPane.setLayout(null);
 
 		getContentPane().setLayout(layout);
-		setPreferredSize(new Dimension(1350, 600));
+		setPreferredSize(new Dimension(1550, 700));
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
 }

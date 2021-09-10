@@ -24,7 +24,7 @@ public class Splash extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setUndecorated(true);
-		img = new ImageIcon(getClass().getResource("/logo gn-02.png"));
+		img = new ImageIcon(getClass().getResource("/logo.png"));
 		imglabel = new JLabel(img);
 		getContentPane().add(imglabel);
 		getContentPane().setLayout(null);

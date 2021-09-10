@@ -3,6 +3,7 @@ package com.sporto.ng.gestion_gn.view;
 import java.awt.Font;
 
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,13 +50,14 @@ public class ProductoPanel extends JPanel {
 	public ProductoPanel(JFrame parent) {
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+		rightRenderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
 		
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		this.setLayout(null);
-		this.setBounds(0, 0, 1290, 400);
+		this.setBounds(0, 0, 1490, 500);
 
 		JScrollPane scrollPaneProductos = new JScrollPane();
-		scrollPaneProductos.setBounds(10, 91, 1270, 398);
+		scrollPaneProductos.setBounds(10, 91, 1470, 455);
 		this.add(scrollPaneProductos);
 
 		tableProductos = new JTable();
@@ -69,12 +71,19 @@ public class ProductoPanel extends JPanel {
 		Action botonDelete = null;
 		Action botonEditar = null;
 		tableProductos.getColumnModel().getColumnCount();
-		tableProductos.getColumnModel().getColumn(0).setPreferredWidth(15);
-		tableProductos.getColumnModel().getColumn(1).setPreferredWidth(21);
-		tableProductos.getColumnModel().getColumn(2).setPreferredWidth(30);
-		tableProductos.getColumnModel().getColumn(3).setPreferredWidth(15);
-		tableProductos.getColumnModel().getColumn(4).setPreferredWidth(15);
-		tableProductos.getColumnModel().getColumn(5).setPreferredWidth(50);
+		//tableProductos.getTableHeader().setResizingAllowed(false);
+		tableProductos.getColumnModel().getColumn(0).setMaxWidth(80);
+		tableProductos.getColumnModel().getColumn(0).setPreferredWidth(80);
+		tableProductos.getColumnModel().getColumn(1).setMaxWidth(150);
+		tableProductos.getColumnModel().getColumn(1).setPreferredWidth(150);
+		tableProductos.getColumnModel().getColumn(2).setMaxWidth(300);
+		tableProductos.getColumnModel().getColumn(2).setPreferredWidth(300);
+		tableProductos.getColumnModel().getColumn(3).setMaxWidth(80);
+		tableProductos.getColumnModel().getColumn(3).setPreferredWidth(80);
+		tableProductos.getColumnModel().getColumn(4).setMaxWidth(150);
+		tableProductos.getColumnModel().getColumn(4).setPreferredWidth(150);
+//		tableProductos.getColumnModel().getColumn(5).setMaxWidth(400);
+//		tableProductos.getColumnModel().getColumn(5).setPreferredWidth(400);
 		
 		for(int i=0; i < tableProductos.getColumnCount(); i++){
 			tableProductos.getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
@@ -96,12 +105,12 @@ public class ProductoPanel extends JPanel {
 
 		btnImportar = new JButton("Importar");
 		btnImportar.setFont(Constants.FUENTE);
-		btnImportar.setBounds(572, 57, 89, 23);
+		btnImportar.setBounds(1272, 30, 89, 34);
 		this.add(btnImportar);
 
 		btnNuevoProducto = new JButton("Nuevo");
 		btnNuevoProducto.setFont(Constants.FUENTE);
-		btnNuevoProducto.setBounds(671, 59, 109, 23);
+		btnNuevoProducto.setBounds(1371, 30, 109, 34);
 		this.add(btnNuevoProducto);
 
 	}

@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,7 +70,8 @@ public class ProductoDialog extends JDialog {
 	 */
 
 	public ProductoDialog() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\sebap\\git\\gestion_gn\\src\\main\\resources\\logo gn-02.png"));
+		URL resource = getClass().getClassLoader().getResource("icono.ico");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		initComponents();
 		configValidations();
@@ -90,6 +92,7 @@ public class ProductoDialog extends JDialog {
 			model.addRow(new Object[] { unPrecio.getKey(), unPrecio.getValue() });
 		}
 		textAreaDescripcion.setText(unProducto.getDescripcion());
+		textFieldCategoria.setText(unProducto.getCategoria());
 	}
 
 	private void initComponents() {
@@ -212,15 +215,23 @@ public class ProductoDialog extends JDialog {
 
 	public Producto getProducto() {
 		try {
-
+			if(tablePrecios.isEditing()) {
+				tablePrecios.getCellEditor().stopCellEditing();
+			}
 			Map<String, Double> preciosMap = new HashMap<String, Double>();
 
 			for (int count = 0; count < tablePrecios.getRowCount(); count++) {
+				System.out.println("Lista:"+tablePrecios.getValueAt(count, 0).toString() + "   PRECIO: "+tablePrecios.getValueAt(count, 1).toString());
 				preciosMap.put(tablePrecios.getValueAt(count, 0).toString(),
 						Double.parseDouble(tablePrecios.getValueAt(count, 1).toString()));
 			}
 
-			Producto build = Producto.builder().fechaVencimiento(formatoFecha.parse(textFechaVencimiento.getText()))
+			Date parse = null;
+			try {
+				parse = formatoFecha.parse(textFechaVencimiento.getText());
+			} catch (Exception e) {
+			}
+			Producto build = Producto.builder().fechaVencimiento(parse)
 					.descripcion(textAreaDescripcion.getText()).activo(true)
 					.id(Integer.parseInt(textFieldCodigo.getText())).stock(Integer.parseInt(textFieldStock.getText()))
 					.precios(preciosMap).categoria(textFieldCategoria.getText()).build();

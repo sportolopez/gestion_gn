@@ -62,7 +62,9 @@ public class ButtonColumn extends AbstractCellEditor
 
 		TableColumnModel columnModel = table.getColumnModel();
 		columnModel.getColumn(column).setCellRenderer( this );
-		columnModel.getColumn(column).setPreferredWidth(15);
+
+		columnModel.getColumn(column).setMaxWidth(100);
+		columnModel.getColumn(column).setPreferredWidth(100);
 		columnModel.getColumn(column).setCellEditor( this );
 		table.addMouseListener( this );
 	}

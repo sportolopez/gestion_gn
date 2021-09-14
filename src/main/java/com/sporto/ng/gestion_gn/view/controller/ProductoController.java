@@ -12,14 +12,14 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.RowFilter;
-import javax.swing.RowSorter;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -36,6 +36,7 @@ import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
 import com.sporto.ng.gestion_gn.view.ProductoPanel;
+import com.sporto.ng.gestion_gn.view.model.ButtonColumn;
 import com.sporto.ng.gestion_gn.view.model.ProductoTableModel;
 
 @Component
@@ -56,15 +57,6 @@ public class ProductoController {
 		this.listaDao = listaDao;
 		this.productosPanel = homeForm.getProductosPanel();
 		productoDialog.getBtnGuardar().addActionListener(e -> saveProducto());
-		productosPanel.getButtonEditar().setAction(new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				JTable table = (JTable) e.getSource();
-				int modelRow = Integer.valueOf(e.getActionCommand());
-				Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-				editarProducto(idProducto);
-
-			}
-		});
 
 		AbstractAction actionBorrar = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
@@ -83,17 +75,64 @@ public class ProductoController {
 			}
 		};
 
-		productosPanel.getButtonEliminar().setAction(actionBorrar);
-
 		productosPanel.getBtnNuevoProducto().addActionListener(e -> nuevoProducto());
 		productosPanel.getBtnImportar().addActionListener(e -> importarExcel());
 
-		// productosPanel.getBtnBuscarProducto().addActionListener(e -> buscar());
 		productosPanel.getTextFieldBuscadorProductos().addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				productosPanel.filtrar();
 			}
 		});
+
+		DefaultTableModel model = (DefaultTableModel) productosPanel.getTableProductos().getModel();
+		model.getColumnCount();
+		Iterable<Lista> listasDePrecio = listaDao.findAll();
+		model.addColumn("C\u00F3digo");
+		model.addColumn("Categoria");
+		model.addColumn("Descripci\u00F3n");
+		model.addColumn("Stock");
+		model.addColumn("Fecha Vencimiento");
+		for (Lista unaLista : listasDePrecio) {
+			model.addColumn("Precio " + unaLista.getNombre());
+		}
+		int columnCount = productosPanel.getTableProductos().getColumnCount();
+		model.addColumn("");
+		model.addColumn("");
+		productosPanel.getTableProductos().getColumnCount();
+		productosPanel.getTableProductos().getColumnModel().getColumn(0).setMaxWidth(50);
+		productosPanel.getTableProductos().getColumnModel().getColumn(0).setPreferredWidth(50);
+		productosPanel.getTableProductos().getColumnModel().getColumn(1).setMaxWidth(130);
+		productosPanel.getTableProductos().getColumnModel().getColumn(1).setPreferredWidth(130);
+		productosPanel.getTableProductos().getColumnModel().getColumn(2).setMaxWidth(300);
+		productosPanel.getTableProductos().getColumnModel().getColumn(2).setPreferredWidth(300);
+		productosPanel.getTableProductos().getColumnModel().getColumn(3).setMaxWidth(80);
+		productosPanel.getTableProductos().getColumnModel().getColumn(3).setPreferredWidth(80);
+		productosPanel.getTableProductos().getColumnModel().getColumn(4).setMaxWidth(150);
+		productosPanel.getTableProductos().getColumnModel().getColumn(4).setPreferredWidth(150);
+
+		Action botonDelete = null;
+		Action botonEditar = null;
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+		rightRenderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
+		for (int i = 0; i < columnCount; i++) {
+			productosPanel.getTableProductos().getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
+		}
+
+		new ButtonColumn(productosPanel.getTableProductos(), botonEditar,
+				columnCount).setAction(new AbstractAction() {
+					public void actionPerformed(ActionEvent e) {
+						JTable table = (JTable) e.getSource();
+						int modelRow = Integer.valueOf(e.getActionCommand());
+						Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
+						editarProducto(idProducto);
+
+					}
+				});
+		;
+		new ButtonColumn(productosPanel.getTableProductos(), botonDelete,
+				columnCount+1).setAction(actionBorrar);
+
 		cargarListaInicial();
 	}
 

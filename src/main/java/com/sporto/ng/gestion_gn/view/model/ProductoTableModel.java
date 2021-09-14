@@ -1,23 +1,35 @@
 package com.sporto.ng.gestion_gn.view.model;
 
+import java.util.ArrayList;
+import java.util.Map.Entry;
+
 import javax.swing.table.DefaultTableModel;
 
-import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Producto;
 
 public class ProductoTableModel extends DefaultTableModel {
 
 	public ProductoTableModel() {
-		super(new Object[][] {  },
-				new String[] { "C\u00F3digo",  "Categoria","Descripci\u00F3n", "Stock", "Fecha Vencimiento", "Precios",
-						"", "" });
+
 	}
 
 	public void addProducto(Producto producto) {
-		addRow(new Object[] { producto.getId(), producto.getCategoria(),
-				producto.getDescripcion(), producto.getStock(), producto.getFechaString(),
-				producto.getPreciosString(), "Editar", "Eliminar" });
+		ArrayList<Object> lista = new ArrayList<Object>();
+		lista.add(producto.getId());
+		lista.add(producto.getCategoria());
+		lista.add(producto.getDescripcion());
+		lista.add(producto.getStock());
+		lista.add(producto.getFechaString());
 		
+		for (Entry<String, Double> object : producto.getPreciosSet()) {
+			lista.add(object.getValue());
+		}
+		
+		lista.add("Editar");
+		lista.add("Eliminar");
+		
+		addRow(lista.toArray());
+
 	}
 
 }

@@ -35,6 +35,7 @@ import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -49,6 +50,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.event.CellEditorListener;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
@@ -68,8 +70,11 @@ public class DoubleEditor extends DefaultCellEditor {
 		minimum = Double.valueOf(0);
 		maximum = Double.MAX_VALUE;
 
+		NumberFormat.getCurrencyInstance();
 		// Set up the editor for the integer cells.
-		NumberFormat currencyInstance = NumberFormat.getCurrencyInstance().getCurrencyInstance(Locale.US);
+		NumberFormat currencyInstance = DecimalFormat.getInstance();
+		currencyInstance.setMaximumFractionDigits(2);
+		currencyInstance.setMinimumFractionDigits(2);
 		doubleFormat = currencyInstance;
 		NumberFormatter intFormatter = new NumberFormatter(doubleFormat);
 		intFormatter.setFormat(doubleFormat);
@@ -127,7 +132,7 @@ public class DoubleEditor extends DefaultCellEditor {
 			}
 		}
 	}
-
+	
 	// Override to check whether the edit is valid,
 	// setting the value if it is and complaining if
 	// it isn't. If it's OK for the editor to go

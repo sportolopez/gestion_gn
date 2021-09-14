@@ -1,12 +1,8 @@
 package com.sporto.ng.gestion_gn.view;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,7 +14,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
@@ -30,12 +25,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
+import javax.swing.event.CellEditorListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.MaskFormatter;
 
+import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
@@ -43,6 +38,7 @@ import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
 import com.sporto.ng.gestion_gn.view.validations.TextoVerifier;
 
 import lombok.Getter;
+import javax.swing.ListSelectionModel;
 
 @Getter
 public class ProductoDialog extends JDialog {
@@ -98,26 +94,29 @@ public class ProductoDialog extends JDialog {
 	private void initComponents() {
 		setTitle("Producto");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 376, 355);
+		setBounds(100, 100, 429, 389);
 		panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
 		panelProductos.setLayout(null);
 
 		lblCodigoLabel = new JLabel("Código");
-		lblCodigoLabel.setBounds(31, 17, 49, 14);
+		lblCodigoLabel.setBounds(31, 17, 66, 14);
 		lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCodigoLabel.setFont(Constants.FUENTE);
 		panelProductos.add(lblCodigoLabel);
 
 		textFieldCodigo = new JTextField();
-		textFieldCodigo.setBounds(90, 14, 86, 20);
+		textFieldCodigo.setBounds(107, 17, 86, 20);
 		textFieldCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCodigo.setColumns(10);
+		textFieldCodigo.setFont(Constants.FUENTE);
 		panelProductos.add(textFieldCodigo);
 
 		lblFechaDeVencimiento = new JLabel("Vencimiento");
-		lblFechaDeVencimiento.setBounds(10, 45, 70, 14);
+		lblFechaDeVencimiento.setBounds(10, 45, 87, 14);
 		lblFechaDeVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblFechaDeVencimiento.setFont(Constants.FUENTE);
 		panelProductos.add(lblFechaDeVencimiento);
 
 		MaskFormatter mascara;
@@ -128,25 +127,28 @@ public class ProductoDialog extends JDialog {
 		}
 
 		textFechaVencimiento = new JFormattedTextField(mascara);
-		textFechaVencimiento.setBounds(90, 42, 86, 20);
+		textFechaVencimiento.setBounds(107, 45, 86, 20);
 		textFechaVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFechaVencimiento.setToolTipText("DD/MM/AAAA");
+		textFechaVencimiento.setFont(Constants.FUENTE);
 		panelProductos.add(textFechaVencimiento);
 		textFechaVencimiento.setColumns(10);
 
 		lblStock = new JLabel("Stock");
-		lblStock.setBounds(181, 45, 70, 14);
+		lblStock.setBounds(214, 45, 70, 14);
 		lblStock.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblStock.setFont(Constants.FUENTE);
 		panelProductos.add(lblStock);
 
 		textFieldStock = new JTextField();
-		textFieldStock.setBounds(264, 42, 86, 20);
+		textFieldStock.setBounds(294, 45, 109, 20);
 		textFieldStock.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldStock.setColumns(10);
+		textFieldStock.setFont(Constants.FUENTE);;
 		panelProductos.add(textFieldStock);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(31, 111, 319, 141);
+		scrollPane.setBounds(59, 111, 319, 141);
 		panelProductos.add(scrollPane);
 
 		tablePrecios = new JTable();
@@ -166,17 +168,16 @@ public class ProductoDialog extends JDialog {
 		});
 		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
 
-
 		btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnGuardar.setBounds(261, 279, 89, 23);
+		btnGuardar.setBounds(314, 300, 89, 41);
 		panelProductos.add(btnGuardar);
 
 		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setBounds(160, 279, 89, 23);
+		btnNewButton_1.setBounds(215, 300, 89, 41);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -185,23 +186,27 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(btnNewButton_1);
 
 		JLabel lblDescripcion = new JLabel("Descripción");
-		lblDescripcion.setBounds(10, 73, 70, 14);
+		lblDescripcion.setBounds(10, 73, 87, 14);
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDescripcion.setFont(Constants.FUENTE);
 		panelProductos.add(lblDescripcion);
 
 		textAreaDescripcion = new JTextField();
-		textAreaDescripcion.setBounds(90, 70, 260, 19);
+		textAreaDescripcion.setBounds(107, 70, 296, 19);
 		textAreaDescripcion.setColumns(10);
+		textAreaDescripcion.setFont(Constants.FUENTE);
 		panelProductos.add(textAreaDescripcion);
 		
 		lblCategoria = new JLabel("Categoria");
 		lblCategoria.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCategoria.setBounds(181, 17, 70, 14);
+		lblCategoria.setBounds(214, 17, 70, 17);
+		lblCategoria.setFont(Constants.FUENTE);
 		panelProductos.add(lblCategoria);
 		
 		textFieldCategoria = new JTextField();
 		textFieldCategoria.setColumns(10);
-		textFieldCategoria.setBounds(264, 14, 86, 20);
+		textFieldCategoria.setBounds(294, 17, 109, 20);
+		textFieldCategoria.setFont(Constants.FUENTE);
 		panelProductos.add(textFieldCategoria);
 
 	}

@@ -74,16 +74,29 @@ public class ProductoPanel extends JPanel {
 		panel.add(textFieldBuscadorProductos);
 		textFieldBuscadorProductos.setColumns(20);
 
-		btnNuevoProducto = new JButton("Nuevo");
+		btnNuevoProducto = new JButton("Nuevo producto");
 		panel.add(btnNuevoProducto);
 		btnNuevoProducto.setMnemonic(KeyEvent.VK_N);
 		btnNuevoProducto.setFont(Constants.FUENTE);
 
-		btnImportar = new JButton("Importar");
+		btnImportar = new JButton("Importar productos...");
 		panel.add(btnImportar);
 		btnImportar.setFont(Constants.FUENTE);
 		btnImportar.setMnemonic(KeyEvent.VK_I);
 
+		JButton btnIngresoStock = new JButton("INGRESO STOCK");
+		btnIngresoStock.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new MovimientoStock().setVisible(true);
+			}
+		});
+		btnIngresoStock.setFont(new Font("Tahoma", Font.BOLD, 12));
+		panel.add(btnIngresoStock);
+		
+		
+		JButton btnEgresoStock = new JButton("EGRESO STOCK");
+		btnEgresoStock.setFont(new Font("Tahoma", Font.BOLD, 12));
+		panel.add(btnEgresoStock);
 		
 		JScrollPane scrollPaneProductos = new JScrollPane();
 		scrollPaneProductos.setAlignmentY(Component.BOTTOM_ALIGNMENT);

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -19,6 +20,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 
@@ -55,6 +57,12 @@ public class Producto {
 	@MapKeyColumn(name = "lista")
 	@Column(name = "precio")
 	private Map<String, Double> precios;
+	@Column(columnDefinition = "double default 0")
+	private Double costo;
+
+	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+	// @JoinColumn(name = "id_producto")
+	private Set<MovimientoStock> movimientoStock;
 
 	public Set<Entry<String, Double>> getPreciosSet() {
 		if (precios != null)
@@ -73,13 +81,12 @@ public class Producto {
 		}
 		return sb.toString();
 	}
-	
+
 	public String getFechaString() {
-		if(fechaVencimiento == null) {
+		if (fechaVencimiento == null) {
 			return "";
-		}else
+		} else
 			return Constants.FORMATO_FECHA.format(getFechaVencimiento());
 	}
-	
 
 }

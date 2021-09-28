@@ -33,12 +33,14 @@ import javax.swing.text.MaskFormatter;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Producto;
+import com.sporto.ng.gestion_gn.view.validations.DoubleVerifier;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
 import com.sporto.ng.gestion_gn.view.validations.TextoVerifier;
 
 import lombok.Getter;
 import javax.swing.ListSelectionModel;
+import java.awt.Font;
 
 @Getter
 public class ProductoDialog extends JDialog {
@@ -50,14 +52,14 @@ public class ProductoDialog extends JDialog {
 	private JTextField textFechaVencimiento;
 	private JLabel lblStock;
 	private JTextField textFieldStock;
-	private JTable tablePrecios;
-	private JScrollPane scrollPane;
 	private JButton btnGuardar;
 	private JTextField textAreaDescripcion;
 	private DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
 	private java.util.Set<String> camposInvalidos = new HashSet<String>();
 	private JLabel lblCategoria;
 	private JTextField textFieldCategoria;
+	private JTextField textFieldCosto;
+	private JLabel lblCosto;
 
 	/**
 	 * Create the frame.
@@ -81,20 +83,21 @@ public class ProductoDialog extends JDialog {
 		if (fechaVencimiento != null)
 			this.textFechaVencimiento.setText(formatoFecha.format(fechaVencimiento));
 		Set<Entry<String, Double>> precios = unProducto.getPreciosSet();
-		DefaultTableModel model = (DefaultTableModel) tablePrecios.getModel();
-		model.setRowCount(0);
-
-		for (Entry<String, Double> unPrecio : precios) {
-			model.addRow(new Object[] { unPrecio.getKey(), unPrecio.getValue() });
-		}
+		//DefaultTableModel model = (DefaultTableModel) tablePrecios.getModel();
+//		model.setRowCount(0);
+//
+//		for (Entry<String, Double> unPrecio : precios) {
+//			model.addRow(new Object[] { unPrecio.getKey(), unPrecio.getValue() });
+//		}
 		textAreaDescripcion.setText(unProducto.getDescripcion());
 		textFieldCategoria.setText(unProducto.getCategoria());
+		textFieldCosto.setText(unProducto.getCosto().toString());
 	}
 
 	private void initComponents() {
 		setTitle("Producto");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 429, 389);
+		setBounds(100, 100, 429, 261);
 		panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
@@ -147,37 +150,33 @@ public class ProductoDialog extends JDialog {
 		textFieldStock.setFont(Constants.FUENTE);;
 		panelProductos.add(textFieldStock);
 
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(59, 111, 319, 141);
-		panelProductos.add(scrollPane);
-
-		tablePrecios = new JTable();
-		scrollPane.setViewportView(tablePrecios);
-		tablePrecios.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Lista", "Precio" }) {
-			Class[] columnTypes = new Class[] { String.class, Double.class };
-
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-
-			boolean[] columnEditables = new boolean[] { false, true };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
+		//tablePrecios = new JTable();
+//		scrollPane.setViewportView(tablePrecios);
+//		tablePrecios.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Lista", "Precio" }) {
+//			Class[] columnTypes = new Class[] { String.class, Double.class };
+//
+//			public Class getColumnClass(int columnIndex) {
+//				return columnTypes[columnIndex];
+//			}
+//
+//			boolean[] columnEditables = new boolean[] { false, true };
+//
+//			public boolean isCellEditable(int row, int column) {
+//				return columnEditables[column];
+//			}
+//		});
+//		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
 
 		btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnGuardar.setBounds(314, 300, 89, 41);
+		btnGuardar.setBounds(314, 160, 89, 41);
 		panelProductos.add(btnGuardar);
 
 		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setBounds(215, 300, 89, 41);
+		btnNewButton_1.setBounds(215, 160, 89, 41);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -208,6 +207,19 @@ public class ProductoDialog extends JDialog {
 		textFieldCategoria.setBounds(294, 17, 109, 20);
 		textFieldCategoria.setFont(Constants.FUENTE);
 		panelProductos.add(textFieldCategoria);
+		
+		textFieldCosto = new JTextField();
+		textFieldCosto.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldCosto.setFont(new Font("Dialog", Font.PLAIN, 12));
+		textFieldCosto.setColumns(10);
+		textFieldCosto.setBounds(107, 98, 86, 20);
+		panelProductos.add(textFieldCosto);
+		
+		lblCosto = new JLabel("Costo");
+		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCosto.setFont(new Font("Dialog", Font.PLAIN, 12));
+		lblCosto.setBounds(31, 98, 66, 14);
+		panelProductos.add(lblCosto);
 
 	}
 
@@ -216,20 +228,21 @@ public class ProductoDialog extends JDialog {
 		textFieldCodigo.setInputVerifier(new NumeroVerifier("Código", camposInvalidos));
 		textFieldStock.setInputVerifier(new NumeroVerifier("Stock", camposInvalidos));
 		textAreaDescripcion.setInputVerifier(new TextoVerifier("Descripción", camposInvalidos));
+		textFieldCosto.setInputVerifier(new DoubleVerifier("Costo", camposInvalidos));
 	}
 
 	public Producto getProducto() {
 		try {
-			if(tablePrecios.isEditing()) {
-				tablePrecios.getCellEditor().stopCellEditing();
-			}
-			Map<String, Double> preciosMap = new HashMap<String, Double>();
-
-			for (int count = 0; count < tablePrecios.getRowCount(); count++) {
-				System.out.println("Lista:"+tablePrecios.getValueAt(count, 0).toString() + "   PRECIO: "+tablePrecios.getValueAt(count, 1).toString());
-				preciosMap.put(tablePrecios.getValueAt(count, 0).toString(),
-						Double.parseDouble(tablePrecios.getValueAt(count, 1).toString()));
-			}
+//			if(tablePrecios.isEditing()) {
+//				tablePrecios.getCellEditor().stopCellEditing();
+//			}
+//			Map<String, Double> preciosMap = new HashMap<String, Double>();
+//
+//			for (int count = 0; count < tablePrecios.getRowCount(); count++) {
+//				System.out.println("Lista:"+tablePrecios.getValueAt(count, 0).toString() + "   PRECIO: "+tablePrecios.getValueAt(count, 1).toString());
+//				preciosMap.put(tablePrecios.getValueAt(count, 0).toString(),
+//						Double.parseDouble(tablePrecios.getValueAt(count, 1).toString()));
+//			}
 
 			Date parse = null;
 			try {
@@ -239,7 +252,9 @@ public class ProductoDialog extends JDialog {
 			Producto build = Producto.builder().fechaVencimiento(parse)
 					.descripcion(textAreaDescripcion.getText()).activo(true)
 					.id(Integer.parseInt(textFieldCodigo.getText())).stock(Integer.parseInt(textFieldStock.getText()))
-					.precios(preciosMap).categoria(textFieldCategoria.getText()).build();
+					.costo(Double.parseDouble(textFieldCosto.getText()))
+					//.precios(preciosMap)
+					.categoria(textFieldCategoria.getText()).build();
 			return build;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -254,7 +269,8 @@ public class ProductoDialog extends JDialog {
 		textFieldCodigo.setText("");
 		textFieldStock.setText("");
 		textFieldCategoria.setText("");
-		((DefaultTableModel) tablePrecios.getModel()).setRowCount(0);
+		textFieldCosto.setText("");
+		//((DefaultTableModel) tablePrecios.getModel()).setRowCount(0);
 	}
 
 	public boolean validar() {

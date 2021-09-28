@@ -21,10 +21,10 @@ public class ProductoTableModel extends DefaultTableModel {
 		lista.add(producto.getStock());
 		lista.add(producto.getFechaString());
 		
-		for (Entry<String, Double> object : producto.getPreciosSet()) {
-			lista.add(object.getValue());
-		}
-		
+//		for (Entry<String, Double> object : producto.getPreciosSet()) {
+//			lista.add(object.getValue());
+//		}
+//		
 		lista.add("Editar");
 		lista.add("Eliminar");
 		

@@ -92,9 +92,9 @@ public class ProductoController {
 		model.addColumn("Descripci\u00F3n");
 		model.addColumn("Stock");
 		model.addColumn("Fecha Vencimiento");
-		for (Lista unaLista : listasDePrecio) {
-			model.addColumn("Precio " + unaLista.getNombre());
-		}
+//		for (Lista unaLista : listasDePrecio) {
+//			model.addColumn("Precio " + unaLista.getNombre());
+//		}
 		int columnCount = productosPanel.getTableProductos().getColumnCount();
 		model.addColumn("");
 		model.addColumn("");
@@ -142,12 +142,12 @@ public class ProductoController {
 
 	private void nuevoProducto() {
 		productoDialog.limpiarCampos();
-		DefaultTableModel model = (DefaultTableModel) productoDialog.getTablePrecios().getModel();
-		Iterable<Lista> findAll = listaDao.findAll();
-		for (Lista lista : findAll) {
-			model.addRow(new Object[] { lista.getNombre(), 0 });
-
-		}
+		//DefaultTableModel model = (DefaultTableModel) productoDialog.getTablePrecios().getModel();
+//		Iterable<Lista> findAll = listaDao.findAll();
+//		for (Lista lista : findAll) {
+//			model.addRow(new Object[] { lista.getNombre(), 0 });
+//
+//		}
 		productoDialog.setVisible(true);
 	}
 

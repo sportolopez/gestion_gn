@@ -34,6 +34,7 @@ public class NumeroVerifier extends InputVerifier {
 			
 			return true;
 		} catch (NumberFormatException e) {
+			System.out.println(e);
 			camposInvalidos.add(campo);
 			return true;
 		}

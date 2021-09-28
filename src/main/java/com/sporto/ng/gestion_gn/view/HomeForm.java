@@ -28,6 +28,7 @@ import lombok.Getter;
 import javax.swing.border.MatteBorder;
 import java.awt.Color;
 import javax.swing.BoxLayout;
+import java.awt.Font;
 
 /**
  *
@@ -54,7 +55,15 @@ public class HomeForm extends javax.swing.JFrame {
 		URL resource = getClass().getClassLoader().getResource("icono.png");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		this.productosPanel = new ProductoPanel(this);
+		productosPanel.getBtnNuevoProducto().setFont(new Font("Dialog", Font.BOLD, 12));
+		productosPanel.getBtnNuevoProducto().setText("NUEVO PRODUCTO");
+		productosPanel.getBtnImportar().setFont(new Font("Dialog", Font.BOLD, 12));
+		productosPanel.getBtnImportar().setText("IMPORTAR PRODUCTOS...");
 		productosPanel.getPanel().setAlignmentY(java.awt.Component.TOP_ALIGNMENT);
+		
+
+		
+		
 		setPreferredSize(new Dimension(Constants.ANCHO, Constants.ALTO));
 		productosPanel.getBtnImportar().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

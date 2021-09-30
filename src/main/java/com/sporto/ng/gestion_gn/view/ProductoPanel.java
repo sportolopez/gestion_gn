@@ -43,7 +43,8 @@ public class ProductoPanel extends JPanel {
 	JTextField textFieldBuscadorProductos;
 	TableRowSorter<ProductoTableModel> sorter;
 	private JPanel panel;
-
+	JButton btnIngresoStock;
+	
 	public void filtrar() {
 		RowFilter<ProductoTableModel, Object> rf = null;
 		try {
@@ -84,12 +85,8 @@ public class ProductoPanel extends JPanel {
 		btnImportar.setFont(Constants.FUENTE);
 		btnImportar.setMnemonic(KeyEvent.VK_I);
 
-		JButton btnIngresoStock = new JButton("INGRESO STOCK");
-		btnIngresoStock.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new MovimientoStock().setVisible(true);
-			}
-		});
+		btnIngresoStock = new JButton("INGRESO STOCK");
+		
 		btnIngresoStock.setFont(new Font("Tahoma", Font.BOLD, 12));
 		panel.add(btnIngresoStock);
 		

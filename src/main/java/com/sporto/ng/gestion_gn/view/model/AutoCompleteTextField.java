@@ -9,6 +9,9 @@ import javax.swing.JFrame;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import com.sporto.ng.gestion_gn.utils.Java2sAutoComboBox;
+import com.sporto.ng.gestion_gn.utils.Java2sAutoTextField;
+
 public class AutoCompleteTextField {
 
     private JFrame frame;

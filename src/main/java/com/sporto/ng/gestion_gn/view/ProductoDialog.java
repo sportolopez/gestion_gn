@@ -1,16 +1,14 @@
 package com.sporto.ng.gestion_gn.view;
 
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -21,14 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.CellEditorListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.MaskFormatter;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Lista;
@@ -39,8 +32,6 @@ import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
 import com.sporto.ng.gestion_gn.view.validations.TextoVerifier;
 
 import lombok.Getter;
-import javax.swing.ListSelectionModel;
-import java.awt.Font;
 
 @Getter
 public class ProductoDialog extends JDialog {
@@ -122,14 +113,7 @@ public class ProductoDialog extends JDialog {
 		lblFechaDeVencimiento.setFont(Constants.FUENTE);
 		panelProductos.add(lblFechaDeVencimiento);
 
-		MaskFormatter mascara;
-		try {
-			mascara = new MaskFormatter("##/##/####");
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
-
-		textFechaVencimiento = new JFormattedTextField(mascara);
+		textFechaVencimiento = new JFormattedTextField(Constants.getMascaraFecha());
 		textFechaVencimiento.setBounds(107, 45, 86, 20);
 		textFechaVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFechaVencimiento.setToolTipText("DD/MM/AAAA");

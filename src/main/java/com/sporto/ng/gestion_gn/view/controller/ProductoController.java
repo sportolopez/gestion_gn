@@ -1,6 +1,7 @@
 package com.sporto.ng.gestion_gn.view.controller;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -34,6 +35,7 @@ import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
 import com.sporto.ng.gestion_gn.view.HomeForm;
+import com.sporto.ng.gestion_gn.view.MovimientoStock;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
 import com.sporto.ng.gestion_gn.view.ProductoPanel;
 import com.sporto.ng.gestion_gn.view.model.ButtonColumn;
@@ -119,30 +121,31 @@ public class ProductoController {
 			productosPanel.getTableProductos().getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
 		}
 
-		new ButtonColumn(productosPanel.getTableProductos(), botonEditar,
-				columnCount).setAction(new AbstractAction() {
-					public void actionPerformed(ActionEvent e) {
-						JTable table = (JTable) e.getSource();
-						int modelRow = Integer.valueOf(e.getActionCommand());
-						Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-						editarProducto(idProducto);
+		new ButtonColumn(productosPanel.getTableProductos(), botonEditar, columnCount).setAction(new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
+				editarProducto(idProducto);
 
-					}
-				});
+			}
+		});
 		;
-		new ButtonColumn(productosPanel.getTableProductos(), botonDelete,
-				columnCount+1).setAction(actionBorrar);
+		new ButtonColumn(productosPanel.getTableProductos(), botonDelete, columnCount + 1).setAction(actionBorrar);
+
+		productosPanel.getBtnIngresoStock().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new MovimientoStock(dao.findAll()).setVisible(true);
+			}
+		});
 
 		cargarListaInicial();
 	}
 
-	private void buscar() {
-		productosPanel.filtrar();
-	}
-
 	private void nuevoProducto() {
 		productoDialog.limpiarCampos();
-		//DefaultTableModel model = (DefaultTableModel) productoDialog.getTablePrecios().getModel();
+		// DefaultTableModel model = (DefaultTableModel)
+		// productoDialog.getTablePrecios().getModel();
 //		Iterable<Lista> findAll = listaDao.findAll();
 //		for (Lista lista : findAll) {
 //			model.addRow(new Object[] { lista.getNombre(), 0 });

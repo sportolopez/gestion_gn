@@ -24,8 +24,8 @@ public class MovimientoStock {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Producto producto;
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	private Producto producto;
 	private Date fecha;
 	private int cantidad;
 	private TipoMovimiento tipoMovimiento;

@@ -254,7 +254,6 @@ public class ProductoDialog extends JDialog {
 		textFieldStock.setText("");
 		textFieldCategoria.setText("");
 		textFieldCosto.setText("");
-		//((DefaultTableModel) tablePrecios.getModel()).setRowCount(0);
 	}
 
 	public boolean validar() {

@@ -7,6 +7,8 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,6 +23,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -29,11 +32,13 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.ListaDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
+import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.MovimientoStock;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
@@ -49,7 +54,7 @@ public class ProductoController {
 	private ProductoDao dao;
 	private ListaDao listaDao;
 	private HomeForm homeForm;
-
+	
 	@Autowired
 	public ProductoController(ProductoDao dao, HomeForm homeForm, ListaDao listaDao) {
 		super();
@@ -135,7 +140,8 @@ public class ProductoController {
 
 		productosPanel.getBtnIngresoStock().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new MovimientoStock(dao.findAll()).setVisible(true);
+				MovimientoStock movimientoStock = new MovimientoStock(dao.findAll());
+				movimientoStock.setVisible(true);
 			}
 		});
 
@@ -164,6 +170,7 @@ public class ProductoController {
 		}
 
 	}
+
 
 	public void editarProducto(Integer idProducto) {
 		Optional<Producto> findById = dao.findById(idProducto);

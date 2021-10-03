@@ -42,7 +42,6 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
-@ToString
 public class Producto {
 
 	@Id
@@ -60,9 +59,9 @@ public class Producto {
 	@Column(columnDefinition = "double default 0")
 	private Double costo;
 
-	@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
+	//@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
 	// @JoinColumn(name = "id_producto")
-	private Set<MovimientoStock> movimientoStock;
+	//private Set<MovimientoStock> movimientoStock;
 
 	public Set<Entry<String, Double>> getPreciosSet() {
 		if (precios != null)
@@ -88,5 +87,9 @@ public class Producto {
 		} else
 			return Constants.FORMATO_FECHA.format(getFechaVencimiento());
 	}
-
+	
+	public String getDescripcionCombo() {
+		return getId() + ": " + getDescripcion();
+	}
+	
 }

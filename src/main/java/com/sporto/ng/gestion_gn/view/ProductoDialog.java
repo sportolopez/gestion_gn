@@ -74,7 +74,7 @@ public class ProductoDialog extends JDialog {
 		if (fechaVencimiento != null)
 			this.textFechaVencimiento.setText(formatoFecha.format(fechaVencimiento));
 		Set<Entry<String, Double>> precios = unProducto.getPreciosSet();
-		//DefaultTableModel model = (DefaultTableModel) tablePrecios.getModel();
+		// DefaultTableModel model = (DefaultTableModel) tablePrecios.getModel();
 //		model.setRowCount(0);
 //
 //		for (Entry<String, Double> unPrecio : precios) {
@@ -82,7 +82,11 @@ public class ProductoDialog extends JDialog {
 //		}
 		textAreaDescripcion.setText(unProducto.getDescripcion());
 		textFieldCategoria.setText(unProducto.getCategoria());
-		textFieldCosto.setText(unProducto.getCosto().toString());
+		if (unProducto.getCosto() == null)
+			textFieldCosto.setText("0");
+		else
+			textFieldCosto.setText(unProducto.getCosto().toString());
+
 	}
 
 	private void initComponents() {
@@ -114,6 +118,7 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(lblFechaDeVencimiento);
 
 		textFechaVencimiento = new JFormattedTextField(Constants.getMascaraFecha());
+		textFechaVencimiento.setEditable(false);
 		textFechaVencimiento.setBounds(107, 45, 86, 20);
 		textFechaVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFechaVencimiento.setToolTipText("DD/MM/AAAA");
@@ -128,13 +133,15 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(lblStock);
 
 		textFieldStock = new JTextField();
+		textFieldStock.setEditable(false);
 		textFieldStock.setBounds(294, 45, 109, 20);
 		textFieldStock.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldStock.setColumns(10);
-		textFieldStock.setFont(Constants.FUENTE);;
+		textFieldStock.setFont(Constants.FUENTE);
+		;
 		panelProductos.add(textFieldStock);
 
-		//tablePrecios = new JTable();
+		// tablePrecios = new JTable();
 //		scrollPane.setViewportView(tablePrecios);
 //		tablePrecios.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Lista", "Precio" }) {
 //			Class[] columnTypes = new Class[] { String.class, Double.class };
@@ -151,22 +158,24 @@ public class ProductoDialog extends JDialog {
 //		});
 //		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
 
-		btnGuardar = new JButton("Guardar");
+		btnGuardar = new JButton("GUARDAR");
+		btnGuardar.setFont(new Font("Tahoma", Font.BOLD, 12));
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnGuardar.setBounds(314, 160, 89, 41);
+		btnGuardar.setBounds(276, 160, 127, 41);
 		panelProductos.add(btnGuardar);
 
-		JButton btnNewButton_1 = new JButton("Cancelar");
-		btnNewButton_1.setBounds(215, 160, 89, 41);
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnCancelar = new JButton("CANCELAR");
+		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnCancelar.setBounds(139, 160, 127, 41);
+		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 			}
 		});
-		panelProductos.add(btnNewButton_1);
+		panelProductos.add(btnCancelar);
 
 		JLabel lblDescripcion = new JLabel("Descripción");
 		lblDescripcion.setBounds(10, 73, 87, 14);
@@ -179,26 +188,27 @@ public class ProductoDialog extends JDialog {
 		textAreaDescripcion.setColumns(10);
 		textAreaDescripcion.setFont(Constants.FUENTE);
 		panelProductos.add(textAreaDescripcion);
-		
+
 		lblCategoria = new JLabel("Categoria");
 		lblCategoria.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCategoria.setBounds(214, 17, 70, 17);
 		lblCategoria.setFont(Constants.FUENTE);
 		panelProductos.add(lblCategoria);
-		
+
 		textFieldCategoria = new JTextField();
 		textFieldCategoria.setColumns(10);
 		textFieldCategoria.setBounds(294, 17, 109, 20);
 		textFieldCategoria.setFont(Constants.FUENTE);
 		panelProductos.add(textFieldCategoria);
-		
+
 		textFieldCosto = new JTextField();
+		textFieldCosto.setEditable(false);
 		textFieldCosto.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCosto.setFont(new Font("Dialog", Font.PLAIN, 12));
 		textFieldCosto.setColumns(10);
 		textFieldCosto.setBounds(107, 98, 86, 20);
 		panelProductos.add(textFieldCosto);
-		
+
 		lblCosto = new JLabel("Costo");
 		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCosto.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -233,11 +243,11 @@ public class ProductoDialog extends JDialog {
 				parse = formatoFecha.parse(textFechaVencimiento.getText());
 			} catch (Exception e) {
 			}
-			Producto build = Producto.builder().fechaVencimiento(parse)
-					.descripcion(textAreaDescripcion.getText()).activo(true)
-					.id(Integer.parseInt(textFieldCodigo.getText())).stock(Integer.parseInt(textFieldStock.getText()))
+			Producto build = Producto.builder().fechaVencimiento(parse).descripcion(textAreaDescripcion.getText())
+					.activo(true).id(Integer.parseInt(textFieldCodigo.getText()))
+					.stock(Integer.parseInt(textFieldStock.getText()))
 					.costo(Double.parseDouble(textFieldCosto.getText()))
-					//.precios(preciosMap)
+					// .precios(preciosMap)
 					.categoria(textFieldCategoria.getText()).build();
 			return build;
 		} catch (Exception e) {

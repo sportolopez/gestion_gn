@@ -3,6 +3,8 @@ package com.sporto.ng.gestion_gn.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,10 +26,11 @@ public class MovimientoStock {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
-//	@ManyToOne(fetch = FetchType.LAZY)
-//	private Producto producto;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Producto producto;
 	private Date fecha;
 	private int cantidad;
+	@Enumerated(EnumType.STRING)
 	private TipoMovimiento tipoMovimiento;
 	private String usuario;
 

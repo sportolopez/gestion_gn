@@ -12,39 +12,34 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.util.Strings;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.dao.MovimientoStockDao;
+import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoComboBox;
-import com.sporto.ng.gestion_gn.view.validations.DoubleVerifier;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
-import com.sporto.ng.gestion_gn.view.validations.TextoVerifier;
 
 public class MovimientoStock extends JDialog {
 	private JTable table;
@@ -54,9 +49,13 @@ public class MovimientoStock extends JDialog {
 	private JButton botonGuardar;
 	private java.util.Set<String> camposInvalidos = new HashSet<String>();
 	List<Producto> listaProductos;
+	MovimientoStockDao movimientoDao;
+	ProductoDao productoDao;
 	
-	public MovimientoStock(List<Producto> listaProductos) {
+	public MovimientoStock(List<Producto> listaProductos, MovimientoStockDao movimientoDao, ProductoDao productoDao) {
 		this.listaProductos = listaProductos;
+		this.movimientoDao = movimientoDao;
+		this.productoDao = productoDao;
 		URL resource = getClass().getClassLoader().getResource("icono.ico");
 		eliminarIcon = new ImageIcon(getClass().getClassLoader().getResource("iconos/Trash-empty-icon.png"));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
@@ -234,12 +233,19 @@ public class MovimientoStock extends JDialog {
 				int parseInt = Integer.parseInt(tableModel.getValueAt(i, 0).toString());
 				Producto unProducto = listaProductos.stream().filter(producto -> producto.getId() == parseInt).findAny().get();
 				Date fechaV = Constants.FORMATO_FECHA.parse((tableModel.getValueAt(i, 3).toString()));
+				if(unProducto.getFechaVencimiento() == null || unProducto.getFechaVencimiento().before(fechaV)) {
+					unProducto.setFechaVencimiento(fechaV);
+					productoDao.save(unProducto);
+				}
 				Integer cantidad = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
-				com.sporto.ng.gestion_gn.model.MovimientoStock movimiento = com.sporto.ng.gestion_gn.model.MovimientoStock.builder().cantidad(cantidad).fecha(fechaV).tipoMovimiento(TipoMovimiento.INGRESO).build();
-				System.out.println(movimiento);
+				com.sporto.ng.gestion_gn.model.MovimientoStock movimiento = com.sporto.ng.gestion_gn.model.MovimientoStock.builder().cantidad(cantidad).fecha(new Date()).tipoMovimiento(TipoMovimiento.INGRESO).producto(unProducto).build();
+				movimientoDao.save(movimiento);
+				
 			}
+			JOptionPane.showMessageDialog(this, "Los movimientos se registraron correctamente");
+			setVisible(false);
 		} catch (NumberFormatException | ParseException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 			
 			

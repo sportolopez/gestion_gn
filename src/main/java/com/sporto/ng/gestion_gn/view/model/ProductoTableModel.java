@@ -3,12 +3,17 @@ package com.sporto.ng.gestion_gn.view.model;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 import com.sporto.ng.gestion_gn.model.Producto;
 
 public class ProductoTableModel extends DefaultTableModel {
 
+	ImageIcon editar = new ImageIcon(getClass().getClassLoader().getResource("iconos/Pencil-icon.png"));
+	ImageIcon eliminarIcon = new ImageIcon(getClass().getClassLoader().getResource("iconos/Trash-empty-icon.png"));
+
+	
 	public ProductoTableModel() {
 
 	}
@@ -21,15 +26,19 @@ public class ProductoTableModel extends DefaultTableModel {
 		lista.add(producto.getStock());
 		lista.add(producto.getFechaString());
 		
-//		for (Entry<String, Double> object : producto.getPreciosSet()) {
-//			lista.add(object.getValue());
-//		}
-//		
-		lista.add("Editar");
-		lista.add("Eliminar");
+		lista.add(editar);
+		lista.add(eliminarIcon);
 		
 		addRow(lista.toArray());
 
+	}
+	
+	public boolean isCellEditable(int row, int col) {
+		if (col < 4) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

@@ -36,8 +36,7 @@ public class NuevoPanel extends JPanel {
 		scrollPaneProductos.setViewportView(tableProductos);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		JLabel lblTituloProductos = new JLabel("Productos");
-		lblTituloProductos.setFont(new Font("Tahoma", Font.BOLD, 20));
+		JLabel lblTituloProductos = new JLabel("PRODUCTOS");
 		lblTituloProductos.setAlignmentX(Component.LEFT_ALIGNMENT);
 		add(lblTituloProductos);
 		add(scrollPaneProductos);

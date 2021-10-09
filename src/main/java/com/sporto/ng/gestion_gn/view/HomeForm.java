@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -19,16 +20,13 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager;
 
 import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 
 import lombok.Getter;
-import javax.swing.border.MatteBorder;
-import java.awt.Color;
-import javax.swing.BoxLayout;
-import java.awt.Font;
 
 /**
  *
@@ -39,7 +37,7 @@ import java.awt.Font;
 @Getter
 public class HomeForm extends javax.swing.JFrame {
 
-	private JPanel panelClientes;
+	private ClientePanel panelClientes;
 	private ProductoPanel productosPanel;
 	private JButton btnNewButton_2;
 	private JButton btnNewButton_3;
@@ -55,7 +53,8 @@ public class HomeForm extends javax.swing.JFrame {
 		URL resource = getClass().getClassLoader().getResource("icono.png");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		this.productosPanel = new ProductoPanel(this);
-		productosPanel.getPanel().setAlignmentY(java.awt.Component.TOP_ALIGNMENT);
+		this.panelClientes = new ClientePanel(this);
+		//productosPanel.getPanel().setAlignmentY(java.awt.Component.TOP_ALIGNMENT);
 		
 		setPreferredSize(new Dimension(Constants.ANCHO, Constants.ALTO));
 		initComponents();
@@ -74,7 +73,7 @@ public class HomeForm extends javax.swing.JFrame {
 		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
 		JLayeredPane layeredPane = new JLayeredPane();
-		btnNewButton_2 = new JButton("Productos");
+		btnNewButton_2 = new JButton("PRODUCTOS");
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();
@@ -83,9 +82,7 @@ public class HomeForm extends javax.swing.JFrame {
 				layeredPane.revalidate();
 			}
 		});
-		btnNewButton_2.setFont(Constants.FUENTE);
-		btnNewButton_3 = new JButton("Clientes");
-		btnNewButton_3.setEnabled(false);
+		btnNewButton_3 = new JButton("CLIENTES");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();
@@ -95,16 +92,16 @@ public class HomeForm extends javax.swing.JFrame {
 			}
 		});
 
-		JButton btnNewButton_3_1 = new JButton("Pedidos");
+		JButton btnNewButton_3_1 = new JButton("PEDIDOS");
 		btnNewButton_3_1.setEnabled(false);
 
-		JButton btnNewButton_3_1_1 = new JButton("Caja");
+		JButton btnNewButton_3_1_1 = new JButton("CAJA");
 		btnNewButton_3_1_1.setEnabled(false);
 
-		JButton btnProveedores = new JButton("Proveedores");
+		JButton btnProveedores = new JButton("PROOVEDORES");
 		btnProveedores.setEnabled(false);
 
-		JButton btnAdmin = new JButton("Admin");
+		JButton btnAdmin = new JButton("ADMIN");
 		btnAdmin.setEnabled(false);
 
 		separator = new JSeparator();
@@ -150,4 +147,14 @@ public class HomeForm extends javax.swing.JFrame {
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
+	
+	public static void setUIFont (javax.swing.plaf.FontUIResource f){
+	    java.util.Enumeration keys = UIManager.getDefaults().keys();
+	    while (keys.hasMoreElements()) {
+	      Object key = keys.nextElement();
+	      Object value = UIManager.get (key);
+	      if (value instanceof javax.swing.plaf.FontUIResource)
+	        UIManager.put (key, f);
+	      }
+	    } 
 }

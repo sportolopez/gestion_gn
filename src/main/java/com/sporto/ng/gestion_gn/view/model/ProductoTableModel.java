@@ -1,7 +1,6 @@
 package com.sporto.ng.gestion_gn.view.model;
 
 import java.util.ArrayList;
-import java.util.Map.Entry;
 
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -15,7 +14,13 @@ public class ProductoTableModel extends DefaultTableModel {
 
 	
 	public ProductoTableModel() {
-
+		addColumn("CÓDIGO");
+		addColumn("CATEGORIA");
+		addColumn("DESCRIPCIÓN");
+		addColumn("STOCK");
+		addColumn("FECHA VENCIMIENTO");
+		addColumn("");
+		addColumn("");
 	}
 
 	public void addProducto(Producto producto) {

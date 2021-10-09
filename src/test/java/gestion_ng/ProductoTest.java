@@ -1,12 +1,9 @@
 package gestion_ng;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -21,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.sporto.ng.gestion_gn.GestionNG;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
-import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
 
@@ -33,19 +29,7 @@ class ProductoTest {
 
 	@Test
 	void test() {
-		Lista build = Lista.builder().nombre("Gremio").build();
-		Map<String, Double> precios = new HashMap<String, Double>();
-		precios.put("CABA", Double.valueOf(200.22));
-		Producto unProducto = Producto.builder().descripcion("prueba").activo(true)
-				.fechaVencimiento(Calendar.getInstance().getTime()).id(1234111).precios(precios).build();
-
-		productoDao.save(unProducto);
-		Iterable<Producto> findAll = productoDao.findAll();
-		for (Producto producto : findAll) {
-			System.out.println(producto);
-			System.out.println(producto.getPrecios().get("CABA"));
-		}
-		assertEquals(1, productoDao.count());
+		productoDao.findAll();
 	}
 
 	@Test
@@ -85,7 +69,7 @@ class ProductoTest {
             	preciosMap.put(listaPecios.get(4), rowProducto.getCell(4).getNumericCellValue());
             }
             
-			builder.precios(preciosMap);
+			//builder.precios(preciosMap);
             
             Producto build = builder.build();
             System.out.println(build);

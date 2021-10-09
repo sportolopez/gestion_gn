@@ -24,7 +24,8 @@ public class FechaVerifier extends InputVerifier {
 		String text = ((JTextField) input).getText();
 		try {
 			Constants.FORMATO_FECHA.setLenient(false);
-			Constants.FORMATO_FECHA.parse(text);
+			if(!text.equals("  /  /    "))
+				Constants.FORMATO_FECHA.parse(text);
 			camposInvalidos.remove(campo);
 
 			return true;

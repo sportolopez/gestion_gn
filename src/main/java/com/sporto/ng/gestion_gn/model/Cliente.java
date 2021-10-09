@@ -1,9 +1,12 @@
 package com.sporto.ng.gestion_gn.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -33,12 +36,12 @@ public class Cliente {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	private String razonSocial;
-	private String nombre;
-	private String apellido;
+	private String cuit;
 	private String mail;
 	private String telefono;
-	private Float limiteDeuda;
+	private Double limiteDeuda;
+	@ManyToOne
+	private Lista listaPrecio;
 	private String domicilio;
-	private String documento;
 
 }

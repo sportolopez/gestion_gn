@@ -1,6 +1,5 @@
 package com.sporto.ng.gestion_gn.view;
 
-import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +23,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.sporto.ng.gestion_gn.config.Constants;
-import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.view.validations.DoubleVerifier;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
@@ -41,8 +39,6 @@ public class ProductoDialog extends JDialog {
 	private JLabel lblCodigoLabel;
 	private JTextField textFieldCodigo;
 	private JTextField textFechaVencimiento;
-	private JLabel lblStock;
-	private JTextField textFieldStock;
 	private JButton btnGuardar;
 	private JTextField textAreaDescripcion;
 	private DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -66,14 +62,16 @@ public class ProductoDialog extends JDialog {
 		configValidations();
 	}
 
-	public void cargarCampos(Producto unProducto, Iterable<Lista> iterable) {
+	public void cargarCampos(Producto unProducto) {
 		this.textFieldCodigo.setText(String.valueOf(unProducto.getId()));
 		textFieldCodigo.setEditable(false);
-		this.textFieldStock.setText(String.valueOf(unProducto.getStock()));
 		Date fechaVencimiento = unProducto.getFechaVencimiento();
 		if (fechaVencimiento != null)
 			this.textFechaVencimiento.setText(formatoFecha.format(fechaVencimiento));
-		Set<Entry<String, Double>> precios = unProducto.getPreciosSet();
+		else 
+			this.textFechaVencimiento.setText("");
+		
+//		Set<Entry<String, Double>> precios = unProducto.getPreciosSet();
 		// DefaultTableModel model = (DefaultTableModel) tablePrecios.getModel();
 //		model.setRowCount(0);
 //
@@ -87,21 +85,26 @@ public class ProductoDialog extends JDialog {
 		else
 			textFieldCosto.setText(unProducto.getCosto().toString());
 
+		
+		textFieldCosto.setVisible(true);
+		lblCosto.setVisible(true);
+		lblFechaDeVencimiento.setVisible(true);
+		textFechaVencimiento.setVisible(true);
+		
 	}
 
 	private void initComponents() {
 		setTitle("Producto");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 429, 261);
+		setBounds(100, 100, 454, 218);
 		panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
 		panelProductos.setLayout(null);
 
-		lblCodigoLabel = new JLabel("Código");
+		lblCodigoLabel = new JLabel("CÓDIGO");
 		lblCodigoLabel.setBounds(31, 17, 66, 14);
 		lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCodigoLabel.setFont(Constants.FUENTE);
 		panelProductos.add(lblCodigoLabel);
 
 		textFieldCodigo = new JTextField();
@@ -111,35 +114,21 @@ public class ProductoDialog extends JDialog {
 		textFieldCodigo.setFont(Constants.FUENTE);
 		panelProductos.add(textFieldCodigo);
 
-		lblFechaDeVencimiento = new JLabel("Vencimiento");
-		lblFechaDeVencimiento.setBounds(10, 45, 87, 14);
+		lblFechaDeVencimiento = new JLabel("VENCIMIENTO");
+		lblFechaDeVencimiento.setVisible(false);
+		lblFechaDeVencimiento.setBounds(10, 81, 87, 14);
 		lblFechaDeVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblFechaDeVencimiento.setFont(Constants.FUENTE);
 		panelProductos.add(lblFechaDeVencimiento);
 
 		textFechaVencimiento = new JFormattedTextField(Constants.getMascaraFecha());
-		textFechaVencimiento.setEditable(false);
-		textFechaVencimiento.setBounds(107, 45, 86, 20);
+		textFechaVencimiento.setVisible(false);
+		textFechaVencimiento.setBounds(107, 78, 86, 20);
 		textFechaVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFechaVencimiento.setToolTipText("DD/MM/AAAA");
 		textFechaVencimiento.setFont(Constants.FUENTE);
 		panelProductos.add(textFechaVencimiento);
 		textFechaVencimiento.setColumns(10);
-
-		lblStock = new JLabel("Stock");
-		lblStock.setBounds(214, 45, 70, 14);
-		lblStock.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblStock.setFont(Constants.FUENTE);
-		panelProductos.add(lblStock);
-
-		textFieldStock = new JTextField();
-		textFieldStock.setEditable(false);
-		textFieldStock.setBounds(294, 45, 109, 20);
-		textFieldStock.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldStock.setColumns(10);
-		textFieldStock.setFont(Constants.FUENTE);
 		;
-		panelProductos.add(textFieldStock);
 
 		// tablePrecios = new JTable();
 //		scrollPane.setViewportView(tablePrecios);
@@ -159,17 +148,11 @@ public class ProductoDialog extends JDialog {
 //		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
 
 		btnGuardar = new JButton("GUARDAR");
-		btnGuardar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnGuardar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnGuardar.setBounds(276, 160, 127, 41);
+		btnGuardar.setBounds(276, 126, 127, 41);
 		panelProductos.add(btnGuardar);
 
 		JButton btnCancelar = new JButton("CANCELAR");
-		btnCancelar.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnCancelar.setBounds(139, 160, 127, 41);
+		btnCancelar.setBounds(139, 126, 127, 41);
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
@@ -177,52 +160,47 @@ public class ProductoDialog extends JDialog {
 		});
 		panelProductos.add(btnCancelar);
 
-		JLabel lblDescripcion = new JLabel("Descripción");
-		lblDescripcion.setBounds(10, 73, 87, 14);
+		JLabel lblDescripcion = new JLabel("DESCRIPCIÓN");
+		lblDescripcion.setBounds(10, 51, 87, 14);
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDescripcion.setFont(Constants.FUENTE);
 		panelProductos.add(lblDescripcion);
 
 		textAreaDescripcion = new JTextField();
-		textAreaDescripcion.setBounds(107, 70, 296, 19);
+		textAreaDescripcion.setBounds(107, 48, 296, 19);
 		textAreaDescripcion.setColumns(10);
-		textAreaDescripcion.setFont(Constants.FUENTE);
 		panelProductos.add(textAreaDescripcion);
 
-		lblCategoria = new JLabel("Categoria");
+		lblCategoria = new JLabel("CATEGORÍA");
 		lblCategoria.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCategoria.setBounds(214, 17, 70, 17);
-		lblCategoria.setFont(Constants.FUENTE);
+		lblCategoria.setBounds(203, 17, 81, 17);
 		panelProductos.add(lblCategoria);
 
 		textFieldCategoria = new JTextField();
 		textFieldCategoria.setColumns(10);
-		textFieldCategoria.setBounds(294, 17, 109, 20);
-		textFieldCategoria.setFont(Constants.FUENTE);
+		textFieldCategoria.setBounds(294, 14, 109, 20);
 		panelProductos.add(textFieldCategoria);
 
 		textFieldCosto = new JTextField();
-		textFieldCosto.setEditable(false);
+		textFieldCosto.setVisible(false);
 		textFieldCosto.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldCosto.setFont(new Font("Dialog", Font.PLAIN, 12));
 		textFieldCosto.setColumns(10);
-		textFieldCosto.setBounds(107, 98, 86, 20);
+		textFieldCosto.setBounds(294, 78, 109, 20);
 		panelProductos.add(textFieldCosto);
 
-		lblCosto = new JLabel("Costo");
+		lblCosto = new JLabel("COSTO");
+		lblCosto.setVisible(false);
 		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCosto.setFont(new Font("Dialog", Font.PLAIN, 12));
-		lblCosto.setBounds(31, 98, 66, 14);
+		lblCosto.setBounds(218, 81, 66, 14);
 		panelProductos.add(lblCosto);
 
 	}
 
 	private void configValidations() {
-		textFechaVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos));
 		textFieldCodigo.setInputVerifier(new NumeroVerifier("Código", camposInvalidos));
-		textFieldStock.setInputVerifier(new NumeroVerifier("Stock", camposInvalidos));
 		textAreaDescripcion.setInputVerifier(new TextoVerifier("Descripción", camposInvalidos));
-		textFieldCosto.setInputVerifier(new DoubleVerifier("Costo", camposInvalidos));
+		textFieldCategoria.setInputVerifier(new TextoVerifier("Categoria", camposInvalidos));
+		textFieldCosto.setInputVerifier(new DoubleVerifier("Costo", camposInvalidos,false));
+		textFechaVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos));
 	}
 
 	public Producto getProducto() {
@@ -240,14 +218,13 @@ public class ProductoDialog extends JDialog {
 
 			Date parse = null;
 			try {
-				parse = formatoFecha.parse(textFechaVencimiento.getText());
+				String text = textFechaVencimiento.getText();
+				parse = formatoFecha.parse(text);
 			} catch (Exception e) {
 			}
 			Producto build = Producto.builder().fechaVencimiento(parse).descripcion(textAreaDescripcion.getText())
 					.activo(true).id(Integer.parseInt(textFieldCodigo.getText()))
-					.stock(Integer.parseInt(textFieldStock.getText()))
 					.costo(Double.parseDouble(textFieldCosto.getText()))
-					// .precios(preciosMap)
 					.categoria(textFieldCategoria.getText()).build();
 			return build;
 		} catch (Exception e) {
@@ -261,13 +238,23 @@ public class ProductoDialog extends JDialog {
 		textFechaVencimiento.setText("");
 		textAreaDescripcion.setText("");
 		textFieldCodigo.setText("");
-		textFieldStock.setText("");
 		textFieldCategoria.setText("");
 		textFieldCosto.setText("");
+		
+		textFieldCosto.setVisible(false);
+		lblCosto.setVisible(false);
+		lblFechaDeVencimiento.setVisible(false);
+		textFechaVencimiento.setVisible(false);
+		
+		camposInvalidos.clear();
 	}
 
 	public boolean validar() {
-
+		textFechaVencimiento.requestFocus();
+		textFieldCategoria.requestFocus();
+		textFieldCosto.requestFocus();
+		textAreaDescripcion.requestFocus();
+		textFieldCodigo.requestFocus();
 		if (camposInvalidos.size() > 0) {
 			JOptionPane.showMessageDialog(new JFrame(), "Campos invalidos:" + camposInvalidos, "Error",
 					JOptionPane.ERROR_MESSAGE);

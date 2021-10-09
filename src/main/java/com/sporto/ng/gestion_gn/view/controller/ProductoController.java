@@ -7,19 +7,14 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -31,12 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
-import com.sporto.ng.gestion_gn.dao.ListaDao;
 import com.sporto.ng.gestion_gn.dao.MovimientoStockDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
-import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
+import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.MovimientoStock;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
@@ -50,16 +44,14 @@ public class ProductoController {
 	private ProductoPanel productosPanel;
 	private ProductoDialog productoDialog;
 	private ProductoDao dao;
-	private ListaDao listaDao;
 	private HomeForm homeForm;
 	
 	@Autowired
-	public ProductoController(ProductoDao dao, HomeForm homeForm, ListaDao listaDao,MovimientoStockDao movimientoDao) {
+	public ProductoController(ProductoDao dao, HomeForm homeForm, MovimientoStockDao movimientoDao) {
 		super();
 		this.dao = dao;
 		this.productoDialog = new ProductoDialog();
 		this.homeForm = homeForm;
-		this.listaDao = listaDao;
 		this.productosPanel = homeForm.getProductosPanel();
 		productoDialog.getBtnGuardar().addActionListener(e -> saveProducto());
 
@@ -97,38 +89,14 @@ public class ProductoController {
 			}
 		});
 
-		DefaultTableModel model = (DefaultTableModel) productosPanel.getTableProductos().getModel();
-		model.getColumnCount();
-		Iterable<Lista> listasDePrecio = listaDao.findAll();
-		model.addColumn("C\u00F3digo");
-		model.addColumn("Categoria");
-		model.addColumn("Descripci\u00F3n");
-		model.addColumn("Stock");
-		model.addColumn("Fecha Vencimiento");
-		int columnCount = productosPanel.getTableProductos().getColumnCount();
-		model.addColumn("");
-		model.addColumn("");
-		productosPanel.getTableProductos().getColumnCount();
-		productosPanel.getTableProductos().getColumnModel().getColumn(0).setMaxWidth(100);
-		productosPanel.getTableProductos().getColumnModel().getColumn(0).setPreferredWidth(50);
-		productosPanel.getTableProductos().getColumnModel().getColumn(1).setMaxWidth(200);
-		productosPanel.getTableProductos().getColumnModel().getColumn(1).setPreferredWidth(130);
-//		productosPanel.getTableProductos().getColumnModel().getColumn(2).setMaxWidth(300);
-//		productosPanel.getTableProductos().getColumnModel().getColumn(2).setPreferredWidth(300);
-		productosPanel.getTableProductos().getColumnModel().getColumn(3).setMaxWidth(100);
-		productosPanel.getTableProductos().getColumnModel().getColumn(3).setPreferredWidth(80);
-		productosPanel.getTableProductos().getColumnModel().getColumn(4).setMaxWidth(200);
-		productosPanel.getTableProductos().getColumnModel().getColumn(4).setPreferredWidth(150);
+		
+		int columnCount = 5;
+
 
 		Action botonDelete = null;
 		Action botonEditar = null;
-		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-		rightRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
-		rightRenderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-		for (int i = 0; i < columnCount; i++) {
-			productosPanel.getTableProductos().getColumnModel().getColumn(i).setCellRenderer(rightRenderer);
-		}
 
+		
 		new ButtonColumn(productosPanel.getTableProductos(), botonEditar, columnCount).setAction(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				JTable table = (JTable) e.getSource();
@@ -143,15 +111,23 @@ public class ProductoController {
 
 		productosPanel.getBtnIngresoStock().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MovimientoStock movimientoStock = new MovimientoStock(dao.findAll(),movimientoDao,dao);
+				MovimientoStock movimientoStock = new MovimientoStock(dao.findAll(),movimientoDao,dao,TipoMovimiento.INGRESO);
 				movimientoStock.setVisible(true);
+				cargarListaInicial();
+			}
+		});
+		productosPanel.getBtnEgresoStock().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MovimientoStock movimientoStock = new MovimientoStock(dao.findAll(),movimientoDao,dao,TipoMovimiento.EGRESO);
+				movimientoStock.setVisible(true);
+				cargarListaInicial();
 			}
 		});
 		cargarListaInicial();
 	}
 
 	private void nuevoProducto() {
-		productoDialog.limpiarCampos();
+		productoDialog.limpiarCampos();;
 		productoDialog.setVisible(true);
 	}
 
@@ -169,7 +145,7 @@ public class ProductoController {
 
 	public void editarProducto(Integer idProducto) {
 		Optional<Producto> findById = dao.findById(idProducto);
-		productoDialog.cargarCampos(findById.get(), listaDao.findAll());
+		productoDialog.cargarCampos(findById.get());
 		productoDialog.setVisible(true);
 
 	}

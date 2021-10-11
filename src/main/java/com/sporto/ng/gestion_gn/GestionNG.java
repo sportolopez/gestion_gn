@@ -1,5 +1,8 @@
 package com.sporto.ng.gestion_gn;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
@@ -19,11 +22,18 @@ import com.sporto.ng.gestion_gn.view.Splash;
 @PropertySource(ignoreResourceNotFound = false, value = "classpath:config.properties")
 public class GestionNG {
 	public static void main(String[] args) {
-		
-		//https://thebadprogrammer.com/swing-uimanager-keys/
-		UIManager.put("Button.font",Constants.FUENTE_BUTTON);
-		UIManager.put("TableHeader.font",Constants.FUENTE_TABLE_HEADER);
-		UIManager.put("Label.font",Constants.FUENTE_LABEL);
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+		    public void uncaughtException(final Thread t, final Throwable e) {
+		    	StringWriter sw = new StringWriter();
+		    	PrintWriter pw = new PrintWriter(sw);
+		    	e.printStackTrace(pw);	
+		    	JOptionPane.showMessageDialog(new Splash(), sw.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+		      }
+		    });
+		// https://thebadprogrammer.com/swing-uimanager-keys/
+		UIManager.put("Button.font", Constants.FUENTE_BUTTON);
+		UIManager.put("TableHeader.font", Constants.FUENTE_TABLE_HEADER);
+		UIManager.put("Label.font", Constants.FUENTE_LABEL);
 		Splash s = new Splash();
 		s.setVisible(true);
 		System.out.println("Inicio");
@@ -32,15 +42,17 @@ public class GestionNG {
 			HomeForm a = context.getBean(HomeForm.class);
 			a.setVisible(true);
 		} catch (BeansException e) {
-			JOptionPane.showMessageDialog(s,
-				    e.getCause().getMessage(),
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
+			StringWriter sw = new StringWriter();
+	    	PrintWriter pw = new PrintWriter(sw);
+	    	e.getCause().printStackTrace(pw);	
+			JOptionPane.showMessageDialog(s,e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			s.setVisible(false);
 			s.dispose();
 		}
-		
+
 		s.setVisible(false);
 	}
+
+
 
 }

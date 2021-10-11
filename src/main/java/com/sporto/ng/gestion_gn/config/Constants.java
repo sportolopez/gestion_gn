@@ -21,7 +21,11 @@ public class Constants {
 	public static int ALTO = 700;
 	public static String VERSION = "20210903.1";
 	
+	public static ImageIcon ICONO_AGREGAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/agregar.png"));
+	public static ImageIcon ICONO_QUITAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/eliminar.png"));
 	public static ImageIcon ICONO_ELIMINAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/Trash-empty-icon.png"));
+	public static ImageIcon ICONO_IMPORTAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-xls-import-24.png"));
+	public static ImageIcon ICONO_EXPORTAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-exportacion-xls-24.png"));
 	
 	public static MaskFormatter getMascaraFecha(){
 		try {

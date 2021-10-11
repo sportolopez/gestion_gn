@@ -47,7 +47,7 @@ public class MovimientoStockTableModel extends DefaultTableModel {
 			if (tipoMovimiento.equals(TipoMovimiento.INGRESO))
 				addRow(new Object[] { idProducto,descripcion, cantidad,vencimiento, Constants.ICONO_ELIMINAR });
 			else
-				addRow(new Object[] { idProducto,descripcion, cantidad * (-1),  Constants.ICONO_ELIMINAR });
+				addRow(new Object[] { idProducto,descripcion, cantidad,  Constants.ICONO_ELIMINAR });
 		}
 		
 		

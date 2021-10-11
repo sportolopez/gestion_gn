@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.SQLDelete;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 
@@ -41,16 +42,18 @@ public class Producto {
 	private String descripcion;
 	private boolean activo;
 	private Date fechaVencimiento;
+	@Column(columnDefinition = "double default 0")
+	private Double costo;
+	@Formula("(select COALESCE(sum(MS.cantidad),0) from movimiento_stock MS where MS.producto_id = id and MS.tipo_movimiento = 'INGRESO')")
+	private Integer ingresos;
+	@Formula("(select COALESCE(sum(MS.cantidad),0) from movimiento_stock MS where MS.producto_id = id and MS.tipo_movimiento = 'EGRESO')")
+	private Integer egresos;
+	
 //	@ElementCollection(fetch = FetchType.EAGER)
 //	@CollectionTable(name = "precio", joinColumns = @JoinColumn(name = "id_producto"))
 //	@MapKeyColumn(name = "lista")
 //	@Column(name = "precio")
 //	private Map<String, Double> precios;
-	@Column(columnDefinition = "double default 0")
-	private Double costo;
-
-	@Formula("(select sum(MS.cantidad) from movimiento_stock MS where MS.producto_id = id)")
-	private Integer stock;
 	//@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
 	// @JoinColumn(name = "id_producto")
 	//private Set<MovimientoStock> movimientoStock;
@@ -72,6 +75,10 @@ public class Producto {
 //		}
 //		return sb.toString();
 //	}
+	
+	public Integer getStock() {
+		return ingresos - egresos;
+	}
 
 	public String getFechaString() {
 		if (fechaVencimiento == null) {

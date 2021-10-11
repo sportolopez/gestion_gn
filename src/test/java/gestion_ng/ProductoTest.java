@@ -60,7 +60,6 @@ class ProductoTest {
             builder.id((int) rowProducto.getCell(0).getNumericCellValue());
             builder.activo(true);
             builder.descripcion( rowProducto.getCell(1).getStringCellValue());
-            builder.stock((int) rowProducto.getCell(2).getNumericCellValue());
             builder.fechaVencimiento( rowProducto.getCell(3).getDateCellValue());
             
             Map<String, Double> preciosMap = new HashMap<String, Double>();

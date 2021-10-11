@@ -96,21 +96,21 @@ public class ProductoPanel extends JPanel {
 		panel = new JPanel();
 		panelBotones.add(panel, BorderLayout.WEST);
 
-		btnNuevoProducto = new JButton("AGREGAR PRODUCTO");
+		btnNuevoProducto = new JButton(Constants.ICONO_AGREGAR);
 		panel.add(btnNuevoProducto);
 		btnNuevoProducto.setMnemonic(KeyEvent.VK_N);
 
-		btnImportar = new JButton("IMPORTAR PRODUCTOS");
+		btnImportar = new JButton(Constants.ICONO_IMPORTAR);
 		panel.add(btnImportar);
 		btnImportar.setMnemonic(KeyEvent.VK_I);
 
 		panel_1 = new JPanel();
 		panelBotones.add(panel_1, BorderLayout.EAST);
 
-		btnIngresoStock = new JButton("INGRESO STOCK");
+		btnIngresoStock = new JButton(Constants.ICONO_AGREGAR);
 		panel_1.add(btnIngresoStock);
 
-		btnEgresoStock = new JButton("EGRESO STOCK");
+		btnEgresoStock = new JButton(Constants.ICONO_QUITAR);
 		panel_1.add(btnEgresoStock);
 
 		lblListadoActual = new JLabel("LISTADO ACTUAL");
@@ -139,7 +139,7 @@ public class ProductoPanel extends JPanel {
 		panel_2 = new JPanel();
 		panelHEaderTabla.add(panel_2, BorderLayout.EAST);
 
-		btnNewButton = new JButton("EXPORTAR");
+		btnNewButton = new JButton(Constants.ICONO_EXPORTAR);
 		panel_2.add(btnNewButton);
 
 		JScrollPane scrollPaneProductos = new JScrollPane();

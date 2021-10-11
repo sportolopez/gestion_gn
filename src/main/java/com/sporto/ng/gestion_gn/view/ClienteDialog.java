@@ -246,7 +246,6 @@ public class ClienteDialog extends JDialog {
 			}
 			Producto build = Producto.builder().fechaVencimiento(parse).descripcion(textFieldDireccion.getText())
 					.activo(true).id(Integer.parseInt(textRazonSocial.getText()))
-					.stock(Integer.parseInt(textFieldTelefono.getText()))
 					.costo(Double.parseDouble(textFieldLimite.getText()))
 					// .precios(preciosMap)
 					.categoria(textFieldCUIT.getText()).build();

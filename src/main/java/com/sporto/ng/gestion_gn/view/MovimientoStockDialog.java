@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
@@ -26,7 +25,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -39,11 +37,10 @@ import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoComboBox;
 import com.sporto.ng.gestion_gn.view.model.MovimientoStockTable;
-import com.sporto.ng.gestion_gn.view.model.MovimientoStockTableModel;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
 
-public class MovimientoStock extends JDialog {
+public class MovimientoStockDialog extends JDialog {
 	private int columnaBorrar = 4;
 	private MovimientoStockTable table;
 	private JTextField textFieldCantidad;
@@ -54,9 +51,10 @@ public class MovimientoStock extends JDialog {
 	List<Producto> listaProductos;
 	MovimientoStockDao movimientoDao;
 	ProductoDao productoDao;
+	private JTextField textFieldStockActual;
 
-	public MovimientoStock(List<Producto> listaProductos, MovimientoStockDao movimientoDao, ProductoDao productoDao,
-			TipoMovimiento tipoMovimiento) {
+	public MovimientoStockDialog(List<Producto> listaProductos, MovimientoStockDao movimientoDao,
+			ProductoDao productoDao, TipoMovimiento tipoMovimiento) {
 		this.listaProductos = listaProductos;
 		this.movimientoDao = movimientoDao;
 		this.productoDao = productoDao;
@@ -85,7 +83,33 @@ public class MovimientoStock extends JDialog {
 		myWords = new ArrayList<>(myWords);
 		myWords.add(0, "");
 		textCodigoProducto = new Java2sAutoComboBox(myWords);
+		textCodigoProducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String idSelected = (String) ((Java2sAutoComboBox) e.getSource()).getSelectedItem();
+					if (Strings.isEmpty(idSelected)) {
+						textFieldStockActual.setText("");
+					} else {
+						Producto unProducto = listaProductos.stream()
+								.filter(producto -> producto.getId() == Integer.parseInt(idSelected.split(":")[0]))
+								.findAny().get();
+						textFieldStockActual.setText(unProducto.getStock().toString());
+					}
+				} catch (Exception e1) {
+					throw new RuntimeException(e1);
+				}
+			}
+		});
+
 		panelAgregar.add(textCodigoProducto);
+
+		JLabel lblNewLabel_3_1 = new JLabel("Stock:");
+		panelAgregar.add(lblNewLabel_3_1);
+
+		textFieldStockActual = new JTextField();
+		textFieldStockActual.setEditable(false);
+		textFieldStockActual.setColumns(8);
+		panelAgregar.add(textFieldStockActual);
 
 		JLabel lblNewLabel_3 = new JLabel("CANTIDAD");
 		panelAgregar.add(lblNewLabel_3);
@@ -121,7 +145,7 @@ public class MovimientoStock extends JDialog {
 		getContentPane().add(scrollPane);
 
 		table = new MovimientoStockTable(tipoMovimiento);
-		
+
 		table.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -165,13 +189,14 @@ public class MovimientoStock extends JDialog {
 				if (Strings.isNotEmpty(selectedItem)) {
 
 					if (validar()) {
-						Integer idProducto = Integer.parseInt(selectedItem.split(":")[0]);
-						Producto unProducto = listaProductos.stream().filter(producto -> producto.getId() == idProducto)
+						Producto unProducto = listaProductos.stream()
+								.filter(producto -> producto.getId() == Integer.parseInt(selectedItem.split(":")[0]))
 								.findAny().get();
 
-						table.registrarMovimiento(tipoMovimiento,
-								unProducto.getId(), unProducto.getDescripcion(),Integer.valueOf(textFieldCantidad.getText()),
-								textFieldVencimiento.getText());
+						// Si es egreso valido que no quede negativo
+
+						table.registrarMovimiento(tipoMovimiento, unProducto,
+								Integer.valueOf(textFieldCantidad.getText()), textFieldVencimiento.getText());
 
 						limpiarCampos();
 					}

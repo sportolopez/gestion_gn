@@ -3,7 +3,10 @@ package com.sporto.ng.gestion_gn.view;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -22,6 +25,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.utils.JTableToExcel;
 import com.sporto.ng.gestion_gn.view.model.ProductoTableModel;
 
 import lombok.Getter;
@@ -53,7 +57,7 @@ public class ProductoPanel extends JPanel {
 	private JPanel panel;
 	private JPanel panel_1;
 	private JPanel panelHEaderTabla;
-	private JButton btnNewButton;
+	private JButton btnExportar;
 	private JPanel panel_2;
 
 	public void filtrar() {
@@ -139,8 +143,21 @@ public class ProductoPanel extends JPanel {
 		panel_2 = new JPanel();
 		panelHEaderTabla.add(panel_2, BorderLayout.EAST);
 
-		btnNewButton = new JButton(Constants.ICONO_EXPORTAR);
-		panel_2.add(btnNewButton);
+		btnExportar = new JButton(Constants.ICONO_EXPORTAR);
+		panel_2.add(btnExportar);
+		
+		btnExportar.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				File file = new File("C:\\Users\\sebap\\OneDrive\\Documents\\prueba4.xls");
+				String heading = "Stock";
+				
+				JTableToExcel.export(file, heading, "", tableProductos);
+
+			}
+		});
 
 		JScrollPane scrollPaneProductos = new JScrollPane();
 		scrollPaneProductos.setAlignmentY(Component.BOTTOM_ALIGNMENT);

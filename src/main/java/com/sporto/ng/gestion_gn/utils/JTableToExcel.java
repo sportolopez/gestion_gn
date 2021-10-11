@@ -35,17 +35,20 @@ public class JTableToExcel {
 			WritableWorkbook workbook = null; // crear libro de trabajo
 
 			if (file.exists()) {// El archivo ya existe
-				workbook = Workbook.createWorkbook(file, Workbook.getWorkbook(file));
-			} else {// el archivo aún no existe
-				workbook = Workbook.createWorkbook(file);
-			}
+				int dialog = JOptionPane.showConfirmDialog(new JDialog(),
+						"El archivo ya existe, ¿Quiere sobreescribirlo?", "Solicitud",
+						JOptionPane.YES_NO_OPTION);
+				if (dialog != JOptionPane.YES_OPTION)
+					return;
+			} 
+			workbook = Workbook.createWorkbook(file);
 			// crear hoja de trabajo
 			WritableSheet sheet = workbook.createSheet(heading, workbook.getNumberOfSheets());
 
 			// Obtenga el número de filas en la tabla (rowNum), el número de columnas
 			// (colNum)
 			int rowNum = table.getRowCount();
-			int colNum = table.getColumnCount();
+			int colNum = table.getColumnCount()-2;
 
 			// completa el título principal
 			fillHeading(sheet, heading, colNum);
@@ -65,14 +68,14 @@ public class JTableToExcel {
 
 			// Exportar cuadro de solicitud de éxito
 			int dialog = JOptionPane.showConfirmDialog(new JDialog(),
-					"¡La tabla estadística se exportó correctamente! ¿Está abierta ahora?", "Solicitud",
+					"¡Se exportó correctamente! ¿Quiere abrirlo ahora?", "Solicitud",
 					JOptionPane.YES_NO_OPTION);
 			if (dialog == JOptionPane.YES_OPTION) {
 				Runtime.getRuntime().exec("cmd /c start \"\" \"" + file + "\"");
 			}
 
 		} catch (FileNotFoundException e) {
-			JOptionPane.showMessageDialog(new JDialog(), "Cerrar la hoja de trabajo antes de importar datos");
+			JOptionPane.showMessageDialog(new JDialog(), "El archivo se encuentra abierto, cerrar para poder continuar.");
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(new JDialog(), "Sin filtrado");
 		}
@@ -115,6 +118,10 @@ public class JTableToExcel {
 		format.setAlignment(Alignment.CENTRE); // Centro de visualización horizontal
 
 		sheet.setColumnView(0, 15); // Establecer el ancho de la columna
+		sheet.setColumnView(1, 20); // Establecer el ancho de la columna
+		sheet.setColumnView(2, 40); // Establecer el ancho de la columna
+		sheet.setColumnView(3, 15); // Establecer el ancho de la columna
+		sheet.setColumnView(4, 20); // Establecer el ancho de la columna
 
 		for (int col = 0; col < colNum; col++) {
 
@@ -134,8 +141,8 @@ public class JTableToExcel {
      */
     private static void fillInscribe(WritableSheet sheet, String inscribe, int rowNum, int colNum) throws WriteException {
     	if( inscribe == null || inscribe.length() < 1 ) {
-    		
-    		     inscribe = "Tiempo de exportación:" + new SimpleDateFormat ("aaaa-MM-dd HH: mm: ss"). format (new Date ());
+    		 
+    		     inscribe = "Fecha y hora: " + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date ());
     	}
     	
         WritableFont font = new WritableFont(WritableFont.ARIAL, 9, WritableFont.NO_BOLD,

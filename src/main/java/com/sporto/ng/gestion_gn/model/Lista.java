@@ -19,4 +19,9 @@ import lombok.Setter;
 public class Lista {
 	@Id
 	private String nombre;
+	
+	@Override
+	public String toString() {
+		return nombre;
+	}
 }

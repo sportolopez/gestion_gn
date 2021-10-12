@@ -1,8 +1,10 @@
 package com.sporto.ng.gestion_gn.view;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,6 +12,7 @@ import java.io.File;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,8 +24,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
+
+import org.apache.commons.io.FilenameUtils;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.utils.JTableToExcel;
@@ -30,10 +38,6 @@ import com.sporto.ng.gestion_gn.view.model.ProductoTableModel;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.awt.Font;
-import javax.swing.JSplitPane;
-import java.awt.BorderLayout;
-import javax.swing.border.SoftBevelBorder;
 
 @Getter
 @Setter
@@ -45,20 +49,13 @@ public class ProductoPanel extends JPanel {
 	private JTable tableProductos;
 	JTextField textFieldBuscadorProductos;
 	TableRowSorter<ProductoTableModel> sorter;
-	private JPanel panelBotones;
 	JButton btnIngresoStock;
 	private JLabel lblListadoActual;
 	JButton btnEgresoStock;
-	private final JLabel lblNewLabel = new JLabel("BUSCAR");
-	private JPanel panelBuscador;
-	private JPanel panelTitulos;
+	private final JLabel lblBuscar = new JLabel("BUSCAR");
 	private JLabel lblTituloProductos_1;
 	private JLabel lblTituloProductos_2;
-	private JPanel panel;
-	private JPanel panel_1;
-	private JPanel panelHEaderTabla;
 	private JButton btnExportar;
-	private JPanel panel_2;
 
 	public void filtrar() {
 		RowFilter<ProductoTableModel, Object> rf = null;
@@ -74,7 +71,7 @@ public class ProductoPanel extends JPanel {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		panelTitulos = new JPanel();
+		JPanel panelTitulos = new JPanel();
 		add(panelTitulos);
 		panelTitulos.setMaximumSize(new Dimension(3500, 50));
 		panelTitulos.setLayout(new BorderLayout(0, 0));
@@ -90,14 +87,14 @@ public class ProductoPanel extends JPanel {
 		lblTituloProductos_2.setAlignmentX(0.5f);
 		panelTitulos.add(lblTituloProductos_2);
 
-		panelBotones = new JPanel();
+		JPanel panelBotones = new JPanel();
 		panelBotones.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelBotones.setMaximumSize(new Dimension(3500, 50));
 		panelBotones.setAlignmentY(Component.TOP_ALIGNMENT);
 		add(panelBotones);
 		panelBotones.setLayout(new BorderLayout(0, 0));
 
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 		panelBotones.add(panel, BorderLayout.WEST);
 
 		btnNuevoProducto = new JButton(Constants.ICONO_AGREGAR);
@@ -108,7 +105,7 @@ public class ProductoPanel extends JPanel {
 		panel.add(btnImportar);
 		btnImportar.setMnemonic(KeyEvent.VK_I);
 
-		panel_1 = new JPanel();
+		JPanel panel_1 = new JPanel();
 		panelBotones.add(panel_1, BorderLayout.EAST);
 
 		btnIngresoStock = new JButton(Constants.ICONO_AGREGAR);
@@ -124,23 +121,23 @@ public class ProductoPanel extends JPanel {
 		lblListadoActual.setFont(Constants.FUENTE_SUB_TITULO);
 		add(lblListadoActual);
 
-		panelHEaderTabla = new JPanel();
+		JPanel panelHEaderTabla = new JPanel();
 		add(panelHEaderTabla);
 		panelHEaderTabla.setLayout(new BorderLayout(50, 50));
-		panelBuscador = new JPanel();
+		JPanel panelBuscador = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panelBuscador.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		flowLayout.setAlignOnBaseline(true);
 		panelBuscador.setMaximumSize(new Dimension(3500, 50));
 		panelBuscador.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		panelHEaderTabla.add(panelBuscador, BorderLayout.WEST);
-		panelBuscador.add(lblNewLabel);
+		panelBuscador.add(lblBuscar);
 
 		textFieldBuscadorProductos = new JTextField();
 		panelBuscador.add(textFieldBuscadorProductos);
 		textFieldBuscadorProductos.setColumns(20);
 
-		panel_2 = new JPanel();
+		JPanel panel_2 = new JPanel();
 		panelHEaderTabla.add(panel_2, BorderLayout.EAST);
 
 		btnExportar = new JButton(Constants.ICONO_EXPORTAR);
@@ -150,12 +147,17 @@ public class ProductoPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				File file = new File("C:\\Users\\sebap\\OneDrive\\Documents\\prueba4.xls");
-				String heading = "Stock";
-				
-				JTableToExcel.export(file, heading, "", tableProductos);
-
+				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+				jfc.setDialogTitle("Guardar como..");
+				jfc.setFileFilter(new FileNameExtensionFilter(".xls", "xls"));
+				if (jfc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
+					File file = jfc.getSelectedFile();
+					if (!FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("xls")) {
+					    file = new File(file.toString() + ".xls");
+					}
+					String heading = "Stock";
+					JTableToExcel.export(file, heading, "", tableProductos);
+				}
 			}
 		});
 

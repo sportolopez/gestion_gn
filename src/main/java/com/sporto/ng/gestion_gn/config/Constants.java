@@ -26,6 +26,8 @@ public class Constants {
 	public static ImageIcon ICONO_ELIMINAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/Trash-empty-icon.png"));
 	public static ImageIcon ICONO_IMPORTAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-xls-import-24.png"));
 	public static ImageIcon ICONO_EXPORTAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-exportacion-xls-24.png"));
+	public static ImageIcon ICONO_EDITAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/Pencil-icon.png"));
+
 	
 	public static MaskFormatter getMascaraFecha(){
 		try {

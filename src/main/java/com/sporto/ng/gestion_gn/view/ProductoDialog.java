@@ -8,8 +8,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -128,24 +126,6 @@ public class ProductoDialog extends JDialog {
 		textFechaVencimiento.setFont(Constants.FUENTE);
 		panelProductos.add(textFechaVencimiento);
 		textFechaVencimiento.setColumns(10);
-		;
-
-		// tablePrecios = new JTable();
-//		scrollPane.setViewportView(tablePrecios);
-//		tablePrecios.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "Lista", "Precio" }) {
-//			Class[] columnTypes = new Class[] { String.class, Double.class };
-//
-//			public Class getColumnClass(int columnIndex) {
-//				return columnTypes[columnIndex];
-//			}
-//
-//			boolean[] columnEditables = new boolean[] { false, true };
-//
-//			public boolean isCellEditable(int row, int column) {
-//				return columnEditables[column];
-//			}
-//		});
-//		tablePrecios.getColumnModel().getColumn(1).setCellEditor(new DoubleEditor());
 
 		btnGuardar = new JButton("GUARDAR");
 		btnGuardar.setBounds(276, 126, 127, 41);

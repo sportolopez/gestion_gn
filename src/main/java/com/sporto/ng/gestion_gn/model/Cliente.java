@@ -1,5 +1,6 @@
 package com.sporto.ng.gestion_gn.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -37,8 +38,9 @@ public class Cliente {
 	private int id;
 	private String razonSocial;
 	private String cuit;
-	private String mail;
+	private String email;
 	private String telefono;
+	@Column(columnDefinition = "double default 0")
 	private Double limiteDeuda;
 	@ManyToOne
 	private Lista listaPrecio;

@@ -4,6 +4,7 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import com.sporto.ng.gestion_gn.config.Constants;
@@ -19,8 +20,8 @@ public class ClienteTable extends JTable {
 		TableRowSorter<ClienteTableModel> sorter = new TableRowSorter<ClienteTableModel>(productoTableModel);
 		setRowSorter(sorter);
 		setModel(productoTableModel);
-		getColumnModel().getColumn(0).setMaxWidth(200);
-		getColumnModel().getColumn(0).setPreferredWidth(150);
+		getColumnModel().getColumn(0).setMaxWidth(40);
+		getColumnModel().getColumn(0).setPreferredWidth(20);
 		getColumnModel().getColumn(1).setMaxWidth(200);
 		getColumnModel().getColumn(1).setPreferredWidth(130);
 		getColumnModel().getColumn(3).setMaxWidth(100);
@@ -32,6 +33,8 @@ public class ClienteTable extends JTable {
 		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		setDefaultRenderer(Object.class, rightRenderer);
 		
+		
+	
 	}
 	
 	public void filtrar(String texto) {
@@ -43,4 +46,6 @@ public class ClienteTable extends JTable {
 		}
 		((TableRowSorter<ClienteTableModel>)getRowSorter()).setRowFilter(rf);
 	}
+	
+	
 }

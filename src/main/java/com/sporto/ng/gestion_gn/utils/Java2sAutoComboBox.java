@@ -1,15 +1,10 @@
 package com.sporto.ng.gestion_gn.utils;
 
-import java.awt.Component;
 import java.awt.event.ItemEvent;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
-import javax.swing.plaf.basic.BasicComboBoxRenderer;
-
-import com.sporto.ng.gestion_gn.model.Producto;
 
 public class Java2sAutoComboBox extends JComboBox {
 

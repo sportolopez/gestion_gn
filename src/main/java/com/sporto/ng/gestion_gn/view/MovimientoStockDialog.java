@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -54,7 +55,8 @@ public class MovimientoStockDialog extends JDialog {
 	private JTextField textFieldStockActual;
 
 	public MovimientoStockDialog(List<Producto> listaProductos, MovimientoStockDao movimientoDao,
-			ProductoDao productoDao, TipoMovimiento tipoMovimiento) {
+			ProductoDao productoDao, TipoMovimiento tipoMovimiento, JFrame owner) {
+		super(owner);
 		this.listaProductos = listaProductos;
 		this.movimientoDao = movimientoDao;
 		this.productoDao = productoDao;

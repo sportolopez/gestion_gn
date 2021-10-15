@@ -27,6 +27,7 @@ public class GestionNG {
 				StringWriter sw = new StringWriter();
 				PrintWriter pw = new PrintWriter(sw);
 				e.printStackTrace(pw);
+				e.printStackTrace();
 				JOptionPane.showMessageDialog(new Splash(), sw.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
@@ -50,6 +51,7 @@ public class GestionNG {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			e.getCause().printStackTrace(pw);
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(s, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			s.setVisible(false);
 			s.dispose();

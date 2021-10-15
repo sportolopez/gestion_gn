@@ -1,14 +1,12 @@
 package com.sporto.ng.gestion_gn.view.controller;
 
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.AbstractAction;
@@ -20,10 +18,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,8 +26,8 @@ import org.springframework.stereotype.Component;
 import com.sporto.ng.gestion_gn.dao.MovimientoStockDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Producto;
-import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
+import com.sporto.ng.gestion_gn.utils.ExcelUtils;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.MovimientoStockDialog;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
@@ -120,7 +114,7 @@ public class ProductoController {
 		productosPanel.getBtnIngresoStock().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MovimientoStockDialog movimientoStock = new MovimientoStockDialog(dao.findAll(), movimientoDao, dao,
-						TipoMovimiento.INGRESO);
+						TipoMovimiento.INGRESO,homeForm);
 				movimientoStock.setVisible(true);
 				cargarListaInicial();
 			}
@@ -128,7 +122,7 @@ public class ProductoController {
 		productosPanel.getBtnEgresoStock().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MovimientoStockDialog movimientoStock = new MovimientoStockDialog(dao.findAll(), movimientoDao, dao,
-						TipoMovimiento.EGRESO);
+						TipoMovimiento.EGRESO,homeForm);
 				movimientoStock.setVisible(true);
 				cargarListaInicial();
 			}
@@ -175,8 +169,16 @@ public class ProductoController {
 		int option = fileChooser.showOpenDialog(homeForm);
 		if (option == JFileChooser.APPROVE_OPTION) {
 			try {
-				int procesarExcel = procesarExcelProductos(fileChooser.getSelectedFile());
-				JOptionPane.showMessageDialog(homeForm, "Se procesaron " + procesarExcel + " registros");
+				List<Producto> productosConError = new ArrayList<Producto>();
+				List<Producto> procesarExcel = ExcelUtils.procesarExcelProductos(fileChooser.getSelectedFile());
+				for (Producto producto : procesarExcel) {
+					try {
+						dao.save(producto);
+					} catch (Exception e) {
+						productosConError.add(producto);
+					}
+				}
+				JOptionPane.showMessageDialog(homeForm, "Se procesaron " + (procesarExcel.size()-productosConError.size()) + " registros correctamente. Con error: "+productosConError.size());
 				cargarListaInicial();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
@@ -184,106 +186,6 @@ public class ProductoController {
 		}
 	}
 
-	private int procesarExcelProductos(File excel) throws IOException {
-		/**
-		 * Diseño del excel: CODIGO CATEGORIA DESCRIPCION COSTO VENCIMIENTO
-		 */
 
-		FileInputStream inputStream = new FileInputStream(excel);
-
-		// TODO: Validar Excel
-
-		Workbook workbook = new XSSFWorkbook(inputStream);
-		org.apache.poi.ss.usermodel.Sheet firstSheet = workbook.getSheetAt(0);
-		Iterator<Row> iterator = firstSheet.iterator();
-		iterator.next();
-
-		Row filaEncabezados = iterator.next();
-		int contador = 0;
-		while (iterator.hasNext()) {
-			Row rowProducto = iterator.next();
-			ProductoBuilder builder = Producto.builder();
-			builder.activo(true);
-			builder.id((int) rowProducto.getCell(0).getNumericCellValue());
-			builder.categoria(rowProducto.getCell(1).getStringCellValue());
-			builder.descripcion(rowProducto.getCell(2).getStringCellValue());
-			Cell cellCosto = rowProducto.getCell(3);
-			if (cellCosto != null)
-				builder.costo(cellCosto.getNumericCellValue());
-
-			Cell cellFecha = rowProducto.getCell(4);
-			if (cellFecha != null) {
-				builder.fechaVencimiento(cellFecha.getDateCellValue());
-			}
-			Producto build = builder.build();
-			dao.save(build);
-			contador++;
-		}
-
-		workbook.close();
-		inputStream.close();
-		return contador;
-	}
-
-	
-//	private int procesarExcel(File excel) throws IOException {
-//		FileInputStream inputStream = new FileInputStream(excel);
-//
-//		// TODO: Validar Excel
-//
-//		Workbook workbook = new XSSFWorkbook(inputStream);
-//		org.apache.poi.ss.usermodel.Sheet firstSheet = workbook.getSheetAt(0);
-//		Iterator<Row> iterator = firstSheet.iterator();
-//		iterator.next();
-//
-//		Map<Integer, String> listaPecios = new HashMap<Integer, String>();
-//
-//		Row filaEncabezados = iterator.next();
-//		for (Cell cell : filaEncabezados) {
-//			if (cell.getStringCellValue().contains("PRECIO")) {
-//				listaPecios.put(cell.getColumnIndex(), cell.getStringCellValue().substring("PRECIO_".length()));
-//			}
-//		}
-//		int contador = 0;
-//		while (iterator.hasNext()) {
-//			Row rowProducto = iterator.next();
-//			ProductoBuilder builder = Producto.builder();
-//			builder.activo(true);
-//			builder.id((int) rowProducto.getCell(0).getNumericCellValue());
-//			builder.categoria(rowProducto.getCell(1).getStringCellValue());
-//			builder.descripcion(rowProducto.getCell(2).getStringCellValue());
-//			Cell cell = rowProducto.getCell(3);
-//			if (cell != null) {
-//				double numericCellValue = cell.getNumericCellValue();
-//				builder.stock((int) numericCellValue);
-//			} else {
-//				builder.stock(0);
-//			}
-//			Cell cellFecha = rowProducto.getCell(4);
-//			if (cellFecha != null) {
-//				builder.fechaVencimiento(cellFecha.getDateCellValue());
-//			}
-//			Map<String, Double> preciosMap = new HashMap<String, Double>();
-//
-//			for (int i = 5; i < (5 + listaPecios.size()); ++i) {
-//				Cell cellPrecio = rowProducto.getCell(i);
-//				if (cellPrecio != null && !Double.isNaN(cellPrecio.getNumericCellValue())) {
-//					preciosMap.put(listaPecios.get(i), cellPrecio.getNumericCellValue());
-//				} else {
-//					preciosMap.put(listaPecios.get(i), (double) 0);
-//				}
-//			}
-//
-//			builder.precios(preciosMap);
-//
-//			Producto build = builder.build();
-//			dao.save(build);
-//			contador++;
-//		}
-//
-//		workbook.close();
-//		inputStream.close();
-//		return contador;
-//	}
 
 }

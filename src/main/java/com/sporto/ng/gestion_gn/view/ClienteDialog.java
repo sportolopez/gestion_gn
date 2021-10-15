@@ -36,7 +36,6 @@ public class ClienteDialog extends JDialog {
 	private JTextField textTelefono;
 	private JButton btnGuardar;
 
-
 	private JTextField textDomicilio;
 	private java.util.Set<String> camposInvalidos = new HashSet<String>();
 	private JTextField textCUIT;
@@ -55,10 +54,9 @@ public class ClienteDialog extends JDialog {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		initComponents();
 		comboBoxLista.setModel(new DefaultComboBoxModel<Lista>(listaPrecios));
-		
+
 		configValidations();
 	}
-
 
 	private void initComponents() {
 		setTitle("Cliente");
@@ -164,7 +162,6 @@ public class ClienteDialog extends JDialog {
 		textRazonSocial.setInputVerifier(new TextoVerifier("Razon Social", camposInvalidos));
 		textLimite.setInputVerifier(new DoubleVerifier("Límite Descubierto", camposInvalidos));
 	}
-	
 
 	public void cargarCampos(Cliente unCliente) {
 		idClienteEditando = unCliente.getId();
@@ -174,19 +171,15 @@ public class ClienteDialog extends JDialog {
 		textCUIT.setText(unCliente.getCuit());
 		textEmail.setText(unCliente.getEmail());
 		comboBoxLista.setSelectedItem(unCliente.getListaPrecio());
-		textLimite.setText(unCliente.getLimiteDeuda().toString());
+		textLimite.setText(String.valueOf(unCliente.getLimiteDeuda()));
 	}
 
 	public Cliente getCliente() {
-		ClienteBuilder cliente = Cliente.builder()
-			.cuit(textCUIT.getText())
-			.domicilio(textDomicilio.getText())
-			.razonSocial(textRazonSocial.getText())
-			.email(textEmail.getText())
-			.telefono(textTelefono.getText())
-			.listaPrecio(Lista.builder().nombre(comboBoxLista.getSelectedItem().toString()).build())
-			.limiteDeuda(Double.valueOf(textLimite.getText()));
-		if(idClienteEditando!=null)
+		ClienteBuilder cliente = Cliente.builder().cuit(textCUIT.getText()).domicilio(textDomicilio.getText())
+				.razonSocial(textRazonSocial.getText()).email(textEmail.getText()).telefono(textTelefono.getText())
+				.listaPrecio(Lista.builder().nombre(comboBoxLista.getSelectedItem().toString()).build())
+				.limiteDeuda(Double.valueOf(textLimite.getText()));
+		if (idClienteEditando != null)
 			cliente.id(idClienteEditando);
 		return cliente.build();
 	}
@@ -211,7 +204,7 @@ public class ClienteDialog extends JDialog {
 		return true;
 
 	}
-	
+
 	public JButton getBtnGuardar() {
 		return btnGuardar;
 	}

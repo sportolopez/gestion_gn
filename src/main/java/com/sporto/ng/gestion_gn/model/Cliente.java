@@ -41,7 +41,7 @@ public class Cliente {
 	private String email;
 	private String telefono;
 	@Column(columnDefinition = "double default 0")
-	private Double limiteDeuda;
+	private double limiteDeuda;
 	@ManyToOne
 	private Lista listaPrecio;
 	private String domicilio;

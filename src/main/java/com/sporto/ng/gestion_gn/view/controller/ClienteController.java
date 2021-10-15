@@ -1,50 +1,94 @@
 package com.sporto.ng.gestion_gn.view.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.ListaDao;
+import com.sporto.ng.gestion_gn.dao.PrecioDao;
 import com.sporto.ng.gestion_gn.model.Lista;
+import com.sporto.ng.gestion_gn.model.Precio;
+import com.sporto.ng.gestion_gn.utils.ExcelUtils;
+import com.sporto.ng.gestion_gn.utils.PrecioExcelExporter;
 import com.sporto.ng.gestion_gn.view.ClienteDialog;
 import com.sporto.ng.gestion_gn.view.ClientePanel;
 import com.sporto.ng.gestion_gn.view.HomeForm;
+import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
 
 @Component
 public class ClienteController {
 
 	ClienteDao clienteDao;
-	ClientePanel panelClientes;
+	ClientePanel clientePanel;
 	ClienteDialog clienteDialog;
+	PrecioDao precioDao;
 
 	@Autowired
-	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm) {
+	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao) {
 		this.clienteDao = clienteDao;
-		this.panelClientes = homeForm.getPanelClientes();
+		this.precioDao = precioDao;
+		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
 
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
-		panelClientes.getBtnExportar().addActionListener(i -> exportarClientes());
-		panelClientes.getBtnNuevoCliente().addActionListener(i -> nuevoCliente());
+		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());
+		clientePanel.getBtnImportar().addActionListener(i -> importarExcel());
+		clientePanel.getBtnNuevoCliente().addActionListener(i -> nuevoCliente());
 		cargarListaInicial();
 
-		panelClientes.getTableClientes().addMouseListener(new java.awt.event.MouseAdapter() {
+		clientePanel.getTableClientes().addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				int row = panelClientes.getTableClientes().rowAtPoint(evt.getPoint());
-				int idCliente = Integer.valueOf(panelClientes.getTableClientes().getValueAt(row, 0).toString());
-				int col = panelClientes.getTableClientes().columnAtPoint(evt.getPoint());
-				editarCliente(listaPrecios, idCliente);
+				int row = clientePanel.getTableClientes().rowAtPoint(evt.getPoint());
+				int idCliente = Integer.valueOf(clientePanel.getTableClientes().getValueAt(row, 0).toString());
+				int col = clientePanel.getTableClientes().columnAtPoint(evt.getPoint());
+				if (col == ClienteTableModel.COLUMN_EDITAR)
+					editarCliente(listaPrecios, idCliente);
+				if (col == ClienteTableModel.COLUMN_EXPORTAR)
+					exportarPrecios(clientePanel.getTableClientes().getValueAt(row, ClienteTableModel.COLUMN_LISTA).toString());
+
 			}
 		});
 	}
 
+	protected void exportarPrecios(String lista) {
+
+		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		jfc.setDialogTitle("Guardar como..");
+		jfc.setFileFilter(new FileNameExtensionFilter(".xlsx", "xlsx"));
+		if (jfc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+			File file = jfc.getSelectedFile();
+			if (!FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("xlsx")) {
+				file = new File(file.toString() + ".xlsx");
+			}
+			String heading = "Clientes";
+			List<Precio> findByLista = precioDao.findByLista(Lista.builder().nombre(lista).build());
+			System.out.println("Lista precios"+ findByLista);
+			PrecioExcelExporter precioExcelExporter = new PrecioExcelExporter(findByLista);
+			try {
+				precioExcelExporter.export(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
 	private void nuevoCliente() {
-		clienteDialog.setVisible(true);
 		clienteDialog.limpiarCampos();
+		clienteDialog.setVisible(true);
 	}
 
 	private void editarCliente(List<Lista> listas, int idCliente) {
@@ -65,7 +109,28 @@ public class ClienteController {
 	}
 
 	public void cargarListaInicial() {
-		panelClientes.cargarLista(clienteDao.findAll());
+		clientePanel.cargarLista(clienteDao.findAll());
+	}
+
+	public void importarExcel() {
+		JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+		fileChooser.setDialogTitle("Abrir");
+		fileChooser.setFileFilter(new FileNameExtensionFilter(".xlsx", "xlsx"));
+		int option = fileChooser.showOpenDialog(clientePanel);
+		if (option == JFileChooser.APPROVE_OPTION) {
+			List<Precio> conError = new ArrayList<Precio>();
+			List<Precio> procesarExcel = ExcelUtils.procesarExcelPrecios(fileChooser.getSelectedFile());
+			for (Precio precio : procesarExcel) {
+				try {
+					precioDao.save(precio);
+				} catch (Exception e) {
+					conError.add(precio);
+				}
+			}
+			JOptionPane.showMessageDialog(clientePanel, "Se procesaron " + (procesarExcel.size() - conError.size())
+					+ " registros correctamente. Con error: " + conError.size());
+			cargarListaInicial();
+		}
 	}
 
 }

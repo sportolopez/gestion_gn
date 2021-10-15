@@ -37,6 +37,9 @@ import com.sporto.ng.gestion_gn.utils.JTableToExcel;
 import com.sporto.ng.gestion_gn.view.model.ClienteTable;
 import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
 
+import lombok.Getter;
+
+@Getter
 public class ClientePanel extends JPanel {
 
 	private JButton btnNuevoCliente;
@@ -44,6 +47,7 @@ public class ClientePanel extends JPanel {
 	private ClienteTable tableClientes;
 	TableRowSorter<ClienteTableModel> sorter;
 	JTextField textFieldBuscador;
+	private JButton btnImportar;
 
 	public ClientePanel(JFrame parent) {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -142,6 +146,11 @@ public class ClientePanel extends JPanel {
 		btnNuevoCliente = new JButton(Constants.ICONO_AGREGAR);
 		panelBotonera.add(btnNuevoCliente);
 		btnNuevoCliente.setMnemonic(KeyEvent.VK_N);
+		
+		btnImportar = new JButton(Constants.ICONO_IMPORTAR);
+		panelBotonera.add(btnImportar);
+		btnImportar.setMnemonic(KeyEvent.VK_I);
+
 
 	}
 

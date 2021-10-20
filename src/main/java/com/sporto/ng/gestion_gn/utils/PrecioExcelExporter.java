@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -88,6 +91,15 @@ public class PrecioExcelExporter {
     }
      
     public void export(File file) throws IOException {
+    	
+		if (file.exists()) {// El archivo ya existe
+			int dialog = JOptionPane.showConfirmDialog(new JDialog(),
+					"El archivo ya existe, ¿Quiere sobreescribirlo?", "Solicitud",
+					JOptionPane.YES_NO_OPTION);
+			if (dialog != JOptionPane.YES_OPTION)
+				return;
+		} 
+		
         writeHeaderLine();
         writeDataLines();
          
@@ -96,5 +108,13 @@ public class PrecioExcelExporter {
         workbook.close();
          
         stream.close();
+        
+		int dialog = JOptionPane.showConfirmDialog(new JDialog(),
+				"¡Se exportó correctamente! ¿Quiere abrirlo ahora?", "Solicitud",
+				JOptionPane.YES_NO_OPTION);
+		if (dialog == JOptionPane.YES_OPTION) {
+			Runtime.getRuntime().exec("cmd /c start \"\" \"" + file + "\"");
+		}
+
     }
 }

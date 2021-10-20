@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -32,6 +33,7 @@ import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.MovimientoStockDialog;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
 import com.sporto.ng.gestion_gn.view.ProductoPanel;
+import com.sporto.ng.gestion_gn.view.Splash;
 import com.sporto.ng.gestion_gn.view.model.ButtonColumn;
 import com.sporto.ng.gestion_gn.view.model.ProductoTableModel;
 
@@ -42,6 +44,7 @@ public class ProductoController {
 	private ProductoDialog productoDialog;
 	private ProductoDao dao;
 	private HomeForm homeForm;
+	private boolean esEdicion = false;
 
 	@Autowired
 	public ProductoController(ProductoDao dao, HomeForm homeForm, MovimientoStockDao movimientoDao) {
@@ -96,10 +99,19 @@ public class ProductoController {
 
 		int columnCount = 5;
 
+		Action botonDetalle = null;
 		Action botonDelete = null;
 		Action botonEditar = null;
+		
+		
+		new ButtonColumn(productosPanel.getTableProductos(), botonDetalle, columnCount).setAction(new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				
 
-		new ButtonColumn(productosPanel.getTableProductos(), botonEditar, columnCount).setAction(new AbstractAction() {
+			}
+		});
+
+		new ButtonColumn(productosPanel.getTableProductos(), botonEditar, columnCount+1).setAction(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				JTable table = (JTable) e.getSource();
 				int modelRow = Integer.valueOf(e.getActionCommand());
@@ -108,8 +120,7 @@ public class ProductoController {
 
 			}
 		});
-		;
-		new ButtonColumn(productosPanel.getTableProductos(), botonDelete, columnCount + 1).setAction(actionBorrar);
+		new ButtonColumn(productosPanel.getTableProductos(), botonDelete, columnCount+2).setAction(actionBorrar);
 
 		productosPanel.getBtnIngresoStock().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -132,8 +143,8 @@ public class ProductoController {
 
 	private void nuevoProducto() {
 		productoDialog.limpiarCampos();
-		;
 		productoDialog.setVisible(true);
+		esEdicion = false;
 	}
 
 	public void cargarListaInicial() {
@@ -150,13 +161,30 @@ public class ProductoController {
 	public void editarProducto(Integer idProducto) {
 		Optional<Producto> findById = dao.findById(idProducto);
 		productoDialog.cargarCampos(findById.get());
+		esEdicion = true;
 		productoDialog.setVisible(true);
 
 	}
 
 	private void saveProducto() {
 		if (productoDialog.validar()) {
-			dao.save(productoDialog.getProducto());
+			Producto producto = productoDialog.getProducto();
+			
+			if(dao.existsById(producto.getId()) && !esEdicion){
+				
+				int dialog = JOptionPane.showConfirmDialog(homeForm,
+						"El producto ya existe, ¿Quiere editarlo?", "Producto existente",
+						JOptionPane.YES_NO_OPTION);
+				if (dialog == JOptionPane.YES_OPTION) {
+					productoDialog.setVisible(false);
+					editarProducto(producto.getId());
+					return;
+				}else {
+					return;
+				}
+			}
+			
+			dao.save(producto);
 			productoDialog.setVisible(false);
 			cargarListaInicial();
 		}

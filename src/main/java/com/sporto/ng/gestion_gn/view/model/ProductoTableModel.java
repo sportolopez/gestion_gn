@@ -15,8 +15,9 @@ public class ProductoTableModel extends DefaultTableModel {
 		addColumn("DESCRIPCIÓN");
 		addColumn("STOCK");
 		addColumn("FECHA VENCIMIENTO");
-		addColumn("");
-		addColumn("");
+		addColumn("DETALLE");
+		addColumn("EDITAR");
+		addColumn("ELIMINAR");
 	}
 
 	public void addProducto(Producto producto) {
@@ -27,6 +28,7 @@ public class ProductoTableModel extends DefaultTableModel {
 		lista.add(producto.getStock());
 		lista.add(producto.getFechaString());
 
+		lista.add(Constants.ICONO_DETALLE);
 		lista.add(Constants.ICONO_EDITAR);
 		lista.add(Constants.ICONO_ELIMINAR);
 

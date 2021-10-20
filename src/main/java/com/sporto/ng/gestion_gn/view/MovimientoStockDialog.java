@@ -3,8 +3,11 @@ package com.sporto.ng.gestion_gn.view;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -15,7 +18,6 @@ import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -30,6 +32,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.util.NumberUtils;
+import org.springframework.util.StringUtils;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.MovimientoStockDao;
@@ -37,9 +41,14 @@ import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoComboBox;
+import com.sporto.ng.gestion_gn.utils.Java2sAutoTextField;
 import com.sporto.ng.gestion_gn.view.model.MovimientoStockTable;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
 
 public class MovimientoStockDialog extends JDialog {
 	private int columnaBorrar = 4;
@@ -57,6 +66,7 @@ public class MovimientoStockDialog extends JDialog {
 	public MovimientoStockDialog(List<Producto> listaProductos, MovimientoStockDao movimientoDao,
 			ProductoDao productoDao, TipoMovimiento tipoMovimiento, JFrame owner) {
 		super(owner);
+		setResizable(false);
 		this.listaProductos = listaProductos;
 		this.movimientoDao = movimientoDao;
 		this.productoDao = productoDao;
@@ -85,18 +95,29 @@ public class MovimientoStockDialog extends JDialog {
 		myWords = new ArrayList<>(myWords);
 		myWords.add(0, "");
 		textCodigoProducto = new Java2sAutoComboBox(myWords);
+		textCodigoProducto.getEditor().getEditorComponent().addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				try {
+					String idSelected = (String) ((Java2sAutoTextField) e.getSource()).getText();
+					precargarStock(listaProductos, idSelected);
+				} catch (Exception e1) {
+					throw new RuntimeException(e1);
+				}
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 		textCodigoProducto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					String idSelected = (String) ((Java2sAutoComboBox) e.getSource()).getSelectedItem();
-					if (Strings.isEmpty(idSelected)) {
-						textFieldStockActual.setText("");
-					} else {
-						Producto unProducto = listaProductos.stream()
-								.filter(producto -> producto.getId() == Integer.parseInt(idSelected.split(":")[0]))
-								.findAny().get();
-						textFieldStockActual.setText(unProducto.getStock().toString());
-					}
+					precargarStock(listaProductos, idSelected);
 				} catch (Exception e1) {
 					throw new RuntimeException(e1);
 				}
@@ -183,6 +204,16 @@ public class MovimientoStockDialog extends JDialog {
 
 	}
 
+	private void precargarStock(List<Producto> listaProductos, String idSelected) {
+		if (Strings.isEmpty(idSelected)) {
+			textFieldStockActual.setText("");
+		} else {
+			Producto unProducto = listaProductos.stream()
+					.filter(producto -> producto.getId() == Integer.parseInt(idSelected.split(":")[0])).findAny().get();
+			textFieldStockActual.setText(unProducto.getStock().toString());
+		}
+	}
+
 	private ActionListener registrarMovimiento(List<Producto> listaProductos, TipoMovimiento tipoMovimiento) {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -223,8 +254,8 @@ public class MovimientoStockDialog extends JDialog {
 	}
 
 	private void configValidations() {
-		textFieldVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos));
-		textFieldCantidad.setInputVerifier(new NumeroVerifier("Cantidad", camposInvalidos));
+		textFieldVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos, true));
+		textFieldCantidad.setInputVerifier(new NumeroVerifier("Cantidad", camposInvalidos, 0, 9999));
 	}
 
 	public boolean validar() {
@@ -242,7 +273,27 @@ public class MovimientoStockDialog extends JDialog {
 
 	public void guardarMovimientos(TipoMovimiento tipoMovimiento) {
 		TableModel tableModel = table.getModel();
-		int nRow = tableModel.getRowCount(), nCol = tableModel.getColumnCount();
+		int nRow = tableModel.getRowCount();
+
+		if (nRow == 0) {
+			JOptionPane.showMessageDialog(this, "Ingrese al menos un movimiento", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		Integer remitoInt = null;
+		if (tipoMovimiento.equals(TipoMovimiento.INGRESO)) {
+			String nroRemito = JOptionPane.showInputDialog(this, "Ingrese el número de remito", "Remito",
+					JOptionPane.QUESTION_MESSAGE);
+			if (nroRemito == null)
+				return;
+			while (!isNumeric(nroRemito)) {
+				nroRemito = JOptionPane.showInputDialog(this, "Ingrese el número de remito", "Remito",
+						JOptionPane.QUESTION_MESSAGE);
+				if (nroRemito == null)
+					return;
+			}
+			remitoInt = Integer.parseInt(nroRemito);
+
+		}
 
 		try {
 			for (int i = 0; i < nRow; i++) {
@@ -260,7 +311,7 @@ public class MovimientoStockDialog extends JDialog {
 				Integer cantidad = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
 				com.sporto.ng.gestion_gn.model.MovimientoStock movimiento = com.sporto.ng.gestion_gn.model.MovimientoStock
 						.builder().cantidad(cantidad).fecha(new Date()).tipoMovimiento(tipoMovimiento)
-						.producto(unProducto).build();
+						.producto(unProducto).remito(remitoInt).build();
 				movimientoDao.save(movimiento);
 
 			}
@@ -270,6 +321,18 @@ public class MovimientoStockDialog extends JDialog {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	public static boolean isNumeric(String strNum) {
+		if (strNum == null) {
+			return false;
+		}
+		try {
+			double d = Integer.parseInt(strNum);
+		} catch (NumberFormatException nfe) {
+			return false;
+		}
+		return true;
 	}
 
 }

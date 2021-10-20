@@ -38,6 +38,7 @@ import com.sporto.ng.gestion_gn.view.model.ClienteTable;
 import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
 
 import lombok.Getter;
+import java.awt.Font;
 
 @Getter
 public class ClientePanel extends JPanel {
@@ -47,17 +48,23 @@ public class ClientePanel extends JPanel {
 	private ClienteTable tableClientes;
 	TableRowSorter<ClienteTableModel> sorter;
 	JTextField textFieldBuscador;
-	private JButton btnImportar;
+	private JButton btnImportarPrecios;
+	
+	JLabel lblTitulo;
 
 	public ClientePanel(JFrame parent) {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		JLabel lblTituloProductos = new JLabel("CLIENTES");
-		lblTituloProductos.setBorder(new EmptyBorder(10, 0, 10, 0));
-		lblTituloProductos.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblTituloProductos.setFont(Constants.FUENTE_TITULO);
-		lblTituloProductos.setBounds(10, 11, 125, 20);
-		this.add(lblTituloProductos);
+		
+		JPanel panel = new JPanel();
+		add(panel);
+		panel.setLayout(new BorderLayout(0, 0));
+		
+		lblTitulo = new JLabel("CLIENTES");
+		lblTitulo.setFont(Constants.FUENTE_TITULO);
+		lblTitulo.setBorder(new EmptyBorder(10, 20, 10, 0));
+		lblTitulo.setAlignmentX(0.5f);
+		panel.add(lblTitulo);
 
 		crearBotonera();
 
@@ -97,7 +104,7 @@ public class ClientePanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-				jfc.setDialogTitle("Guardar como..");
+				jfc.setDialogTitle("Exportar clientes..");
 				jfc.setFileFilter(new FileNameExtensionFilter(".xls", "xls"));
 				if (jfc.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
 					File file = jfc.getSelectedFile();
@@ -147,9 +154,9 @@ public class ClientePanel extends JPanel {
 		panelBotonera.add(btnNuevoCliente);
 		btnNuevoCliente.setMnemonic(KeyEvent.VK_N);
 		
-		btnImportar = new JButton(Constants.ICONO_IMPORTAR);
-		panelBotonera.add(btnImportar);
-		btnImportar.setMnemonic(KeyEvent.VK_I);
+		btnImportarPrecios = new JButton(Constants.ICONO_IMPORTAR);
+		panelBotonera.add(btnImportarPrecios);
+		btnImportarPrecios.setMnemonic(KeyEvent.VK_I);
 
 
 	}
@@ -172,6 +179,18 @@ public class ClientePanel extends JPanel {
 			return;
 		}
 		sorter.setRowFilter(rf);
+	}
+	
+	public void showClientes() {
+		lblTitulo.setText("CLIENTES");
+		btnNuevoCliente.setVisible(true);
+		btnImportarPrecios.setVisible(false);
+	}
+	
+	public void showPrecios() {
+		lblTitulo.setText("PRECIOS");
+		btnNuevoCliente.setVisible(false);
+		btnImportarPrecios.setVisible(true);
 	}
 
 }

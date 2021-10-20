@@ -54,9 +54,14 @@ public class ProductoPanel extends JPanel {
 	JButton btnEgresoStock;
 	private final JLabel lblBuscar = new JLabel("BUSCAR");
 	private JLabel lblTituloProductos_1;
-	private JLabel lblTituloProductos_2;
+	private JLabel lblTitulo;
 	private JButton btnExportar;
-
+	
+	JLabel lblTituloStock;
+	JPanel panelBotoneraStock;
+	JPanel panelBotonesProducto;
+	JPanel panelBotones;
+	
 	public void filtrar() {
 		RowFilter<ProductoTableModel, Object> rf = null;
 		try {
@@ -75,49 +80,50 @@ public class ProductoPanel extends JPanel {
 		add(panelTitulos);
 		panelTitulos.setMaximumSize(new Dimension(3500, 50));
 		panelTitulos.setLayout(new BorderLayout(0, 0));
-		JLabel lblTituloProductos = new JLabel("STOCK");
-		panelTitulos.add(lblTituloProductos, BorderLayout.EAST);
-		lblTituloProductos.setBorder(new EmptyBorder(10, 0, 10, 20));
-		lblTituloProductos.setFont(Constants.FUENTE_TITULO);
-		lblTituloProductos.setBounds(10, 11, 125, 20);
+		lblTituloStock = new JLabel("STOCK");
+		//panelTitulos.add(lblTituloStock, BorderLayout.EAST);
+		lblTituloStock.setBorder(new EmptyBorder(10, 0, 10, 20));
+		lblTituloStock.setFont(Constants.FUENTE_TITULO);
+		lblTituloStock.setBounds(10, 11, 125, 20);
 
-		lblTituloProductos_2 = new JLabel("PRODUCTOS");
-		lblTituloProductos_2.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblTituloProductos_2.setBorder(new EmptyBorder(10, 20, 10, 0));
-		lblTituloProductos_2.setAlignmentX(0.5f);
-		panelTitulos.add(lblTituloProductos_2);
+		lblTitulo = new JLabel("PRODUCTOS");
+		lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblTitulo.setBorder(new EmptyBorder(10, 20, 10, 0));
+		lblTitulo.setAlignmentX(0.5f);
+		panelTitulos.add(lblTitulo);
 
-		JPanel panelBotones = new JPanel();
+		panelBotones = new JPanel();
 		panelBotones.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panelBotones.setMaximumSize(new Dimension(3500, 50));
 		panelBotones.setAlignmentY(Component.TOP_ALIGNMENT);
 		add(panelBotones);
 		panelBotones.setLayout(new BorderLayout(0, 0));
 
-		JPanel panel = new JPanel();
-		panelBotones.add(panel, BorderLayout.WEST);
+		panelBotonesProducto = new JPanel();
+		panelBotones.add(panelBotonesProducto, BorderLayout.WEST);
 
 		btnNuevoProducto = new JButton(Constants.ICONO_AGREGAR);
-		panel.add(btnNuevoProducto);
+		panelBotonesProducto.add(btnNuevoProducto);
 		btnNuevoProducto.setMnemonic(KeyEvent.VK_N);
 
 		btnImportar = new JButton(Constants.ICONO_IMPORTAR);
-		panel.add(btnImportar);
+		panelBotonesProducto.add(btnImportar);
 		btnImportar.setMnemonic(KeyEvent.VK_I);
 
-		JPanel panel_1 = new JPanel();
-		panelBotones.add(panel_1, BorderLayout.EAST);
+		panelBotoneraStock = new JPanel();
+		//panelBotones.add(panelBotoneraStock, BorderLayout.WEST);
 
 		btnIngresoStock = new JButton(Constants.ICONO_AGREGAR);
-		panel_1.add(btnIngresoStock);
+		panelBotoneraStock.add(btnIngresoStock);
 
 		btnEgresoStock = new JButton(Constants.ICONO_QUITAR);
-		panel_1.add(btnEgresoStock);
+		panelBotoneraStock.add(btnEgresoStock);
 
 		lblListadoActual = new JLabel("LISTADO ACTUAL");
 		lblListadoActual.setBorder(new EmptyBorder(10, 0, 10, 0));
-		lblListadoActual.setHorizontalAlignment(SwingConstants.LEFT);
+		lblListadoActual.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListadoActual.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblListadoActual.setMaximumSize(new Dimension(3500, 50));
 		lblListadoActual.setFont(Constants.FUENTE_SUB_TITULO);
 		add(lblListadoActual);
 
@@ -188,6 +194,19 @@ public class ProductoPanel extends JPanel {
 
 		scrollPaneProductos.setViewportView(tableProductos);
 
+	}
+	
+	public void showProductos() {
+		panelBotones.remove(panelBotoneraStock);
+		panelBotones.add(panelBotonesProducto, BorderLayout.WEST);
+		lblTitulo.setText("PRODUCTOS");
+	}
+	
+	public void showStock() {
+		panelBotones.remove(panelBotonesProducto);
+		panelBotones.add(panelBotoneraStock, BorderLayout.WEST);
+		lblTitulo.setText("STOCK");
+		
 	}
 
 }

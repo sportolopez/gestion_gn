@@ -221,8 +221,9 @@ public class ProductoDialog extends JDialog {
 		textFieldCategoria.setText("");
 		textFieldCosto.setText("");
 		
-		textFieldCosto.setVisible(false);
-		lblCosto.setVisible(false);
+		textFieldCosto.setVisible(true);
+		textFieldCosto.setText("0");
+		lblCosto.setVisible(true);
 		lblFechaDeVencimiento.setVisible(false);
 		textFechaVencimiento.setVisible(false);
 		

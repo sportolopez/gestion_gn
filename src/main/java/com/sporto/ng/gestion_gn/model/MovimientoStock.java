@@ -33,5 +33,8 @@ public class MovimientoStock {
 	@Enumerated(EnumType.STRING)
 	private TipoMovimiento tipoMovimiento;
 	private String usuario;
+	
+	private Integer remito;
+
 
 }

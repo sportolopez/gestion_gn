@@ -44,7 +44,7 @@ public class ClienteController {
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
 		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());
-		clientePanel.getBtnImportar().addActionListener(i -> importarExcel());
+		clientePanel.getBtnImportarPrecios().addActionListener(i -> importarExcel());
 		clientePanel.getBtnNuevoCliente().addActionListener(i -> nuevoCliente());
 		cargarListaInicial();
 
@@ -114,7 +114,7 @@ public class ClienteController {
 
 	public void importarExcel() {
 		JFileChooser fileChooser = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-		fileChooser.setDialogTitle("Abrir");
+		fileChooser.setDialogTitle("Importar precios");
 		fileChooser.setFileFilter(new FileNameExtensionFilter(".xlsx", "xlsx"));
 		int option = fileChooser.showOpenDialog(clientePanel);
 		if (option == JFileChooser.APPROVE_OPTION) {

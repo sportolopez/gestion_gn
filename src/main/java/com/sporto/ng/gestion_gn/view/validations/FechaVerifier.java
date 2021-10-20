@@ -11,12 +11,19 @@ import com.sporto.ng.gestion_gn.config.Constants;
 public class FechaVerifier extends InputVerifier {
 
 	private String campo;
-	
 	private java.util.Set<String> camposInvalidos;
-
+	private boolean required;
+	
 	public FechaVerifier(String nombreCampo, java.util.Set<String> camposInvalidos) {
 		this.campo = nombreCampo;
 		this.camposInvalidos = camposInvalidos;
+		required = false;
+	}
+	
+	public FechaVerifier(String nombreCampo, java.util.Set<String> camposInvalidos, boolean obligatorio) {
+		this.campo = nombreCampo;
+		this.camposInvalidos = camposInvalidos;
+		this.required = obligatorio;
 	}
 
 	@Override
@@ -24,7 +31,7 @@ public class FechaVerifier extends InputVerifier {
 		String text = ((JTextField) input).getText();
 		try {
 			Constants.FORMATO_FECHA.setLenient(false);
-			if(!text.equals("  /  /    "))
+			if(required || !text.equals("  /  /    "))
 				Constants.FORMATO_FECHA.parse(text);
 			camposInvalidos.remove(campo);
 

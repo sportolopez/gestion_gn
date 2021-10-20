@@ -76,6 +76,7 @@ public class HomeForm extends javax.swing.JFrame {
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();
+				productosPanel.showProductos();
 				layeredPane.add(productosPanel);
 				layeredPane.repaint();
 				layeredPane.revalidate();
@@ -85,17 +86,34 @@ public class HomeForm extends javax.swing.JFrame {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();
+				panelClientes.showClientes();
 				layeredPane.add(panelClientes);
 				layeredPane.repaint();
 				layeredPane.revalidate();
 			}
 		});
 
-		JButton btnNewButton_3_1 = new JButton("PEDIDOS");
-		btnNewButton_3_1.setEnabled(false);
+		JButton btnStock = new JButton("STOCK");
+		btnStock.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				layeredPane.removeAll();
+				productosPanel.showStock();
+				layeredPane.add(productosPanel);
+				layeredPane.repaint();
+				layeredPane.revalidate();
+			}
+		});
+		JButton btnPrecios = new JButton("PRECIOS");
+		btnPrecios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				layeredPane.removeAll();
+				panelClientes.showPrecios();
+				layeredPane.add(panelClientes);
+				layeredPane.repaint();
+				layeredPane.revalidate();
+			}
+		});
 
-		JButton btnNewButton_3_1_1 = new JButton("CAJA");
-		btnNewButton_3_1_1.setEnabled(false);
 
 		JButton btnProveedores = new JButton("PROOVEDORES");
 		btnProveedores.setEnabled(false);
@@ -119,10 +137,10 @@ public class HomeForm extends javax.swing.JFrame {
 												.addComponent(btnNewButton_3, GroupLayout.PREFERRED_SIZE, 107,
 														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnNewButton_3_1, GroupLayout.PREFERRED_SIZE, 107,
+												.addComponent(btnStock, GroupLayout.PREFERRED_SIZE, 107,
 														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(btnNewButton_3_1_1, GroupLayout.PREFERRED_SIZE, 107,
+												.addComponent(btnPrecios, GroupLayout.PREFERRED_SIZE, 107,
 														GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
 												.addComponent(btnProveedores, GroupLayout.PREFERRED_SIZE, 107,
@@ -133,8 +151,8 @@ public class HomeForm extends javax.swing.JFrame {
 		layout.setVerticalGroup(layout.createParallelGroup(Alignment.LEADING)
 				.addGroup(layout.createSequentialGroup().addContainerGap()
 						.addGroup(layout.createParallelGroup(Alignment.LEADING).addComponent(btnNewButton_2)
-								.addComponent(btnNewButton_3).addComponent(btnNewButton_3_1)
-								.addComponent(btnNewButton_3_1_1).addComponent(btnProveedores).addComponent(btnAdmin))
+								.addComponent(btnNewButton_3).addComponent(btnStock)
+								.addComponent(btnPrecios).addComponent(btnProveedores).addComponent(btnAdmin))
 						.addPreferredGap(ComponentPlacement.RELATED)
 						.addComponent(separator, GroupLayout.PREFERRED_SIZE, 2, GroupLayout.PREFERRED_SIZE).addGap(18)
 						.addComponent(layeredPane, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE).addContainerGap()));

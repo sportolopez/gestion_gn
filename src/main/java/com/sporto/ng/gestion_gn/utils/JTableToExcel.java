@@ -75,8 +75,10 @@ public class JTableToExcel {
 			}
 
 		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(new JDialog(), "El archivo se encuentra abierto, cerrar para poder continuar.");
 		} catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(new JDialog(), "Sin filtrado");
 		}
 	}
@@ -178,7 +180,12 @@ public class JTableToExcel {
 
 			for (int j = 1; j <= rowNum; j++) {// fila
 
-				String str = table.getValueAt(j - 1, i).toString();
+				Object valueAt = table.getValueAt(j - 1, i);
+				String str;
+				if(valueAt == null)
+					str = "";
+				else
+					str = valueAt.toString();
 
 				Label labelN = new Label(i, j + 1, str);
 

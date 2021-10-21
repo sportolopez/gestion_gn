@@ -20,6 +20,8 @@ public class Lista {
 	@Id
 	private String nombre;
 	
+	private String color;
+	
 	@Override
 	public String toString() {
 		return nombre;

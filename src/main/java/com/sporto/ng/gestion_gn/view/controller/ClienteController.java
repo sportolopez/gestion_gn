@@ -14,6 +14,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.ListaDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
@@ -61,6 +62,8 @@ public class ClienteController {
 
 			}
 		});
+		
+		Constants.setListas(listaDao.findAll());
 	}
 
 	protected void exportarPrecios(String lista) {

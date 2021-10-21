@@ -2,6 +2,7 @@ package com.sporto.ng.gestion_gn;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;

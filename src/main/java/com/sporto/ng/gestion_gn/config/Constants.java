@@ -4,9 +4,13 @@ import java.awt.Font;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.text.MaskFormatter;
+
+import com.sporto.ng.gestion_gn.model.Lista;
 
 public class Constants {
 	public static final Font FUENTE_TABLE_HEADER = new Font("Dialog", Font.BOLD, 12);
@@ -29,6 +33,7 @@ public class Constants {
 	public static ImageIcon ICONO_EDITAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/Pencil-icon.png"));
 	public static ImageIcon ICONO_DETALLE = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/eye.png"));
 
+	private static List<Lista> LISTAS;
 	
 	public static MaskFormatter getMascaraFecha(){
 		try {
@@ -36,5 +41,25 @@ public class Constants {
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static String outFecha(Date fecha) {
+		if(fecha == null)
+			return "";
+		
+		return FORMATO_FECHA.format(fecha);
+	}
+	
+	
+	public static void setListas(List<Lista> lista) {
+		LISTAS = lista;
+	}
+	
+	public static Lista getLista(String nombreLista) {
+		for (Lista lista : LISTAS) {
+			if(lista.getNombre().equals(nombreLista))
+				return lista;
+		}
+		return Lista.builder().nombre("-").build();
 	}
 }

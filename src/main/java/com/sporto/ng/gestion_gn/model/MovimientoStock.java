@@ -41,5 +41,4 @@ public class MovimientoStock {
 	private Integer remito;
 
 
-	
 }

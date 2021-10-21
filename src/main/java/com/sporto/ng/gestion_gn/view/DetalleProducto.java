@@ -3,6 +3,7 @@ package com.sporto.ng.gestion_gn.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -14,132 +15,149 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.MovimientoStock;
 import com.sporto.ng.gestion_gn.model.Producto;
+import javax.swing.border.BevelBorder;
 
 public class DetalleProducto extends JDialog {
 	private JTable table;
-	private JTextField textFieldCategoria;
 	private JTextField textFieldCodigo;
-	private JTextField textFieldDescripcion;
+	private JTextField textFieldCategoria;
 	private JTextField textFieldStock;
+	private JTextField textFieldDescripcion;
 	private JTextField textFieldVencimiento;
 	private JTextField textFieldCosto;
 
-	public DetalleProducto(HomeForm homeForm, Producto unProducto,List<MovimientoStock> ingresos) {
+	public DetalleProducto(HomeForm homeForm, Producto unProducto, List<MovimientoStock> ingresos) {
 		super(homeForm);
-		setSize(new Dimension(700, 350));
-		setMinimumSize(new Dimension(600, 300));
+
 		initView();
 		cargarCampos(unProducto);
-		
+
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		for (MovimientoStock movimientoStock : ingresos) {
-			model.addRow(new Object[] { movimientoStock.getRemito(),movimientoStock.getCantidad(), movimientoStock.getFecha(),movimientoStock.getFechaVencimiento() });
+			model.addRow(new Object[] { movimientoStock.getRemito(), movimientoStock.getCantidad(),
+					Constants.outFecha(movimientoStock.getFechaVencimiento()),
+					Constants.outFecha(movimientoStock.getFecha()) });
 		}
-		
+
 	}
 
 	private void cargarCampos(Producto unProducto) {
 		textFieldCategoria.setText(unProducto.getCategoria());
-		textFieldCodigo.setText(unProducto.getCosto().toString());
+		textFieldCodigo.setText(String.valueOf(unProducto.getId()));
 		textFieldDescripcion.setText(unProducto.getDescripcion());
 		textFieldStock.setText(unProducto.getStock().toString());
-		textFieldVencimiento.setText(Constants.FORMATO_FECHA.format(unProducto.getFechaVencimiento()));
+		textFieldVencimiento.setText(Constants.outFecha(unProducto.getFechaVencimiento()));
 		textFieldCosto.setText(unProducto.getCosto().toString());
 	}
 
 	private void initView() {
-		setBounds(100, 100, 500, 350);
+		setSize(new Dimension(800, 500));
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		JPanel panelTitulo = new JPanel();
-		panelTitulo.setMaximumSize(new Dimension(32767, 10000));
 		getContentPane().add(panelTitulo);
 		panelTitulo.setLayout(new BorderLayout(0, 0));
 
 		JLabel lblNewLabel = new JLabel("Detalle Producto");
-		lblNewLabel.setMaximumSize(new Dimension(79, 40));
+		lblNewLabel.setMaximumSize(new Dimension(800, 50));
 		lblNewLabel.setFont(Constants.FUENTE_TITULO);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panelTitulo.add(lblNewLabel);
 
 		JPanel panelDetalle = new JPanel();
+		panelDetalle.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panelDetalle.setMinimumSize(new Dimension(10, 200));
 		getContentPane().add(panelDetalle);
-		panelDetalle.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panelDetalle.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+		JPanel panel1 = new JPanel();
+		panelDetalle.add(panel1);
+		panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
 		JLabel lblCodigoLabel = new JLabel("CÓDIGO");
 		lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelDetalle.add(lblCodigoLabel);
+		panel1.add(lblCodigoLabel);
 
 		textFieldCodigo = new JTextField();
+		textFieldCodigo.setText((String) null);
 		textFieldCodigo.setEditable(false);
-		panelDetalle.add(textFieldCodigo);
 		textFieldCodigo.setColumns(10);
+		panel1.add(textFieldCodigo);
 
 		JLabel lblCategoria = new JLabel("CATEGORÍA");
 		lblCategoria.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelDetalle.add(lblCategoria);
+		panel1.add(lblCategoria);
 
 		textFieldCategoria = new JTextField();
+		textFieldCategoria.setText((String) null);
 		textFieldCategoria.setEditable(false);
-		panelDetalle.add(textFieldCategoria);
 		textFieldCategoria.setColumns(10);
+		panel1.add(textFieldCategoria);
 
 		JLabel lblStock = new JLabel("STOCK");
 		lblStock.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelDetalle.add(lblStock);
+		panel1.add(lblStock);
 
 		textFieldStock = new JTextField();
+		textFieldStock.setText((String) null);
 		textFieldStock.setEditable(false);
 		textFieldStock.setColumns(10);
-		panelDetalle.add(textFieldStock);
+		panel1.add(textFieldStock);
+
+		JPanel panel2 = new JPanel();
+		panelDetalle.add(panel2);
+		panel2.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
 		JLabel lblDescripcion = new JLabel("DESCRIPCIÓN");
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelDetalle.add(lblDescripcion);
+		panel2.add(lblDescripcion);
 
 		textFieldDescripcion = new JTextField();
+		textFieldDescripcion.setText((String) null);
 		textFieldDescripcion.setEditable(false);
-		panelDetalle.add(textFieldDescripcion);
-		textFieldDescripcion.setColumns(10);
+		textFieldDescripcion.setColumns(15);
+		panel2.add(textFieldDescripcion);
 
 		JLabel lblFVencimiento = new JLabel("F. VENCIMIENTO");
 		lblFVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelDetalle.add(lblFVencimiento);
+		panel2.add(lblFVencimiento);
 
 		textFieldVencimiento = new JTextField();
+		textFieldVencimiento.setText((String) null);
 		textFieldVencimiento.setEditable(false);
 		textFieldVencimiento.setColumns(10);
-		panelDetalle.add(textFieldVencimiento);
+		panel2.add(textFieldVencimiento);
 
 		JLabel lblCosto = new JLabel("COSTO");
 		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
-		panelDetalle.add(lblCosto);
+		panel2.add(lblCosto);
 
 		textFieldCosto = new JTextField();
+		textFieldCosto.setText((String) null);
 		textFieldCosto.setEditable(false);
 		textFieldCosto.setColumns(10);
-		panelDetalle.add(textFieldCosto);
-
-		JPanel panelTitulo_1 = new JPanel();
-		panelTitulo_1.setMaximumSize(new Dimension(32767, 10000));
-		getContentPane().add(panelTitulo_1);
-		panelTitulo_1.setLayout(new BorderLayout(0, 0));
+		panel2.add(textFieldCosto);
 
 		JPanel panelMovimientos = new JPanel();
 		getContentPane().add(panelMovimientos);
+		panelMovimientos.setLayout(new BorderLayout(0, 0));
 
 		JTabbedPane tp = new JTabbedPane();
+		tp.setSize(new Dimension(0, 50));
 
 		panelMovimientos.add(tp);
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setSize(new Dimension(0, 50));
 		tp.add("Ingresos", scrollPane);
 		table = new JTable();
-		table.setModel(new DefaultTableModel(new Object[][] { { null, null, null, null }, },
+		table.setSize(new Dimension(0, 50));
+		table.setModel(new DefaultTableModel(new Object[][] {},
 				new String[] { "Nro Remito", "Cantidad", "Fecha Vencimiento", "Fecha Movimiento" }) {
 			Class[] columnTypes = new Class[] { String.class, String.class, Integer.class, Integer.class };
 
@@ -148,6 +166,10 @@ public class DetalleProducto extends JDialog {
 			}
 		});
 		scrollPane.setViewportView(table);
+		
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		table.setDefaultRenderer(Object.class, rightRenderer);
 	}
 
 }

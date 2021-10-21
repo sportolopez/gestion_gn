@@ -33,6 +33,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Cliente;
+import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.utils.JTableToExcel;
 import com.sporto.ng.gestion_gn.view.model.ClienteTable;
 import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
@@ -162,6 +163,7 @@ public class ClientePanel extends JPanel {
 	}
 
 	public void cargarLista(List<Cliente> lista) {
+		
 		ClienteTableModel tableModel = (ClienteTableModel) tableClientes.getModel();
 		tableModel.setRowCount(0);
 

@@ -300,8 +300,9 @@ public class MovimientoStockDialog extends JDialog {
 				int parseInt = Integer.parseInt(tableModel.getValueAt(i, 0).toString());
 				Producto unProducto = listaProductos.stream().filter(producto -> producto.getId() == parseInt).findAny()
 						.get();
+				Date fechaV = null;
 				if (tipoMovimiento.equals(TipoMovimiento.INGRESO)) {
-					Date fechaV = Constants.FORMATO_FECHA.parse((tableModel.getValueAt(i, 3).toString()));
+					fechaV = Constants.FORMATO_FECHA.parse((tableModel.getValueAt(i, 3).toString()));
 					if (unProducto.getFechaVencimiento() == null || unProducto.getFechaVencimiento().before(fechaV)) {
 						unProducto.setFechaVencimiento(fechaV);
 						productoDao.save(unProducto);
@@ -310,7 +311,7 @@ public class MovimientoStockDialog extends JDialog {
 
 				Integer cantidad = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
 				com.sporto.ng.gestion_gn.model.MovimientoStock movimiento = com.sporto.ng.gestion_gn.model.MovimientoStock
-						.builder().cantidad(cantidad).fecha(new Date()).tipoMovimiento(tipoMovimiento)
+						.builder().cantidad(cantidad).fecha(new Date()).tipoMovimiento(tipoMovimiento).fechaVencimiento(fechaV)
 						.producto(unProducto).remito(remitoInt).build();
 				movimientoDao.save(movimiento);
 

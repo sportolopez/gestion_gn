@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -29,11 +28,11 @@ import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.utils.ExcelUtils;
+import com.sporto.ng.gestion_gn.view.DetalleProducto;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.MovimientoStockDialog;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
 import com.sporto.ng.gestion_gn.view.ProductoPanel;
-import com.sporto.ng.gestion_gn.view.Splash;
 import com.sporto.ng.gestion_gn.view.model.ButtonColumn;
 import com.sporto.ng.gestion_gn.view.model.ProductoTableModel;
 
@@ -106,7 +105,13 @@ public class ProductoController {
 		
 		new ButtonColumn(productosPanel.getTableProductos(), botonDetalle, columnCount).setAction(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				JTable table = (JTable) e.getSource();
+				int modelRow = Integer.valueOf(e.getActionCommand());
+				Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
+				Producto findById = dao.findById(idProducto).get();
 				
+				DetalleProducto detalleProducto = new DetalleProducto(homeForm,findById,movimientoDao.findByProducto(findById));
+				detalleProducto.setVisible(true);
 
 			}
 		});

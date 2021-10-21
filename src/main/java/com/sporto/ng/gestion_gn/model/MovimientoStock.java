@@ -12,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -22,6 +24,8 @@ import lombok.ToString;
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
 @ToString
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class MovimientoStock {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +37,9 @@ public class MovimientoStock {
 	@Enumerated(EnumType.STRING)
 	private TipoMovimiento tipoMovimiento;
 	private String usuario;
-	
+	private Date fechaVencimiento;
 	private Integer remito;
 
 
+	
 }

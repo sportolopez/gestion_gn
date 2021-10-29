@@ -45,5 +45,7 @@ public class Cliente {
 	@ManyToOne
 	private Lista listaPrecio;
 	private String domicilio;
+	@Enumerated(EnumType.STRING)
+	private TipoCuenta tipoCuenta;
 
 }

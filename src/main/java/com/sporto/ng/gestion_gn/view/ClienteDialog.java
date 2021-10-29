@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.Cliente.ClienteBuilder;
 import com.sporto.ng.gestion_gn.model.Lista;
+import com.sporto.ng.gestion_gn.model.TipoCuenta;
 import com.sporto.ng.gestion_gn.view.validations.DoubleVerifier;
 import com.sporto.ng.gestion_gn.view.validations.TextoVerifier;
 
@@ -41,6 +42,7 @@ public class ClienteDialog extends JDialog {
 	private JTextField textCUIT;
 	private JTextField textLimite;
 	private JComboBox<Lista> comboBoxLista;
+	private JComboBox<TipoCuenta> comboBoxTipoCuenta;
 
 	/**
 	 * Create the frame.
@@ -68,24 +70,24 @@ public class ClienteDialog extends JDialog {
 		panelProductos.setLayout(null);
 
 		JLabel lblCodigoLabel = new JLabel("RAZÓN SOCIAL");
-		lblCodigoLabel.setBounds(69, 23, 96, 14);
+		lblCodigoLabel.setBounds(47, 25, 96, 14);
 		lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblCodigoLabel);
 
 		textRazonSocial = new JTextField();
-		textRazonSocial.setBounds(175, 20, 116, 20);
+		textRazonSocial.setBounds(153, 22, 116, 20);
 		textRazonSocial.setHorizontalAlignment(SwingConstants.RIGHT);
 		textRazonSocial.setColumns(10);
 		panelProductos.add(textRazonSocial);
 
 		JLabel lblEmail = new JLabel("EMAIL");
-		lblEmail.setBounds(69, 51, 96, 14);
+		lblEmail.setBounds(47, 53, 96, 14);
 		lblEmail.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblEmail);
 
 		textEmail = new JTextField();
 		textEmail.setText("");
-		textEmail.setBounds(175, 48, 116, 20);
+		textEmail.setBounds(153, 50, 116, 20);
 		textEmail.setHorizontalAlignment(SwingConstants.RIGHT);
 		textEmail.setToolTipText("");
 		panelProductos.add(textEmail);
@@ -116,12 +118,12 @@ public class ClienteDialog extends JDialog {
 		panelProductos.add(btnCancelar);
 
 		JLabel lblDescripcion = new JLabel("DIRECCIÓN");
-		lblDescripcion.setBounds(69, 76, 96, 14);
+		lblDescripcion.setBounds(47, 78, 96, 14);
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblDescripcion);
 
 		textDomicilio = new JTextField();
-		textDomicilio.setBounds(175, 73, 302, 19);
+		textDomicilio.setBounds(153, 75, 116, 19);
 		textDomicilio.setColumns(10);
 		panelProductos.add(textDomicilio);
 
@@ -138,23 +140,44 @@ public class ClienteDialog extends JDialog {
 		textLimite = new JTextField();
 		textLimite.setHorizontalAlignment(SwingConstants.RIGHT);
 		textLimite.setColumns(10);
-		textLimite.setBounds(175, 101, 116, 20);
+		textLimite.setBounds(368, 105, 109, 20);
 		textLimite.setText("0");
 		panelProductos.add(textLimite);
 
-		JLabel lblCosto = new JLabel("LÍMITE DESCUBIERTO");
+		JLabel lblCosto = new JLabel("DESCUBIERTO");
 		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCosto.setBounds(23, 104, 142, 14);
+		lblCosto.setBounds(270, 108, 88, 14);
 		panelProductos.add(lblCosto);
 
 		JLabel lblListaDePrecio = new JLabel("LISTA");
 		lblListaDePrecio.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblListaDePrecio.setBounds(299, 103, 56, 14);
+		lblListaDePrecio.setBounds(298, 79, 56, 14);
 		panelProductos.add(lblListaDePrecio);
 
 		comboBoxLista = new JComboBox<Lista>();
-		comboBoxLista.setBounds(368, 100, 109, 22);
+		comboBoxLista.setBounds(367, 76, 109, 22);
 		panelProductos.add(comboBoxLista);
+		
+		comboBoxTipoCuenta = new JComboBox<TipoCuenta>();
+		comboBoxTipoCuenta.setModel(new DefaultComboBoxModel<TipoCuenta>(TipoCuenta.values()));
+		comboBoxTipoCuenta.setBounds(153, 105, 116, 22);
+		comboBoxTipoCuenta.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	TipoCuenta tipoCuentaSeleccionado = (TipoCuenta) comboBoxTipoCuenta.getSelectedItem();
+		    	if(TipoCuenta.EFECTIVO.equals(tipoCuentaSeleccionado)) {
+		    		textLimite.setEditable(false);
+		    	}else {
+		    		textLimite.setEditable(true);
+		    	}
+		    			
+		    }
+		});
+		panelProductos.add(comboBoxTipoCuenta);
+		
+		JLabel lblTipoCuenta = new JLabel("TIPO CUENTA");
+		lblTipoCuenta.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTipoCuenta.setBounds(47, 108, 96, 14);
+		panelProductos.add(lblTipoCuenta);
 
 	}
 
@@ -172,13 +195,14 @@ public class ClienteDialog extends JDialog {
 		textEmail.setText(unCliente.getEmail());
 		comboBoxLista.setSelectedItem(unCliente.getListaPrecio());
 		textLimite.setText(String.valueOf(unCliente.getLimiteDeuda()));
+		comboBoxTipoCuenta.setSelectedItem(unCliente.getTipoCuenta());
 	}
 
 	public Cliente getCliente() {
 		ClienteBuilder cliente = Cliente.builder().cuit(textCUIT.getText()).domicilio(textDomicilio.getText())
 				.razonSocial(textRazonSocial.getText()).email(textEmail.getText()).telefono(textTelefono.getText())
 				.listaPrecio(Lista.builder().nombre(comboBoxLista.getSelectedItem().toString()).build())
-				.limiteDeuda(Double.valueOf(textLimite.getText()));
+				.limiteDeuda(Double.valueOf(textLimite.getText())).tipoCuenta((TipoCuenta) comboBoxTipoCuenta.getSelectedItem());
 		if (idClienteEditando != null)
 			cliente.id(idClienteEditando);
 		return cliente.build();
@@ -191,11 +215,15 @@ public class ClienteDialog extends JDialog {
 		textTelefono.setText("");
 		textCUIT.setText("");
 		textLimite.setText("");
+		comboBoxTipoCuenta.setSelectedItem(TipoCuenta.EFECTIVO);
 		idClienteEditando = null;
 	}
 
 	public boolean validar() {
-
+		textRazonSocial.requestFocus();
+		textLimite.requestFocus();
+		btnGuardar.requestFocus();
+		
 		if (camposInvalidos.size() > 0) {
 			JOptionPane.showMessageDialog(new JFrame(), "Campos invalidos:" + camposInvalidos, "Error",
 					JOptionPane.ERROR_MESSAGE);

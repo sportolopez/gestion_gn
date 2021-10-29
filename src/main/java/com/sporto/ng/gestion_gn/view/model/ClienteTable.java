@@ -32,6 +32,10 @@ public class ClienteTable extends JTable {
 		getColumnModel().getColumn(3).setPreferredWidth(80);
 		getColumnModel().getColumn(4).setMaxWidth(200);
 		getColumnModel().getColumn(4).setPreferredWidth(150);
+		getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMinWidth(0);
+		getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMaxWidth(0);
+		getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setPreferredWidth(0);
+		
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer() {
 			@Override
@@ -43,10 +47,10 @@ public class ClienteTable extends JTable {
 					try {
 						tableCellRendererComponent.setBackground(Color.decode("#"+lista.getColor()));
 					} catch (NumberFormatException e) {
-						tableCellRendererComponent.setBackground(table.getBackground());
+						tableCellRendererComponent.setBackground(Color.white);
 					}
 				} else {
-					tableCellRendererComponent.setBackground(table.getBackground());
+					tableCellRendererComponent.setBackground(Color.white);
 				}
 				return tableCellRendererComponent;
 			}

@@ -11,8 +11,9 @@ import com.sporto.ng.gestion_gn.model.Cliente;
 public class ClienteTableModel extends DefaultTableModel {
 
 	public static final int COLUMN_LISTA = 7;
-	public static final int COLUMN_EXPORTAR = 8;
-	public static final int COLUMN_EDITAR = 9;
+	public static final int COLUMN_PEDIDO = 8;
+	public static final int COLUMN_EXPORTAR = 9;
+	public static final int COLUMN_EDITAR = 10;
 	
 	public ClienteTableModel() {
 		addColumn("ID");
@@ -23,6 +24,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		addColumn("DOMICILIO");
 		addColumn("DESCUBIERTO");
 		addColumn("LISTA");
+		addColumn("PEDIDO");
 		addColumn("PRECIOS");
 		addColumn("EDITAR");
 	}
@@ -37,6 +39,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		lista.add(producto.getDomicilio());
 		lista.add(producto.getLimiteDeuda());
 		lista.add(producto.getListaPrecio());
+		lista.add(Constants.ICONO_PEDIDO);
 		lista.add(Constants.ICONO_EXPORTAR);
 		lista.add(Constants.ICONO_EDITAR);
 		
@@ -46,7 +49,7 @@ public class ClienteTableModel extends DefaultTableModel {
 	
 	@Override
 	public Class getColumnClass(int column) {
-		if (column == COLUMN_EDITAR || column == COLUMN_EXPORTAR)
+		if (column == COLUMN_EDITAR || column == COLUMN_EXPORTAR|| column == COLUMN_PEDIDO)
 			return ImageIcon.class;
 		return Object.class;
 	}

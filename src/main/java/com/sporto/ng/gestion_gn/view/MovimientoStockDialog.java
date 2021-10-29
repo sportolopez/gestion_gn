@@ -294,6 +294,21 @@ public class MovimientoStockDialog extends JDialog {
 			remitoInt = Integer.parseInt(nroRemito);
 
 		}
+		String ordenCompra = null;
+		if (tipoMovimiento.equals(TipoMovimiento.INGRESO)) {
+			String nroIngresado = JOptionPane.showInputDialog(this, "Ingrese la orden de compra", "Orden de compra",
+					JOptionPane.QUESTION_MESSAGE);
+			if (nroIngresado == null)
+				return;
+			while (!Strings.isNotBlank(nroIngresado)) {
+				nroIngresado = JOptionPane.showInputDialog(this, "Ingrese la orden de compra", "Orden de compra",
+						JOptionPane.QUESTION_MESSAGE);
+				if (nroIngresado == null)
+					return;
+			}
+			ordenCompra = (nroIngresado);
+
+		}
 
 		try {
 			for (int i = 0; i < nRow; i++) {
@@ -312,7 +327,7 @@ public class MovimientoStockDialog extends JDialog {
 				Integer cantidad = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
 				com.sporto.ng.gestion_gn.model.MovimientoStock movimiento = com.sporto.ng.gestion_gn.model.MovimientoStock
 						.builder().cantidad(cantidad).fecha(new Date()).tipoMovimiento(tipoMovimiento).fechaVencimiento(fechaV)
-						.producto(unProducto).remito(remitoInt).build();
+						.producto(unProducto).remito(remitoInt).ordenCompra(ordenCompra).build();
 				movimientoDao.save(movimiento);
 
 			}

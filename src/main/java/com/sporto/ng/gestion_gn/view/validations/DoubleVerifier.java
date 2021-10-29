@@ -28,6 +28,12 @@ public class DoubleVerifier extends InputVerifier {
 	@Override
 	public boolean verify(JComponent input) {
 		String text = ((JTextField) input).getText();
+		if(!((JTextField) input).isEditable()) {
+			//Cuenta EFECTIVO
+			camposInvalidos.remove(campo);
+			return true;
+		}
+		
 		if(Strings.isEmpty(text) && obligatorio) {
 			camposInvalidos.add(campo);
 			return true;
@@ -35,7 +41,7 @@ public class DoubleVerifier extends InputVerifier {
 		
 		try {
 			Double value = Double.valueOf(text);
-			boolean b = value >= 0;
+			boolean b = value > 0;
 			if(b) 
 				camposInvalidos.remove(campo);
 			else

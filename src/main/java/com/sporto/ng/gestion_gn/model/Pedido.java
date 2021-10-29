@@ -1,6 +1,5 @@
 package com.sporto.ng.gestion_gn.model;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -31,5 +30,8 @@ public class Pedido {
 	//private Collection<PedidoProductoCantidad> productos;
 	private EstadoPedido estado;
 	private Date fecha;
+	
+	private int descuento;
+	
 
 }

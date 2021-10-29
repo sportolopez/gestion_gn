@@ -32,6 +32,7 @@ public class Constants {
 	public static ImageIcon ICONO_EXPORTAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-exportacion-xls-24.png"));
 	public static ImageIcon ICONO_EDITAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/Pencil-icon.png"));
 	public static ImageIcon ICONO_DETALLE = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/eye.png"));
+	public static ImageIcon ICONO_PEDIDO = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-shopping-cart-24.png"));
 
 	private static List<Lista> LISTAS;
 	

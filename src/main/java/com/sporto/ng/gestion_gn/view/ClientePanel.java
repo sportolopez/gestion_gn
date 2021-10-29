@@ -187,12 +187,20 @@ public class ClientePanel extends JPanel {
 		lblTitulo.setText("CLIENTES");
 		btnNuevoCliente.setVisible(true);
 		btnImportarPrecios.setVisible(false);
+		
+		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMinWidth(0);
+		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMaxWidth(0);
+		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setPreferredWidth(0);
 	}
 	
 	public void showPrecios() {
 		lblTitulo.setText("PRECIOS");
 		btnNuevoCliente.setVisible(false);
 		btnImportarPrecios.setVisible(true);
+		
+		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMinWidth(100);
+		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMaxWidth(100);
+		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setPreferredWidth(100);
 	}
 
 }

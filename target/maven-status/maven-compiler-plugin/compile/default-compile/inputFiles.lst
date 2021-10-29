@@ -18,6 +18,7 @@ C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\Preci
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\dao\MovimientoStockDao.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\TableToExcel.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\ClientePanel.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\DetalleProducto.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\MovimientoStockDialog.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\Lista.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\Java2sAutoComboBox.java
@@ -42,6 +43,6 @@ C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\valida
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\Cliente.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\validations\TextoVerifier.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\dao\PrecioDao.java
-C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\JTableToExcel_xls.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\IconosJTabbedPane.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\StringSearchable.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\Producto.java

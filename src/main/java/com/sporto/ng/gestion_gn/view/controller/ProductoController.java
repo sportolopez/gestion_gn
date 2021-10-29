@@ -28,7 +28,7 @@ import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.utils.ExcelUtils;
-import com.sporto.ng.gestion_gn.view.DetalleProducto;
+import com.sporto.ng.gestion_gn.view.ProductoDetalle;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.MovimientoStockDialog;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
@@ -110,7 +110,7 @@ public class ProductoController {
 				Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
 				Producto findById = dao.findById(idProducto).get();
 				
-				DetalleProducto detalleProducto = new DetalleProducto(homeForm,findById,movimientoDao.findByProducto(findById));
+				ProductoDetalle detalleProducto = new ProductoDetalle(homeForm,findById,movimientoDao.findByProducto(findById));
 				detalleProducto.setVisible(true);
 
 			}

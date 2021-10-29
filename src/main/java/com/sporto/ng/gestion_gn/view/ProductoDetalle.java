@@ -23,7 +23,7 @@ import com.sporto.ng.gestion_gn.model.MovimientoStock;
 import com.sporto.ng.gestion_gn.model.Producto;
 import javax.swing.border.BevelBorder;
 
-public class DetalleProducto extends JDialog {
+public class ProductoDetalle extends JDialog {
 	private JTable table;
 	private JTextField textFieldCodigo;
 	private JTextField textFieldCategoria;
@@ -32,7 +32,7 @@ public class DetalleProducto extends JDialog {
 	private JTextField textFieldVencimiento;
 	private JTextField textFieldCosto;
 
-	public DetalleProducto(HomeForm homeForm, Producto unProducto, List<MovimientoStock> ingresos) {
+	public ProductoDetalle(HomeForm homeForm, Producto unProducto, List<MovimientoStock> ingresos) {
 		super(homeForm);
 
 		initView();

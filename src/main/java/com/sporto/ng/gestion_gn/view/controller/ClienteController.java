@@ -17,7 +17,10 @@ import org.springframework.stereotype.Component;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.ListaDao;
+import com.sporto.ng.gestion_gn.dao.PedidoDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
+import com.sporto.ng.gestion_gn.dao.ProductoDao;
+import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Precio;
 import com.sporto.ng.gestion_gn.utils.ExcelUtils;
@@ -25,6 +28,7 @@ import com.sporto.ng.gestion_gn.utils.PrecioExcelExporter;
 import com.sporto.ng.gestion_gn.view.ClienteDialog;
 import com.sporto.ng.gestion_gn.view.ClientePanel;
 import com.sporto.ng.gestion_gn.view.HomeForm;
+import com.sporto.ng.gestion_gn.view.PedidoDialog;
 import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
 
 @Component
@@ -34,14 +38,17 @@ public class ClienteController {
 	ClientePanel clientePanel;
 	ClienteDialog clienteDialog;
 	PrecioDao precioDao;
+	PedidoDao pedidoDao;
+	private PedidoDialog dialog;
 
 	@Autowired
-	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao) {
+	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao, PedidoDao pedidoDao, ProductoDao productoDao) {
 		this.clienteDao = clienteDao;
 		this.precioDao = precioDao;
+		this.pedidoDao = pedidoDao;
 		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
-
+		dialog = new PedidoDialog(productoDao.findAll(),pedidoDao,homeForm,precioDao);
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
 		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());
@@ -55,17 +62,27 @@ public class ClienteController {
 				int row = clientePanel.getTableClientes().rowAtPoint(evt.getPoint());
 				int idCliente = Integer.valueOf(clientePanel.getTableClientes().getValueAt(row, 0).toString());
 				int col = clientePanel.getTableClientes().columnAtPoint(evt.getPoint());
+				if (col == ClienteTableModel.COLUMN_PEDIDO)
+					nuevoPedido(idCliente);
 				if (col == ClienteTableModel.COLUMN_EDITAR)
 					editarCliente(listaPrecios, idCliente);
 				if (col == ClienteTableModel.COLUMN_EXPORTAR)
 					exportarPrecios(clientePanel.getTableClientes().getValueAt(row, ClienteTableModel.COLUMN_LISTA).toString());
 
 			}
+
+
 		});
 		
 		Constants.setListas(listaDao.findAll());
 	}
-
+	
+	private void nuevoPedido(int idCliente) {
+		Cliente cliente = clienteDao.findById(idCliente).get();
+		dialog.nuevoPedido(cliente);
+		
+		
+	}
 	protected void exportarPrecios(String lista) {
 
 		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());

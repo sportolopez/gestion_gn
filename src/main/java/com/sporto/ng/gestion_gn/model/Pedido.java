@@ -1,12 +1,17 @@
 package com.sporto.ng.gestion_gn.model;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,11 +32,21 @@ public class Pedido {
 	private int id;
 	@ManyToOne
 	private Cliente cliente;
-	//private Collection<PedidoProductoCantidad> productos;
+	
+//	@ManyToMany
+//	@JoinTable(
+//	  name = "course_like", 
+//	  joinColumns = @JoinColumn(name = "student_id"), 
+//	  inverseJoinColumns = @JoinColumn(name = "course_id"))
+//	@ManyToMany
+//	private Collection<PedidoProducto> productos;
+//    @OneToMany()
+//    @JoinColumn(name = "pedido")
+//    private Collection<PedidoProducto> productos;
+//    
+    
+	@Enumerated(EnumType.STRING)
 	private EstadoPedido estado;
 	private Date fecha;
-	
-	private int descuento;
-	
 
 }

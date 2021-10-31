@@ -79,4 +79,19 @@ class ProductoTest {
         workbook.close();
         inputStream.close();
     }
+	
+	@Test
+	void testCalculoDescuento() {
+		
+		String descuento = "5 %";
+		
+		double precio = 100;
+		
+		int descuentoParsed = Integer.parseInt(descuento.substring(0, 1));
+		
+		System.out.println(precio - precio*descuentoParsed/100);
+		
+		
+	}
+
 }

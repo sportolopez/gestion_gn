@@ -18,6 +18,7 @@ import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.ListaDao;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
+import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Cliente;
@@ -42,13 +43,13 @@ public class ClienteController {
 	private PedidoDialog dialog;
 
 	@Autowired
-	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao, PedidoDao pedidoDao, ProductoDao productoDao) {
+	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao, PedidoDao pedidoDao, ProductoDao productoDao, PedidoProductoDao pedidoProductoDao) {
 		this.clienteDao = clienteDao;
 		this.precioDao = precioDao;
 		this.pedidoDao = pedidoDao;
 		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
-		dialog = new PedidoDialog(productoDao.findAll(),pedidoDao,homeForm,precioDao);
+		dialog = new PedidoDialog(productoDao,pedidoDao,homeForm,precioDao,pedidoProductoDao);
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
 		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());

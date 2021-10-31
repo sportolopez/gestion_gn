@@ -34,7 +34,7 @@ public class ExcelUtils {
 		org.apache.poi.ss.usermodel.Sheet firstSheet = workbook.getSheetAt(0);
 		Iterator<Row> iterator = firstSheet.iterator();
 		iterator.next();
-
+		iterator.next();
 		List<Producto> productos = new ArrayList<Producto>();
 		while (iterator.hasNext()) {
 			Row rowProducto = iterator.next();

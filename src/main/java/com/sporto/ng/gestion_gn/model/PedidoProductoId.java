@@ -20,9 +20,9 @@ import lombok.Setter;
 @Getter
 @EqualsAndHashCode
 @Builder
-public class PrecioId implements Serializable {
+public class PedidoProductoId implements Serializable {
 	
-	private String lista;
+	private Integer pedido;
 
 	private Integer producto;
 }

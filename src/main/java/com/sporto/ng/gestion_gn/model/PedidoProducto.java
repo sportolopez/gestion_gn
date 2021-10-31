@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import lombok.AccessLevel;
@@ -19,14 +21,19 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
+@IdClass(PedidoProductoId.class)
 public class PedidoProducto implements Serializable {
 
 	@Id
 	@ManyToOne
 	private Pedido pedido;
-	private int cantidad;
 	@Id
 	@ManyToOne
 	private Producto producto;
+
+	private double precio;
+	private String descuento;
+	private int cantidad;
+	
 
 }

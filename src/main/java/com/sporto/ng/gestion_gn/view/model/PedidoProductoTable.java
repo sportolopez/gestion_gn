@@ -30,24 +30,31 @@ public class PedidoProductoTable extends JTable {
 		setRowSorter(tableRowSorter);
 	}
 
-	public void registrarMovimiento(Producto unProducto, int cantidad, Double precio) {
+	public void registrarMovimiento(Producto unProducto, int cantidad, Double precio,String descuento) {
 
 		final int COLUMNA_CANTIDAD = 2;
-
+		final int COLUMNA_DESCUENTO = 4;
+		final int COLUMNA_PRECIO = 3;
+		final int COLUMNA_SUBTOTAL = 5;
 		PedidoProductoTableModel model = (PedidoProductoTableModel) getModel();
 
 		Integer indexProducto = getIndexProducto(unProducto.getId());
 		if (indexProducto != null) {
 			Integer cantidadEnTabla = (Integer) getValueAt(indexProducto, COLUMNA_CANTIDAD);
+			double precioEnTabla = (double) getValueAt(indexProducto, COLUMNA_PRECIO);
+			
 			int nuevaCantidad = cantidadEnTabla + cantidad;
 
+			double nuevoSubtotal = model.calcularSubtotal(precioEnTabla, descuento,nuevaCantidad);
+			
 			if (unProducto.getStock() - nuevaCantidad < 0) {
 				JOptionPane.showMessageDialog(new JFrame(), "No puede registar un stock negativo", "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-
 			setValueAt(nuevaCantidad, indexProducto, COLUMNA_CANTIDAD);
+			setValueAt(descuento, indexProducto, COLUMNA_DESCUENTO);
+			setValueAt(nuevoSubtotal, indexProducto, COLUMNA_SUBTOTAL);
 
 		} else {
 
@@ -56,7 +63,7 @@ public class PedidoProductoTable extends JTable {
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			model.add(unProducto.getId(), unProducto.getDescripcion(), cantidad,precio);
+			model.add(unProducto.getId(), unProducto.getDescripcion(), cantidad,precio,descuento);
 		}
 
 	}

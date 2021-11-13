@@ -1,6 +1,5 @@
 package com.sporto.ng.gestion_gn.model;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -9,9 +8,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Formula;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ import lombok.Setter;
 @Builder(toBuilder = true)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@Setter(value = AccessLevel.PACKAGE)
+@Setter
 @Getter
 public class Pedido {
 	@Id
@@ -45,6 +44,10 @@ public class Pedido {
 //    private Collection<PedidoProducto> productos;
 //    
     
+	@Formula("(select sum(pp.precio * pp.cantidad * (1-SUBSTRING(pp.descuento,1,1)/100)) from pedido_producto pp where pp.pedido_id = id)")
+	private Double monto;
+	
+	
 	@Enumerated(EnumType.STRING)
 	private EstadoPedido estado;
 	private Date fecha;

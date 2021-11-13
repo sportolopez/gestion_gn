@@ -9,12 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Formula;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * razón social nombre, apellido, mail, teléfono, límite de deuda (un flag que
@@ -32,6 +35,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
+@ToString
 public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,5 +51,13 @@ public class Cliente {
 	private String domicilio;
 	@Enumerated(EnumType.STRING)
 	private TipoCuenta tipoCuenta;
+	
+	@Formula("( select coalesce(sum(mc.monto),0) from movimiento_caja mc where mc.cliente_id = id and mc.tipo_movimiento = 'INGRESO')")
+	private Double ingreso;
+	@Formula("(select coalesce(sum(pp.precio * pp.cantidad * (1-SUBSTRING(pp.descuento,1,1)/100)),0) from pedido_producto pp, pedido p where pp.pedido_id = p.id and p.cliente_id = id and (p.estado = 'LIBERADO' or p.estado = 'ENTREGADO'))")
+	private Double egreso;
 
+	public Double getSaldo() {
+		return ingreso - egreso;
+	}
 }

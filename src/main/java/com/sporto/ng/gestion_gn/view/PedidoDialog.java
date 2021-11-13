@@ -2,12 +2,19 @@ package com.sporto.ng.gestion_gn.view;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -28,6 +35,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTable.PrintMode;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -50,12 +58,12 @@ import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoComboBox;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoTextField;
 import com.sporto.ng.gestion_gn.view.model.PedidoProductoTable;
+import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableImpresion;
 import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableModel;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
 
 public class PedidoDialog extends JDialog {
-	private Integer columnaBorrar = 4;
 	private PedidoProductoTable table;
 	private JTextField textFieldCantidad;
 	private JFormattedTextField textFieldVencimiento;
@@ -74,8 +82,10 @@ public class PedidoDialog extends JDialog {
 	private JComboBox comboBoxDescuento;
 	private PedidoProductoDao pedidoProductoDao;
 	private PedidoDao pedidoDao;
+	private JTextField textFieldTotal;
 
-	public PedidoDialog(ProductoDao productoDao, PedidoDao pedidoDao, JFrame owner, PrecioDao precioDao, PedidoProductoDao pedidoProductoDao) {
+	public PedidoDialog(ProductoDao productoDao, PedidoDao pedidoDao, JFrame owner, PrecioDao precioDao,
+			PedidoProductoDao pedidoProductoDao) {
 		super(owner);
 		setResizable(false);
 		this.precioDao = precioDao;
@@ -138,7 +148,8 @@ public class PedidoDialog extends JDialog {
 		JLabel lblNewLabel_1 = new JLabel("CÓDIGO");
 		panelAgregar.add(lblNewLabel_1);
 
-		List<String> myWords = productoDao.findAll().stream().map(Producto::getDescripcionCombo).collect(Collectors.toList());
+		List<String> myWords = productoDao.findAll().stream().map(Producto::getDescripcionCombo)
+				.collect(Collectors.toList());
 		myWords = new ArrayList<>(myWords);
 		myWords.add(0, "");
 		textCodigoProducto = new Java2sAutoComboBox(myWords);
@@ -146,7 +157,7 @@ public class PedidoDialog extends JDialog {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-					onProductoChange((String) ((Java2sAutoTextField) e.getSource()).getText());
+				onProductoChange((String) ((Java2sAutoTextField) e.getSource()).getText());
 			}
 
 			@Override
@@ -155,7 +166,8 @@ public class PedidoDialog extends JDialog {
 
 			}
 		});
-		textCodigoProducto.addActionListener(e -> onProductoChange(((Java2sAutoComboBox) e.getSource()).getSelectedItem().toString()));
+		textCodigoProducto.addActionListener(
+				e -> onProductoChange(((Java2sAutoComboBox) e.getSource()).getSelectedItem().toString()));
 
 		panelAgregar.add(textCodigoProducto);
 
@@ -217,14 +229,28 @@ public class PedidoDialog extends JDialog {
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
 				int row = table.rowAtPoint(evt.getPoint());
 				int col = table.columnAtPoint(evt.getPoint());
-				if (col == columnaBorrar) {
+				if (col == PedidoProductoTableModel.COLUMNA_ELIMINAR) {
 					((DefaultTableModel) table.getModel()).removeRow(row);
+					textFieldTotal.setText(table.getTotal().toString());
 				}
 
 			}
 		});
 
 		scrollPane.setViewportView(table);
+
+		JPanel panelTotal = new JPanel();
+		FlowLayout flowLayout_2 = (FlowLayout) panelTotal.getLayout();
+		flowLayout_2.setAlignment(FlowLayout.RIGHT);
+		getContentPane().add(panelTotal);
+
+		JLabel lblNewLabel_2 = new JLabel("TOTAL:");
+		panelTotal.add(lblNewLabel_2);
+
+		textFieldTotal = new JTextField();
+		textFieldTotal.setEnabled(false);
+		panelTotal.add(textFieldTotal);
+		textFieldTotal.setColumns(10);
 		getContentPane().add(panelBotones);
 
 		JButton btnNewButton = new JButton("CANCELAR");
@@ -247,9 +273,35 @@ public class PedidoDialog extends JDialog {
 
 	}
 
+	public void printComponenet(Component component) {
+		PrinterJob pj = PrinterJob.getPrinterJob();
+		pj.setJobName(" Print Component ");
+
+		pj.setPrintable(new Printable() {
+			public int print(Graphics pg, PageFormat pf, int pageNum) {
+				if (pageNum > 0) {
+					return Printable.NO_SUCH_PAGE;
+				}
+
+				Graphics2D g2 = (Graphics2D) pg;
+				g2.translate(pf.getImageableX(), pf.getImageableY());
+				component.paint(g2);
+				return Printable.PAGE_EXISTS;
+			}
+		});
+		if (pj.printDialog() == false)
+			return;
+
+		try {
+			pj.print();
+		} catch (PrinterException ex) {
+			// handle exception
+		}
+	}
+
 	private void onProductoChange(String idSelected) {
 		try {
-			if(Strings.isEmpty(idSelected)) {
+			if (Strings.isEmpty(idSelected)) {
 				textFieldStockActual.setText("");
 				textFieldPrecio.setText("");
 				return;
@@ -261,18 +313,20 @@ public class PedidoDialog extends JDialog {
 			throw new RuntimeException(e1);
 		}
 	}
-	
-	protected void precargarPrecio(Producto unProducto,Lista listaPrecio) {
+
+	protected void precargarPrecio(Producto unProducto, Lista listaPrecio) {
 		if (null == unProducto) {
 			textFieldPrecio.setText("");
 		} else {
 			PrecioId build = PrecioId.builder().producto(unProducto.getId()).lista(listaPrecio.getNombre()).build();
 			Optional<Precio> unPrecio = precioDao.findById(build);
-			if(!unPrecio.isPresent()) {
-				JOptionPane.showMessageDialog(this, "El producto no tiene precio en esa lista, por favor carguelo y vuelva a probar", "Error", JOptionPane.ERROR_MESSAGE);
+			if (!unPrecio.isPresent()) {
+				JOptionPane.showMessageDialog(this,
+						"El producto no tiene precio en esa lista, por favor carguelo y vuelva a probar", "Error",
+						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-				
+
 			textFieldPrecio.setText(unPrecio.get().getPrecio().toString());
 		}
 
@@ -296,17 +350,17 @@ public class PedidoDialog extends JDialog {
 					if (validar()) {
 						Producto unProducto = obtenerProducto(selectedItem);
 
-						// Si es egreso valido que no quede negativo
-
 						Object descuentoSeleccionado = comboBoxDescuento.getSelectedItem();
-						table.registrarMovimiento(unProducto, Integer.valueOf(textFieldCantidad.getText()), Double.parseDouble(textFieldPrecio.getText()),descuentoSeleccionado.toString());
+						table.registrarMovimiento(unProducto, Integer.valueOf(textFieldCantidad.getText()),
+								Double.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
 
+						textFieldTotal.setText(table.getTotal().toString());
+						
 						limpiarCampos();
 					}
 
 				}
 			}
-
 
 		};
 	}
@@ -314,7 +368,7 @@ public class PedidoDialog extends JDialog {
 	private Producto obtenerProducto(String selectedItem) {
 		return productoDao.findById(Integer.valueOf(selectedItem.split(":")[0])).get();
 	}
-	
+
 	public void limpiarCampos() {
 		textFieldCantidad.setText("");
 		textFieldVencimiento.setValue(null);
@@ -357,21 +411,47 @@ public class PedidoDialog extends JDialog {
 			return;
 		}
 		try {
-			
-			Pedido unPedido = Pedido.builder()
-				.cliente(cliente)
-				.estado(EstadoPedido.EMITIDO)
-				.fecha(new Date()).build();
+
+			Pedido unPedido = Pedido.builder().cliente(cliente).estado(EstadoPedido.EMITIDO).fecha(new Date()).build();
 			pedidoDao.save(unPedido);
 			Collection<PedidoProducto> pedidoProductos = tableModel.getPedidoProductos(unPedido);
 			pedidoProductoDao.saveAll(pedidoProductos);
 
-			JOptionPane.showMessageDialog(this, "El pedido fue gardado correctamente");
+			JOptionPane.showMessageDialog(this, "El pedido fue gardado correctamente..Imprimiendo");
+
+			imprimir(unPedido);
+
 			setVisible(false);
 		} catch (NumberFormatException e) {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	public void imprimir(Pedido unPedido) {
+		
+		try {
+			/*
+			PedidoProductoTableImpresion pedidoProductoTableImpresion = new PedidoProductoTableImpresion();
+			DefaultTableModel tableModel = new DefaultTableModel();
+			pedidoProductoTableImpresion.setModel(tableModel);
+			tableModel.addColumn("Languages");
+			tableModel.insertRow(0, new Object[] { "CSS" });
+			tableModel.insertRow(0, new Object[] { "HTML5" });
+			tableModel.insertRow(0, new Object[] { "JavaScript" });
+			tableModel.insertRow(0, new Object[] { "jQuery" });
+			tableModel.insertRow(0, new Object[] { "AngularJS" });
+			tableModel.insertRow(tableModel.getRowCount(), new Object[] { "ExpressJS" });
+
+			
+			pedidoProductoTableImpresion.getRowCount();
+			pedidoProductoTableImpresion.imprimir(unPedido);*/
+			//table.ocultarColumnaEliminar();
+			table.imprimir(unPedido);
+			//table.mostrarColumnaEliminar();
+		} catch (java.awt.print.PrinterException e) {
+			System.err.format("Cannot print %s%n", e.getMessage());
+		}
 	}
 
 	public static boolean isNumeric(String strNum) {
@@ -392,7 +472,7 @@ public class PedidoDialog extends JDialog {
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
 		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
 		listaPrecios = precioDao.findByLista(unCliente.getListaPrecio());
-		((PedidoProductoTableModel)table.getModel()).setRowCount(0);
+		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
 		this.setVisible(true);
 	}
 

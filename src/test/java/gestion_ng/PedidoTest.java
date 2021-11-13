@@ -3,6 +3,7 @@ package gestion_ng;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.sporto.ng.gestion_gn.GestionNG;
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
+import com.sporto.ng.gestion_gn.dao.MovimientoCajaDao;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
 import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.Lista;
+import com.sporto.ng.gestion_gn.model.MedioPago;
+import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.PedidoProducto;
 import com.sporto.ng.gestion_gn.model.Producto;
+import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 
 @SpringBootTest(classes = GestionNG.class)
 class PedidoTest {
@@ -34,6 +39,9 @@ class PedidoTest {
 
 	@Autowired
 	private ClienteDao clienteDao;
+
+	@Autowired
+	private MovimientoCajaDao movimientoCajaDao;
 
 	@Test
 	void test() {
@@ -57,4 +65,26 @@ class PedidoTest {
 		System.out.println(save.getId());
 	}
 
+	@Test
+	void testGet() {
+		Optional<Pedido> findById = pedidoDao.findById(67);
+		System.out.println(findById.get().getMonto());
+	}
+	
+	@Test
+	void testRegistrarMovimiento() {
+		Cliente cliente = clienteDao.findById(2).get();
+		
+		System.out.println(cliente);
+		MovimientoCaja unMovimiento = MovimientoCaja.builder().cliente(cliente)
+					.comentario("Prueba")
+					.fecha(new Date())
+					.medioPago(MedioPago.DEPOSITO)
+					.monto((double) 100)
+					.tipoMovimiento(TipoMovimiento.INGRESO).build();
+		//movimientoCajaDao.save(unMovimiento);
+		
+		
+		
+	}
 }

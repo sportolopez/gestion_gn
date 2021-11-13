@@ -3,7 +3,6 @@ package com.sporto.ng.gestion_gn.view;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -32,8 +31,6 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.util.NumberUtils;
-import org.springframework.util.StringUtils;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.MovimientoStockDao;
@@ -45,10 +42,6 @@ import com.sporto.ng.gestion_gn.utils.Java2sAutoTextField;
 import com.sporto.ng.gestion_gn.view.model.MovimientoStockTable;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
-import java.awt.Color;
-import javax.swing.border.LineBorder;
 
 public class MovimientoStockDialog extends JDialog {
 	private int columnaBorrar = 4;

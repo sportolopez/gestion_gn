@@ -6,20 +6,25 @@ import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.Pedido;
 
 public class PedidoTableModel extends DefaultTableModel {
 
 	public static final int COLUMN_DETALLE = 4;
+	public static final int COLUMN_ESTADO = 3;
+	public static final int COLUMN_ANULADO = 5;
+	public static final int COLUMN_ENTREGADO = 6;
 	
 	public PedidoTableModel() {
-		addColumn("NRO PEDIDO");
+		addColumn("ID");
 		addColumn("CLIENTE");
 		addColumn("CUIT/CUIL");
 		addColumn("ESTADO");
 		addColumn("DETALLE");
+		addColumn("CANCELAR");
+		addColumn("RETIRAR");
 		addColumn("ANULAR");
-		addColumn("ENTREGADO");
 	}
 
 	public void addPedido(Pedido pedido) {
@@ -29,16 +34,28 @@ public class PedidoTableModel extends DefaultTableModel {
 		lista.add(pedido.getCliente().getCuit());
 		lista.add(pedido.getEstado());
 		lista.add(Constants.ICONO_DETALLE);
-		lista.add(Constants.ICONO_ELIMINAR);
-		lista.add(Constants.ICONO_AGREGAR);
+		if(pedido.getEstado().equals(EstadoPedido.EMITIDO))
+			lista.add(Constants.ICONO_CANCELAR);
+		else
+			lista.add("");
 		
+		if(pedido.getEstado().equals(EstadoPedido.LIBERADO))
+			lista.add(Constants.ICONO_ENTREGADO);
+		else
+			lista.add("");
+		
+		if(pedido.getEstado().equals(EstadoPedido.RETIRADO))
+			lista.add(Constants.ICONO_CANCELAR);
+		else
+			lista.add("");
+
 		addRow(lista.toArray());
 
 	}
 	
 	@Override
 	public Class getColumnClass(int column) {
-		if (column > COLUMN_DETALLE)
+		if (column >= COLUMN_DETALLE)
 			return ImageIcon.class;
 		return Object.class;
 	}

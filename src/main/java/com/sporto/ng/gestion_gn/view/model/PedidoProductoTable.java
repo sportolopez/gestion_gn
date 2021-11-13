@@ -1,7 +1,15 @@
 package com.sporto.ng.gestion_gn.view.model;
 
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -9,13 +17,20 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.Producto;
+import com.sporto.ng.gestion_gn.utils.MyTablePrintable;
 
 public class PedidoProductoTable extends JTable {
 	TableRowSorter<PedidoProductoTableModel> tableRowSorter;
+	private MessageFormat[] header;
+	private MessageFormat[] footer;
+	   private Map<String, IndexedColumn> hidden =
+		        new HashMap<String, IndexedColumn>();
 
 	public PedidoProductoTable() {
 		super();
@@ -30,7 +45,7 @@ public class PedidoProductoTable extends JTable {
 		setRowSorter(tableRowSorter);
 	}
 
-	public void registrarMovimiento(Producto unProducto, int cantidad, Double precio,String descuento) {
+	public void registrarMovimiento(Producto unProducto, int cantidad, Double precio, String descuento) {
 
 		final int COLUMNA_CANTIDAD = 2;
 		final int COLUMNA_DESCUENTO = 4;
@@ -42,11 +57,11 @@ public class PedidoProductoTable extends JTable {
 		if (indexProducto != null) {
 			Integer cantidadEnTabla = (Integer) getValueAt(indexProducto, COLUMNA_CANTIDAD);
 			double precioEnTabla = (double) getValueAt(indexProducto, COLUMNA_PRECIO);
-			
+
 			int nuevaCantidad = cantidadEnTabla + cantidad;
 
-			double nuevoSubtotal = model.calcularSubtotal(precioEnTabla, descuento,nuevaCantidad);
-			
+			double nuevoSubtotal = model.calcularSubtotal(precioEnTabla, descuento, nuevaCantidad);
+
 			if (unProducto.getStock() - nuevaCantidad < 0) {
 				JOptionPane.showMessageDialog(new JFrame(), "No puede registar un stock negativo", "Error",
 						JOptionPane.ERROR_MESSAGE);
@@ -63,7 +78,7 @@ public class PedidoProductoTable extends JTable {
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			model.add(unProducto.getId(), unProducto.getDescripcion(), cantidad,precio,descuento);
+			model.add(unProducto.getId(), unProducto.getDescripcion(), cantidad, precio, descuento);
 		}
 
 	}
@@ -112,5 +127,93 @@ public class PedidoProductoTable extends JTable {
 		}
 		tableRowSorter.setRowFilter(rf);
 	}
+
+	@Override
+	public Printable getPrintable(PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat) {
+		// TODO Auto-generated method stub
+
+		return new MyTablePrintable(this, PrintMode.FIT_WIDTH, header, footer);
+
+		// return super.getPrintable(printMode, headerFormat, footerFormat);
+	}
+
+	public void imprimir(Pedido unPedido) throws PrinterException {
+		header = new MessageFormat[3];
+		header[0] = new MessageFormat("");
+		header[1] = new MessageFormat("Nro pedido: " + unPedido.getId());
+		header[2] = new MessageFormat("CLIENTE: " + unPedido.getCliente().getRazonSocial() + "           DOMICILIO: "
+				+ unPedido.getCliente().getDomicilio());
+
+		footer = new MessageFormat[1];
+		footer[0] = new MessageFormat(" footer ");
+
+		PrinterJob job = PrinterJob.getPrinterJob();
+		PageFormat pf = job.defaultPage();
+		Paper paper = pf.getPaper();
+		double margin = 10.;
+		paper.setImageableArea(margin, 10, paper.getWidth() - 2 * margin, paper.getImageableHeight());
+		pf.setPaper(paper);
+		job.setPrintable(this.getPrintable(JTable.PrintMode.FIT_WIDTH,
+				new MessageFormat("Nro pedido: " + unPedido.getId()), null), job.validatePage(pf));
+
+		boolean printAccepted = job.printDialog();
+		if (printAccepted) {
+			try {
+				job.print();
+			} catch (PrinterException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+	}
+
+	public Double getTotal() {
+		Double subTotal = (double) 0;
+		for (int i = 0; i < getRowCount(); i++) {
+			subTotal += (Double) getValueAt(i, PedidoProductoTableModel.COLUMNA_SUBTOTAL);
+		}
+		return subTotal;
+	}
+
+	public void ocultarColumnaEliminar() {
+		hide("DESCUENTO");
+	}
+
+	public void mostrarColumnaEliminar() {
+		show("DESCUENTO");
+	}
+
+    public void hide(String columnName) {
+        int index = getColumnModel().getColumnIndex(columnName);
+        TableColumn column = getColumnModel().getColumn(index);
+        IndexedColumn ic = new IndexedColumn(index, column);
+        if (hidden.put(columnName, ic) != null) {
+            throw new IllegalArgumentException("Duplicate column name.");
+        }
+        getColumnModel().removeColumn(column);
+    }
+
+    public void show(String columnName) {
+        IndexedColumn ic = hidden.remove(columnName);
+        if (ic != null) {
+            getColumnModel().addColumn(ic.column);
+            int lastColumn = getColumnModel().getColumnCount() - 1;
+            if (ic.index < lastColumn) {
+                getColumnModel().moveColumn(lastColumn, ic.index);
+            }
+        }
+    }
+    
+    private static class IndexedColumn {
+
+        private Integer index;
+        private TableColumn column;
+
+        public IndexedColumn(Integer index, TableColumn column) {
+            this.index = index;
+            this.column = column;
+        }
+    }
+
 
 }

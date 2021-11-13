@@ -28,12 +28,16 @@ public class Constants {
 	public static ImageIcon ICONO_AGREGAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/agregar.png"));
 	public static ImageIcon ICONO_QUITAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/eliminar.png"));
 	public static ImageIcon ICONO_ELIMINAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/Trash-empty-icon.png"));
+	public static ImageIcon ICONO_CANCELAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/cancelar.png"));
+	public static ImageIcon ICONO_ENTREGADO = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/delivered.png"));
 	public static ImageIcon ICONO_IMPORTAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-xls-import-24.png"));
 	public static ImageIcon ICONO_EXPORTAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-exportacion-xls-24.png"));
 	public static ImageIcon ICONO_EDITAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/Pencil-icon.png"));
+	public static ImageIcon ICONO_LIBERAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/tick.png"));
 	public static ImageIcon ICONO_DETALLE = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/eye.png"));
 	public static ImageIcon ICONO_PEDIDO = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-shopping-cart-24.png"));
-
+	public static ImageIcon ICONO_PAGO = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-us-dollar-25.png"));
+	
 	private static List<Lista> LISTAS;
 	
 	public static MaskFormatter getMascaraFecha(){

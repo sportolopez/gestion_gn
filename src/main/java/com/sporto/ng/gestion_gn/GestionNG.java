@@ -2,7 +2,6 @@ package com.sporto.ng.gestion_gn;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Locale;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -17,6 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.Splash;
+
 
 @SpringBootApplication
 @ComponentScan

@@ -48,6 +48,8 @@ public class Producto {
 	private Integer ingresos;
 	@Formula("(select COALESCE(sum(MS.cantidad),0) from movimiento_stock MS where MS.producto_id = id and MS.tipo_movimiento = 'EGRESO')")
 	private Integer egresos;
+	@Formula("(select COALESCE(sum(pp.cantidad),0) from pedido_producto pp, pedido p where p.id = pp.pedido_id && pp.producto_id = id and p.estado = 'EMITIDO')")
+	private Integer bloqueado_pedido;
 	
 //	@ElementCollection(fetch = FetchType.EAGER)
 //	@CollectionTable(name = "precio", joinColumns = @JoinColumn(name = "id_producto"))
@@ -77,7 +79,7 @@ public class Producto {
 //	}
 	
 	public Integer getStock() {
-		return ingresos - egresos;
+		return ingresos - egresos - bloqueado_pedido;
 	}
 
 	public String getFechaString() {

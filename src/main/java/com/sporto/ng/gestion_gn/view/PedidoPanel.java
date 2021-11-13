@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
@@ -32,8 +34,11 @@ import javax.swing.table.TableRowSorter;
 import org.apache.commons.io.FilenameUtils;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.dao.PedidoDao;
+import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.utils.JTableToExcel;
+import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableModel;
 import com.sporto.ng.gestion_gn.view.model.PedidoTable;
 import com.sporto.ng.gestion_gn.view.model.PedidoTableModel;
 
@@ -41,23 +46,23 @@ import lombok.Getter;
 
 @Getter
 public class PedidoPanel extends JPanel {
-
-	private JButton btnNuevoPedido;
 	private JButton btnExportar;
 	private PedidoTable table;
 	TableRowSorter<PedidoTableModel> sorter;
 	JTextField textFieldBuscador;
-	
-	JLabel lblTitulo;
 
-	public PedidoPanel(JFrame parent) {
+	JLabel lblTitulo;
+	private PedidoDao pedidoDao;
+
+	public PedidoPanel(JFrame parent, PedidoDao pedidoDao) {
+		this.pedidoDao = pedidoDao;
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+
 		JPanel panel = new JPanel();
 		add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
-		
+
 		lblTitulo = new JLabel("PEDIDOS");
 		lblTitulo.setFont(Constants.FUENTE_TITULO);
 		lblTitulo.setBorder(new EmptyBorder(10, 20, 10, 0));
@@ -124,10 +129,44 @@ public class PedidoPanel extends JPanel {
 		sorter = new TableRowSorter<PedidoTableModel>((PedidoTableModel) table.getModel());
 		table.setRowSorter(sorter);
 
-	}
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				JTable target = (JTable) evt.getSource();
+				int row = target.getSelectedRow();
+				int column = target.getSelectedColumn();
+				Integer idPedido = Integer.parseInt(target.getValueAt(row, 0).toString());
+				if (column == PedidoTableModel.COLUMN_ENTREGADO) {
+					cambiarEstadoPedido(idPedido,EstadoPedido.RETIRADO);
+					cargarPedidos();
+				}
+				
+				if (column == PedidoTableModel.COLUMN_ANULADO) {
+					cambiarEstadoPedido(idPedido,EstadoPedido.CANCELADO);
+					cargarPedidos();
+				}
+				
 
-	public JButton getBtnNuevoPedido() {
-		return btnNuevoPedido;
+			}
+
+
+
+		});
+
+	}
+	private void cambiarEstadoPedido(Integer idPedido, EstadoPedido retirado) {
+		Optional<Pedido> findById = pedidoDao.findById(idPedido);
+		Pedido pedido = findById.get();
+		pedido.setEstado(retirado);
+		pedidoDao.save(pedido);
+	}
+	
+	public void cargarPedidos() {
+		Iterable<Pedido> findAll = pedidoDao.findAll();
+		((PedidoTableModel) table.getModel()).setRowCount(0);
+		for (Pedido pedido : findAll) {
+			table.agregarPedido(pedido);
+		}
 	}
 
 	public PedidoTable getTable() {
@@ -148,15 +187,10 @@ public class PedidoPanel extends JPanel {
 		fl_panelBotonera.setAlignment(FlowLayout.LEFT);
 		add(panelBotonera);
 
-		btnNuevoPedido = new JButton(Constants.ICONO_AGREGAR);
-		panelBotonera.add(btnNuevoPedido);
-		btnNuevoPedido.setMnemonic(KeyEvent.VK_N);
-
-
 	}
 
 	public void cargarLista(List<Pedido> lista) {
-		
+
 		PedidoTableModel tableModel = (PedidoTableModel) table.getModel();
 		tableModel.setRowCount(0);
 
@@ -175,5 +209,5 @@ public class PedidoPanel extends JPanel {
 		}
 		sorter.setRowFilter(rf);
 	}
-	
+
 }

@@ -101,36 +101,37 @@ public class ProductoController {
 		Action botonDetalle = null;
 		Action botonDelete = null;
 		Action botonEditar = null;
-		
-		
+
 		new ButtonColumn(productosPanel.getTableProductos(), botonDetalle, columnCount).setAction(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				JTable table = (JTable) e.getSource();
 				int modelRow = Integer.valueOf(e.getActionCommand());
 				Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
 				Producto findById = dao.findById(idProducto).get();
-				
-				ProductoDetalle detalleProducto = new ProductoDetalle(homeForm,findById,movimientoDao.findByProducto(findById));
+
+				ProductoDetalle detalleProducto = new ProductoDetalle(homeForm, findById,
+						movimientoDao.findByProducto(findById));
 				detalleProducto.setVisible(true);
 
 			}
 		});
 
-		new ButtonColumn(productosPanel.getTableProductos(), botonEditar, columnCount+1).setAction(new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-				JTable table = (JTable) e.getSource();
-				int modelRow = Integer.valueOf(e.getActionCommand());
-				Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
-				editarProducto(idProducto);
+		new ButtonColumn(productosPanel.getTableProductos(), botonEditar, columnCount + 1)
+				.setAction(new AbstractAction() {
+					public void actionPerformed(ActionEvent e) {
+						JTable table = (JTable) e.getSource();
+						int modelRow = Integer.valueOf(e.getActionCommand());
+						Integer idProducto = (Integer) ((DefaultTableModel) table.getModel()).getValueAt(modelRow, 0);
+						editarProducto(idProducto);
 
-			}
-		});
-		new ButtonColumn(productosPanel.getTableProductos(), botonDelete, columnCount+2).setAction(actionBorrar);
+					}
+				});
+		new ButtonColumn(productosPanel.getTableProductos(), botonDelete, columnCount + 2).setAction(actionBorrar);
 
 		productosPanel.getBtnIngresoStock().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MovimientoStockDialog movimientoStock = new MovimientoStockDialog(dao.findAll(), movimientoDao, dao,
-						TipoMovimiento.INGRESO,homeForm);
+						TipoMovimiento.INGRESO, homeForm);
 				movimientoStock.setVisible(true);
 				cargarListaInicial();
 			}
@@ -138,8 +139,14 @@ public class ProductoController {
 		productosPanel.getBtnEgresoStock().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MovimientoStockDialog movimientoStock = new MovimientoStockDialog(dao.findAll(), movimientoDao, dao,
-						TipoMovimiento.EGRESO,homeForm);
+						TipoMovimiento.EGRESO, homeForm);
 				movimientoStock.setVisible(true);
+				cargarListaInicial();
+			}
+		});
+
+		homeForm.getBotonProductos().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				cargarListaInicial();
 			}
 		});
@@ -174,21 +181,20 @@ public class ProductoController {
 	private void saveProducto() {
 		if (productoDialog.validar()) {
 			Producto producto = productoDialog.getProducto();
-			
-			if(dao.existsById(producto.getId()) && !esEdicion){
-				
-				int dialog = JOptionPane.showConfirmDialog(homeForm,
-						"El producto ya existe, ¿Quiere editarlo?", "Producto existente",
-						JOptionPane.YES_NO_OPTION);
+
+			if (dao.existsById(producto.getId()) && !esEdicion) {
+
+				int dialog = JOptionPane.showConfirmDialog(homeForm, "El producto ya existe, ¿Quiere editarlo?",
+						"Producto existente", JOptionPane.YES_NO_OPTION);
 				if (dialog == JOptionPane.YES_OPTION) {
 					productoDialog.setVisible(false);
 					editarProducto(producto.getId());
 					return;
-				}else {
+				} else {
 					return;
 				}
 			}
-			
+
 			dao.save(producto);
 			productoDialog.setVisible(false);
 			cargarListaInicial();
@@ -211,14 +217,14 @@ public class ProductoController {
 						productosConError.add(producto);
 					}
 				}
-				JOptionPane.showMessageDialog(homeForm, "Se procesaron " + (procesarExcel.size()-productosConError.size()) + " registros correctamente. Con error: "+productosConError.size());
+				JOptionPane.showMessageDialog(homeForm,
+						"Se procesaron " + (procesarExcel.size() - productosConError.size())
+								+ " registros correctamente. Con error: " + productosConError.size());
 				cargarListaInicial();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 		}
 	}
-
-
 
 }

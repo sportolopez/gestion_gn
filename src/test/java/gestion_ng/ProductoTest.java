@@ -20,7 +20,6 @@ import com.sporto.ng.gestion_gn.GestionNG;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
-
 @SpringBootTest(classes = GestionNG.class)
 class ProductoTest {
 

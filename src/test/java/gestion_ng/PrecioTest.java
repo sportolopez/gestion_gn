@@ -14,6 +14,7 @@ import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Precio;
 import com.sporto.ng.gestion_gn.model.Producto;
 
+
 @SpringBootTest(classes = GestionNG.class)
 public class PrecioTest {
 	@Autowired

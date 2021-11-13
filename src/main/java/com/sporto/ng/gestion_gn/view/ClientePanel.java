@@ -188,19 +188,49 @@ public class ClientePanel extends JPanel {
 		btnNuevoCliente.setVisible(true);
 		btnImportarPrecios.setVisible(false);
 		
-		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMinWidth(0);
-		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMaxWidth(0);
-		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setPreferredWidth(0);
+		ocultarColumna(ClienteTableModel.COLUMN_PEDIDO);
+		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
+		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
+		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
+		mostrarColumna(ClienteTableModel.COLUMN_MAIL);
+		mostrarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 	}
 	
 	public void showPrecios() {
 		lblTitulo.setText("PRECIOS");
 		btnNuevoCliente.setVisible(false);
 		btnImportarPrecios.setVisible(true);
-		
-		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMinWidth(100);
-		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMaxWidth(100);
-		tableClientes.getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setPreferredWidth(100);
+		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
+		mostrarColumna(ClienteTableModel.COLUMN_PEDIDO);
+		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
+		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
+		mostrarColumna(ClienteTableModel.COLUMN_MAIL);
+		mostrarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 	}
 
+	public void showCaja() {
+		lblTitulo.setText("CAJA");
+		btnNuevoCliente.setVisible(false);
+		btnImportarPrecios.setVisible(false);
+		ocultarColumna(ClienteTableModel.COLUMN_PEDIDO);
+		ocultarColumna(ClienteTableModel.COLUMN_EXPORTAR);
+		ocultarColumna(ClienteTableModel.COLUMN_EDITAR);
+		ocultarColumna(ClienteTableModel.COLUMN_MAIL);
+		ocultarColumna(ClienteTableModel.COLUMN_DOMICILIO);
+		mostrarColumna(ClienteTableModel.COLUMN_LIBERAR);
+		
+	}
+	
+	private void ocultarColumna(int columnIndex) {
+		tableClientes.getColumnModel().getColumn(columnIndex).setMinWidth(0);
+		tableClientes.getColumnModel().getColumn(columnIndex).setMaxWidth(0);
+		tableClientes.getColumnModel().getColumn(columnIndex).setPreferredWidth(0);
+	}
+
+	private void mostrarColumna(int columnIndex) {
+		int width = 100;
+		tableClientes.getColumnModel().getColumn(columnIndex).setMinWidth(width);
+		tableClientes.getColumnModel().getColumn(columnIndex).setMaxWidth(width);
+		tableClientes.getColumnModel().getColumn(columnIndex).setPreferredWidth(width);
+	}
 }

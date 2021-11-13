@@ -2,6 +2,8 @@ package com.sporto.ng.gestion_gn.view.model;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -25,7 +27,7 @@ public class ClienteTable extends JTable {
 		setRowSorter(sorter);
 		setModel(productoTableModel);
 		getColumnModel().getColumn(0).setMaxWidth(40);
-		getColumnModel().getColumn(0).setPreferredWidth(20);
+		getColumnModel().getColumn(0).setPreferredWidth(40);
 		getColumnModel().getColumn(1).setMaxWidth(200);
 		getColumnModel().getColumn(1).setPreferredWidth(130);
 		getColumnModel().getColumn(3).setMaxWidth(100);
@@ -62,6 +64,7 @@ public class ClienteTable extends JTable {
 
 	}
 
+
 	public void filtrar(String texto) {
 		RowFilter<ClienteTableModel, Object> rf = null;
 		try {
@@ -71,5 +74,6 @@ public class ClienteTable extends JTable {
 		}
 		((TableRowSorter<ClienteTableModel>) getRowSorter()).setRowFilter(rf);
 	}
+	
 
 }

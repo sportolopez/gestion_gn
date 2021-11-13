@@ -29,7 +29,6 @@ public class PedidoController {
 	
 		//dialog = new PedidoDialog(productoDao.findAll(),clienteDao.findAll(),pedidoDao,homeForm,precioDao);
 		
-		panel.getBtnNuevoPedido().addActionListener(l -> nuevoPedido());
 	}
 	
 	private void nuevoPedido() {

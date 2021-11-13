@@ -1,5 +1,8 @@
 package com.sporto.ng.gestion_gn.view.model;
 
+import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
@@ -7,6 +10,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.model.EstadoPedido;
+import com.sporto.ng.gestion_gn.model.Lista;
+import com.sporto.ng.gestion_gn.model.Pedido;
 
 public class PedidoTable extends JTable {
 
@@ -18,17 +24,33 @@ public class PedidoTable extends JTable {
 		TableRowSorter<PedidoTableModel> sorter = new TableRowSorter<PedidoTableModel>(productoTableModel);
 		setRowSorter(sorter);
 		setModel(productoTableModel);
-		getColumnModel().getColumn(0).setMaxWidth(40);
-		getColumnModel().getColumn(0).setPreferredWidth(20);
+		getColumnModel().getColumn(0).setMaxWidth(80);
+		getColumnModel().getColumn(0).setPreferredWidth(80);
 		getColumnModel().getColumn(1).setMaxWidth(200);
-		getColumnModel().getColumn(1).setPreferredWidth(130);
-		getColumnModel().getColumn(3).setMaxWidth(100);
-		getColumnModel().getColumn(3).setPreferredWidth(80);
-		getColumnModel().getColumn(4).setMaxWidth(200);
-		getColumnModel().getColumn(4).setPreferredWidth(150);
+		getColumnModel().getColumn(1).setPreferredWidth(200);
+		getColumnModel().getColumn(2).setMaxWidth(200);
+		getColumnModel().getColumn(2).setPreferredWidth(200);
+		getColumnModel().getColumn(3).setMaxWidth(200);
+		getColumnModel().getColumn(3).setPreferredWidth(200);
 
-		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer() {
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				Component tableCellRendererComponent = super.getTableCellRendererComponent(table, value, isSelected,
+						hasFocus, row, column);
+				if (column == PedidoTableModel.COLUMN_ESTADO) {
+					String valueAt = getValueAt(row, PedidoTableModel.COLUMN_ESTADO).toString();
+					tableCellRendererComponent.setBackground(EstadoPedido.valueOf(valueAt).getColor());
+				} else {
+					tableCellRendererComponent.setBackground(Color.white);
+				}
+				return tableCellRendererComponent;
+			}
+
+		};
 		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
 		setDefaultRenderer(Object.class, rightRenderer);
 
 	}
@@ -41,6 +63,12 @@ public class PedidoTable extends JTable {
 			return;
 		}
 		((TableRowSorter<PedidoTableModel>) getRowSorter()).setRowFilter(rf);
+	}
+
+	public void agregarPedido(Pedido pedido) {
+		PedidoTableModel model = (PedidoTableModel) getModel();
+		model.addPedido(pedido);
+
 	}
 
 }

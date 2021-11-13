@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.ListaDao;
+import com.sporto.ng.gestion_gn.dao.MovimientoCajaDao;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
 import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
@@ -29,6 +30,8 @@ import com.sporto.ng.gestion_gn.utils.PrecioExcelExporter;
 import com.sporto.ng.gestion_gn.view.ClienteDialog;
 import com.sporto.ng.gestion_gn.view.ClientePanel;
 import com.sporto.ng.gestion_gn.view.HomeForm;
+import com.sporto.ng.gestion_gn.view.LiberarPedidoDialog;
+import com.sporto.ng.gestion_gn.view.PagoDialog;
 import com.sporto.ng.gestion_gn.view.PedidoDialog;
 import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
 
@@ -40,16 +43,20 @@ public class ClienteController {
 	ClienteDialog clienteDialog;
 	PrecioDao precioDao;
 	PedidoDao pedidoDao;
-	private PedidoDialog dialog;
+	private PedidoDialog pedidoDialog;
+	private PagoDialog pagoDialog;
+	private LiberarPedidoDialog liberarPedidoDialog;
 
 	@Autowired
-	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao, PedidoDao pedidoDao, ProductoDao productoDao, PedidoProductoDao pedidoProductoDao) {
+	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao, PedidoDao pedidoDao, ProductoDao productoDao, PedidoProductoDao pedidoProductoDao, MovimientoCajaDao movimientoCajaDao) {
 		this.clienteDao = clienteDao;
 		this.precioDao = precioDao;
 		this.pedidoDao = pedidoDao;
 		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
-		dialog = new PedidoDialog(productoDao,pedidoDao,homeForm,precioDao,pedidoProductoDao);
+		pedidoDialog = new PedidoDialog(productoDao,pedidoDao,homeForm,precioDao,pedidoProductoDao);
+		pagoDialog = new PagoDialog(productoDao,pedidoDao,homeForm,precioDao,pedidoProductoDao);
+		liberarPedidoDialog = new LiberarPedidoDialog(productoDao,pedidoDao,movimientoCajaDao,homeForm);
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
 		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());
@@ -65,6 +72,8 @@ public class ClienteController {
 				int col = clientePanel.getTableClientes().columnAtPoint(evt.getPoint());
 				if (col == ClienteTableModel.COLUMN_PEDIDO)
 					nuevoPedido(idCliente);
+				if (col == ClienteTableModel.COLUMN_LIBERAR)
+					liberarPedidos(idCliente);
 				if (col == ClienteTableModel.COLUMN_EDITAR)
 					editarCliente(listaPrecios, idCliente);
 				if (col == ClienteTableModel.COLUMN_EXPORTAR)
@@ -78,9 +87,21 @@ public class ClienteController {
 		Constants.setListas(listaDao.findAll());
 	}
 	
+	protected void registrarPago(int idCliente) {
+		Cliente cliente = clienteDao.findById(idCliente).get();
+		pagoDialog.nuevoPago(cliente);
+		
+	}
+	
+	protected void liberarPedidos(int idCliente) {
+		Cliente cliente = clienteDao.findById(idCliente).get();
+		liberarPedidoDialog.liberarPedidos(cliente);
+		
+	}
+
 	private void nuevoPedido(int idCliente) {
 		Cliente cliente = clienteDao.findById(idCliente).get();
-		dialog.nuevoPedido(cliente);
+		pedidoDialog.nuevoPedido(cliente);
 		
 		
 	}

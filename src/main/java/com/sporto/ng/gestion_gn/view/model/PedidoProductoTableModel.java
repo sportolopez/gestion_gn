@@ -15,10 +15,13 @@ import com.sporto.ng.gestion_gn.model.Producto;
 
 public class PedidoProductoTableModel extends DefaultTableModel {
 
+	public static final int COLUMNA_SUBTOTAL = 5;
+	public final static int COLUMNA_ELIMINAR = 6;
+	
 	public PedidoProductoTableModel() {
 		List<String> list;
 
-		list = Arrays.asList(new String[] { "CÓDIGO PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "PRECIO", "DESCUENTO",
+		list = Arrays.asList(new String[] { "CÓDIGO", "DESCRIPCIÓN", "CANTIDAD", "PRECIO", "DESCUENTO",
 				"SUBTOTAL", "ELIMINAR" });
 
 		for (String columnName : list) {
@@ -36,11 +39,7 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 
 	@Override
 	public boolean isCellEditable(int row, int col) {
-		if (col > (getColumnCount() - 2) || col == 1 || col == 0) {
 			return false;
-		} else {
-			return true;
-		}
 	}
 
 	public void add(int idProducto, String descripcion, int cantidad, Double precio, String descuento) {
@@ -77,9 +76,9 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 
 	public double calcularSubtotal(double precio, String descuento, int cantidad) {
 
-		int descuentoParsed = Integer.parseInt(descuento.substring(0, 1));
-
-		double d = precio - Math.round(precio * descuentoParsed) / 100;
+		double descuentoParsed = 1 - (double)Integer.parseInt(descuento.substring(0, 1)) / 100;
+		
+		double d = precio * descuentoParsed;
 		return d * cantidad;
 	}
 

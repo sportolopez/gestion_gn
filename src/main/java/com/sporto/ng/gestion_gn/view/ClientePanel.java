@@ -113,7 +113,7 @@ public class ClientePanel extends JPanel {
 						file = new File(file.toString() + ".xls");
 					}
 					String heading = "Clientes";
-					JTableToExcel.export(file, heading, "", tableClientes);
+					JTableToExcel.export(file, heading, "", tableClientes,8);
 				}
 			}
 		});
@@ -187,9 +187,10 @@ public class ClientePanel extends JPanel {
 		lblTitulo.setText("CLIENTES");
 		btnNuevoCliente.setVisible(true);
 		btnImportarPrecios.setVisible(false);
-		
+
 		ocultarColumna(ClienteTableModel.COLUMN_PEDIDO);
 		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
+		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
 		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
 		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
 		mostrarColumna(ClienteTableModel.COLUMN_MAIL);
@@ -201,9 +202,9 @@ public class ClientePanel extends JPanel {
 		btnNuevoCliente.setVisible(false);
 		btnImportarPrecios.setVisible(true);
 		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
+		ocultarColumna(ClienteTableModel.COLUMN_EDITAR);
 		mostrarColumna(ClienteTableModel.COLUMN_PEDIDO);
 		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
-		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
 		mostrarColumna(ClienteTableModel.COLUMN_MAIL);
 		mostrarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 	}

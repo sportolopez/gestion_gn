@@ -55,6 +55,7 @@ public class MovimientoStockDialog extends JDialog {
 	MovimientoStockDao movimientoDao;
 	ProductoDao productoDao;
 	private JTextField textFieldStockActual;
+	private JTextField textFieldComentario;
 
 	public MovimientoStockDialog(List<Producto> listaProductos, MovimientoStockDao movimientoDao,
 			ProductoDao productoDao, TipoMovimiento tipoMovimiento, JFrame owner) {
@@ -151,6 +152,13 @@ public class MovimientoStockDialog extends JDialog {
 
 		JButton agregarStockBtn = new JButton("REGISTRAR " + tipoMovimiento.name());
 		agregarStockBtn.addActionListener(registrarMovimiento(listaProductos, tipoMovimiento));
+		
+		JLabel lblNewLabel_3_2 = new JLabel("COMENTARIO:");
+		panelAgregar.add(lblNewLabel_3_2);
+		
+		textFieldComentario = new JTextField();
+		textFieldComentario.setColumns(10);
+		panelAgregar.add(textFieldComentario);
 		panelAgregar.add(agregarStockBtn);
 
 		JPanel panelBotones = new JPanel();
@@ -222,7 +230,7 @@ public class MovimientoStockDialog extends JDialog {
 						// Si es egreso valido que no quede negativo
 
 						table.registrarMovimiento(tipoMovimiento, unProducto,
-								Integer.valueOf(textFieldCantidad.getText()), textFieldVencimiento.getText());
+								Integer.valueOf(textFieldCantidad.getText()), textFieldVencimiento.getText(),textFieldComentario.getText());
 
 						limpiarCampos();
 					}
@@ -320,7 +328,7 @@ public class MovimientoStockDialog extends JDialog {
 				Integer cantidad = Integer.parseInt(tableModel.getValueAt(i, 2).toString());
 				com.sporto.ng.gestion_gn.model.MovimientoStock movimiento = com.sporto.ng.gestion_gn.model.MovimientoStock
 						.builder().cantidad(cantidad).fecha(new Date()).tipoMovimiento(tipoMovimiento).fechaVencimiento(fechaV)
-						.producto(unProducto).remito(remitoInt).ordenCompra(ordenCompra).build();
+						.producto(unProducto).remito(remitoInt).ordenCompra(ordenCompra).comentario(textFieldComentario.getText()).build();
 				movimientoDao.save(movimiento);
 
 			}

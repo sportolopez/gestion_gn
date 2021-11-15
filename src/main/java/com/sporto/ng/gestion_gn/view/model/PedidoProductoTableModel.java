@@ -15,6 +15,9 @@ import com.sporto.ng.gestion_gn.model.Producto;
 
 public class PedidoProductoTableModel extends DefaultTableModel {
 
+	public static final int COLUMNA_CODIGO= 0;
+	public static final int COLUMNA_DESCRIPCION = 1;
+	public static final int COLUMNA_CANTIDAD = 2;
 	public static final int COLUMNA_SUBTOTAL = 5;
 	public final static int COLUMNA_ELIMINAR = 6;
 	
@@ -27,7 +30,7 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 		for (String columnName : list) {
 			addColumn(columnName);
 		}
-
+		
 	}
 
 	@Override
@@ -54,7 +57,7 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 		List<PedidoProducto> listPedido = new ArrayList<PedidoProducto>();
 		for (int i = 0; i < nRow; i++) {
 				
-			Producto nroProducto = Producto.builder().id(Integer.parseInt(getValueAt(i, 0).toString())).build();
+			Producto nroProducto = Producto.builder().id(Integer.parseInt(getValueAt(i, 0).toString())).descripcion(getValueAt(i, 1).toString()).build();
 			int cantidad = Integer.parseInt(getValueAt(i, 2).toString());
 			double precio = Double.parseDouble(getValueAt(i, 3).toString());
 			String descuento = (getValueAt(i, 4).toString());

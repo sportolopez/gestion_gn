@@ -9,12 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.net.URL;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -35,7 +36,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTable.PrintMode;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -55,10 +55,10 @@ import com.sporto.ng.gestion_gn.model.PedidoProducto;
 import com.sporto.ng.gestion_gn.model.Precio;
 import com.sporto.ng.gestion_gn.model.PrecioId;
 import com.sporto.ng.gestion_gn.model.Producto;
+import com.sporto.ng.gestion_gn.pruebas.Impresora;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoComboBox;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoTextField;
 import com.sporto.ng.gestion_gn.view.model.PedidoProductoTable;
-import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableImpresion;
 import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableModel;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
@@ -83,11 +83,13 @@ public class PedidoDialog extends JDialog {
 	private PedidoProductoDao pedidoProductoDao;
 	private PedidoDao pedidoDao;
 	private JTextField textFieldTotal;
+	JDialog _self;
 
 	public PedidoDialog(ProductoDao productoDao, PedidoDao pedidoDao, JFrame owner, PrecioDao precioDao,
 			PedidoProductoDao pedidoProductoDao) {
 		super(owner);
 		setResizable(false);
+		this._self = this;
 		this.precioDao = precioDao;
 		this.pedidoDao = pedidoDao;
 		this.productoDao = productoDao;
@@ -97,7 +99,7 @@ public class PedidoDialog extends JDialog {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 678, 533);
-		setTitle("Ingresar Stock");
+		setTitle("NUEVO PEDIDO");
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		JLabel lblNewLabel = new JLabel("NUEVO PEDIDO");
@@ -231,7 +233,7 @@ public class PedidoDialog extends JDialog {
 				int col = table.columnAtPoint(evt.getPoint());
 				if (col == PedidoProductoTableModel.COLUMNA_ELIMINAR) {
 					((DefaultTableModel) table.getModel()).removeRow(row);
-					textFieldTotal.setText(table.getTotal().toString());
+					textFieldTotal.setText("$ " + table.getTotal().toString());
 				}
 
 			}
@@ -248,7 +250,8 @@ public class PedidoDialog extends JDialog {
 		panelTotal.add(lblNewLabel_2);
 
 		textFieldTotal = new JTextField();
-		textFieldTotal.setEnabled(false);
+		textFieldTotal.setEditable(false);
+		textFieldTotal.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelTotal.add(textFieldTotal);
 		textFieldTotal.setColumns(10);
 		getContentPane().add(panelBotones);
@@ -355,7 +358,7 @@ public class PedidoDialog extends JDialog {
 								Double.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
 
 						textFieldTotal.setText(table.getTotal().toString());
-						
+
 						limpiarCampos();
 					}
 
@@ -372,6 +375,9 @@ public class PedidoDialog extends JDialog {
 	public void limpiarCampos() {
 		textFieldCantidad.setText("");
 		textFieldVencimiento.setValue(null);
+		textCodigoProducto.setSelectedIndex(0);
+		textFieldStockActual.setText("");
+		textFieldPrecio.setText("");
 		textCodigoProducto.setSelectedIndex(0);
 		comboBoxDescuento.setSelectedIndex(0);
 	}
@@ -417,41 +423,33 @@ public class PedidoDialog extends JDialog {
 			Collection<PedidoProducto> pedidoProductos = tableModel.getPedidoProductos(unPedido);
 			pedidoProductoDao.saveAll(pedidoProductos);
 
-			JOptionPane.showMessageDialog(this, "El pedido fue gardado correctamente..Imprimiendo");
+			imprimir(unPedido, pedidoProductos);
 
-			imprimir(unPedido);
-
-			setVisible(false);
 		} catch (NumberFormatException e) {
 			throw new RuntimeException(e);
 		}
 
 	}
 
-	public void imprimir(Pedido unPedido) {
+	private void imprimir(Pedido unPedido, Collection<PedidoProducto> productos) {
+		Impresora impresora = new Impresora();
+		impresora.imprimirPedido(unPedido, productos);
+		impresora.setVisible(true);
 		
-		try {
-			/*
-			PedidoProductoTableImpresion pedidoProductoTableImpresion = new PedidoProductoTableImpresion();
-			DefaultTableModel tableModel = new DefaultTableModel();
-			pedidoProductoTableImpresion.setModel(tableModel);
-			tableModel.addColumn("Languages");
-			tableModel.insertRow(0, new Object[] { "CSS" });
-			tableModel.insertRow(0, new Object[] { "HTML5" });
-			tableModel.insertRow(0, new Object[] { "JavaScript" });
-			tableModel.insertRow(0, new Object[] { "jQuery" });
-			tableModel.insertRow(0, new Object[] { "AngularJS" });
-			tableModel.insertRow(tableModel.getRowCount(), new Object[] { "ExpressJS" });
-
-			
-			pedidoProductoTableImpresion.getRowCount();
-			pedidoProductoTableImpresion.imprimir(unPedido);*/
-			//table.ocultarColumnaEliminar();
-			table.imprimir(unPedido);
-			//table.mostrarColumnaEliminar();
-		} catch (java.awt.print.PrinterException e) {
-			System.err.format("Cannot print %s%n", e.getMessage());
-		}
+		JOptionPane.showMessageDialog(this, "El pedido " + unPedido.getId()  + " fue registrado con éxito.", " ", JOptionPane.INFORMATION_MESSAGE);
+		this.setVisible(false);
+//		impresora.addWindowListener(new WindowAdapter() {
+//			public void windowClosed(WindowEvent e) {
+//				_self.setVisible(false);
+//			}
+//
+//			@Override
+//			public void windowClosing(WindowEvent e) {
+//				// TODO Auto-generated method stub
+//				super.windowClosing(e);
+//			}
+//		});
+		//setVisible(false);
 	}
 
 	public static boolean isNumeric(String strNum) {
@@ -471,6 +469,7 @@ public class PedidoDialog extends JDialog {
 		textFieldCliente.setText(unCliente.getRazonSocial());
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
 		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
+		textFieldTotal.setText("");
 		listaPrecios = precioDao.findByLista(unCliente.getListaPrecio());
 		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
 		this.setVisible(true);

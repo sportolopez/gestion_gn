@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.swing.JFrame;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +26,7 @@ import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.PedidoProducto;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
+import com.sporto.ng.gestion_gn.pruebas.Impresora;
 
 @SpringBootTest(classes = GestionNG.class)
 class PedidoTest {
@@ -87,4 +90,6 @@ class PedidoTest {
 		
 		
 	}
+	
+
 }

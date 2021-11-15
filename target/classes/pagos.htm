@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Example 1</title>
+	<style>
+	.clearfix:after {
+	  content: "";
+	  display: table;
+	  clear: both;
+	}
+
+	a {
+	  color: #5D6975;
+	  text-decoration: underline;
+	}
+
+	body {
+	  position: relative;
+	  margin: 0 auto; 
+	  color: #001028;
+	  background: #FFFFFF; 
+	  font-family: Arial, sans-serif; 
+	  font-size: 10px; 
+	  font-family: Arial;
+	}
+
+	header {
+	  padding: 5px 0;
+	  margin-bottom: 10px;
+	}
+
+
+	h1 {
+	  border-top: 1px solid  #5D6975;
+	  border-bottom: 1px solid  #5D6975;
+	  color: #5D6975;
+	  font-size: 23px;
+	  line-height: 1.4em;
+	  font-weight: normal;
+	  text-align: center;
+	  margin: 0 0 10px 0;
+	}
+
+	#project {
+	  float: left;
+	  margin-left: 10px;
+	  margin-bottom: 10px;
+	}
+
+	#project span {
+	  font-weight: bold;
+	  text-align: right;
+	  width: 52px;
+	  margin-right: 10px;
+	  display: inline-block;
+	  font-size: 0.8em;
+	}
+
+	#company {
+	  float: right;
+	  text-align: right;
+	}
+
+	#project div,
+	#company div {
+	  white-space: nowrap;        
+	}
+
+	table {
+	  width: 100%;
+	  
+	  border-collapse: collapse;
+	  border-spacing: 0;
+	  margin-bottom: 20px;
+	}
+
+	.impar {
+	  background: #F5F5F5;
+	}
+
+	table th,
+	table td {
+	  text-align: center;
+	}
+
+	table th {
+	  padding: 5px 20px;
+	  
+	  border-bottom: 1px solid #C1CED9;
+	  white-space: nowrap;        
+	  font-weight: bold;
+	  border-bottom: 1px solid #C1CED9;
+	  border-top: 1px solid #C1CED9;
+	}
+
+	table .service,
+	table .desc {
+	  text-align: left;
+	}
+
+	table td {
+	  padding: 10px;
+	  text-align: right;
+	}
+
+	table td.service,
+	table td.desc {
+	  vertical-align: top;
+	}
+
+	table td.unit,
+	table td.qty,
+	table td.total {
+	  font-size: 1em;
+	  text-align: center;
+	}
+
+	table td.grand {
+	  border-top: 1px solid #5D6975;;
+	}
+
+	#notices .notice {
+	  color: #5D6975;
+	  font-size: 1.2em;
+	}
+
+	footer {
+	  color: #5D6975;
+	  width: 100%;
+	  height: 30px;
+	  position: absolute;
+	  bottom: 0;
+	  border-top: 1px solid #C1CED9;
+	  padding: 8px 0;
+	  text-align: center;
+	}
+	</style>
+  </head>
+  <body>
+    <header class="clearfix">
+
+      <h1>RECIBO DE PAGOS</h1>
+
+      <div id="project">
+        <div><span>CLIENTE:  </span>_CLIENTE_NOMBRE_</div>
+        <div><span>DIRECCION:  </span> _CLIENTE_DIRECCION_</div>
+        <div><span>CUIT:  </span>_CLIENTE_CUIT_</div>
+        <div><span>FECHA:  </span> _FECHA_</div>
+      </div>
+    </header>
+    <main>
+      <table >
+        <thead>
+          <tr>
+            <th class="desc">TIPO PAGO</th>
+            <th width="300px">COMENTARIOS</th>
+            <th width="50px">MONTO</th>
+          </tr>
+                    
+        </thead>
+        <tbody>
+          _LISTA_PAGOS_
+          <tr style=" border-top: 1px solid #5D6975;">
+            <td colspan="2" class="grand total">TOTAL:</td>
+            <td class="grand total">$_TOTAL_</td>
+          </tr>
+          <tr style=" border-top: 1px solid #5D6975;">
+            <td colspan="2" class="grand total">USTED DEBE:</td>
+            <td class="grand total">$_DEUDA_</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

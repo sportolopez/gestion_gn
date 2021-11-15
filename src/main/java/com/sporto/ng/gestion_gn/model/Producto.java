@@ -48,35 +48,8 @@ public class Producto {
 	private Integer ingresos;
 	@Formula("(select COALESCE(sum(MS.cantidad),0) from movimiento_stock MS where MS.producto_id = id and MS.tipo_movimiento = 'EGRESO')")
 	private Integer egresos;
-	@Formula("(select COALESCE(sum(pp.cantidad),0) from pedido_producto pp, pedido p where p.id = pp.pedido_id && pp.producto_id = id and p.estado = 'EMITIDO')")
+	@Formula("(select COALESCE(sum(pp.cantidad),0) from pedido_producto pp, pedido p where p.id = pp.pedido_id && pp.producto_id = id and p.estado != 'CANCELADO')")
 	private Integer bloqueado_pedido;
-	
-//	@ElementCollection(fetch = FetchType.EAGER)
-//	@CollectionTable(name = "precio", joinColumns = @JoinColumn(name = "id_producto"))
-//	@MapKeyColumn(name = "lista")
-//	@Column(name = "precio")
-//	private Map<String, Double> precios;
-	//@OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-	// @JoinColumn(name = "id_producto")
-	//private Set<MovimientoStock> movimientoStock;
-
-//	public Set<Entry<String, Double>> getPreciosSet() {
-//		if (precios != null)
-//			return precios.entrySet();
-//		else
-//			return new HashSet<Entry<String, Double>>();
-//	}
-
-//	public String getPreciosString() {
-//		StringBuffer sb = new StringBuffer();
-//		for (Entry<String, Double> iterable_element : precios.entrySet()) {
-//			sb.append(iterable_element.getKey());
-//			sb.append(": ");
-//			sb.append(iterable_element.getValue());
-//			sb.append(" ");
-//		}
-//		return sb.toString();
-//	}
 	
 	public Integer getStock() {
 		return ingresos - egresos - bloqueado_pedido;

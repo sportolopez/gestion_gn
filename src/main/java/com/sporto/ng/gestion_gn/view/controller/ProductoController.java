@@ -150,6 +150,16 @@ public class ProductoController {
 				cargarListaInicial();
 			}
 		});
+		homeForm.getBotonProductos().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarListaInicial();
+			}
+		});
+		homeForm.getBtnStock().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cargarListaInicial();
+			}
+		});
 		cargarListaInicial();
 	}
 

@@ -11,20 +11,17 @@ import com.sporto.ng.gestion_gn.model.Pedido;
 
 public class PedidoTableModel extends DefaultTableModel {
 
-	public static final int COLUMN_DETALLE = 4;
 	public static final int COLUMN_ESTADO = 3;
-	public static final int COLUMN_ANULADO = 5;
-	public static final int COLUMN_ENTREGADO = 6;
+	public static final int COLUMN_CANCELAR = 4;
+	public static final int COLUMN_ENTREGADO = 5;
 	
 	public PedidoTableModel() {
 		addColumn("ID");
 		addColumn("CLIENTE");
 		addColumn("CUIT/CUIL");
 		addColumn("ESTADO");
-		addColumn("DETALLE");
 		addColumn("CANCELAR");
 		addColumn("RETIRAR");
-		addColumn("ANULAR");
 	}
 
 	public void addPedido(Pedido pedido) {
@@ -33,7 +30,6 @@ public class PedidoTableModel extends DefaultTableModel {
 		lista.add(pedido.getCliente().getRazonSocial());
 		lista.add(pedido.getCliente().getCuit());
 		lista.add(pedido.getEstado());
-		lista.add(Constants.ICONO_DETALLE);
 		if(pedido.getEstado().equals(EstadoPedido.EMITIDO))
 			lista.add(Constants.ICONO_CANCELAR);
 		else
@@ -44,10 +40,7 @@ public class PedidoTableModel extends DefaultTableModel {
 		else
 			lista.add("");
 		
-		if(pedido.getEstado().equals(EstadoPedido.RETIRADO))
-			lista.add(Constants.ICONO_CANCELAR);
-		else
-			lista.add("");
+
 
 		addRow(lista.toArray());
 
@@ -55,7 +48,7 @@ public class PedidoTableModel extends DefaultTableModel {
 	
 	@Override
 	public Class getColumnClass(int column) {
-		if (column >= COLUMN_DETALLE)
+		if (column >= COLUMN_CANCELAR)
 			return ImageIcon.class;
 		return Object.class;
 	}

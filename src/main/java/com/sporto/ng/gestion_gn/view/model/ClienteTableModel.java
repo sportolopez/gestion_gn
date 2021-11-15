@@ -30,7 +30,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		addColumn("NUEVO PEDIDO");
 		addColumn("PRECIOS");
 		addColumn("EDITAR");
-		addColumn("LIBERAR PEDIDOS");
+		addColumn("OPERAR");
 	}
 
 	public void addCliente(Cliente producto) {
@@ -46,7 +46,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		lista.add(Constants.ICONO_PEDIDO);
 		lista.add(Constants.ICONO_EXPORTAR);
 		lista.add(Constants.ICONO_EDITAR);
-		lista.add(Constants.ICONO_LIBERAR);
+		lista.add(Constants.ICONO_PAGO);
 		
 		addRow(lista.toArray());
 

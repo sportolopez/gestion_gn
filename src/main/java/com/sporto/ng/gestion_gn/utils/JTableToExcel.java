@@ -30,7 +30,7 @@ import jxl.write.WriteException;
  */
 public class JTableToExcel {
 
-	public static void export(File file, String heading, String inscribe, JTable table) {
+	public static void export(File file, String heading, String inscribe, JTable table, int colFinal) {
 		try {
 			WritableWorkbook workbook = null; // crear libro de trabajo
 
@@ -48,7 +48,7 @@ public class JTableToExcel {
 			// Obtenga el número de filas en la tabla (rowNum), el número de columnas
 			// (colNum)
 			int rowNum = table.getRowCount();
-			int colNum = table.getColumnCount()-2;
+			int colNum = colFinal;
 
 			// completa el título principal
 			fillHeading(sheet, heading, colNum);

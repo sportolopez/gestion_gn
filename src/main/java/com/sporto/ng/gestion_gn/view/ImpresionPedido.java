@@ -54,5 +54,7 @@ public class ImpresionPedido extends JPanel{
 		PedidoProductoTable table = new PedidoProductoTable();
 		scrollPane.setViewportView(table);
 	}
+	
+	
 
 }

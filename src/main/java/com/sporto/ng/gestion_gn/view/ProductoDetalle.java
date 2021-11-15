@@ -3,7 +3,6 @@ package com.sporto.ng.gestion_gn.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -15,22 +14,24 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.MovimientoStock;
 import com.sporto.ng.gestion_gn.model.Producto;
-import javax.swing.border.BevelBorder;
+import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 
 public class ProductoDetalle extends JDialog {
-	private JTable table;
+	private JTable tableIngresos;
 	private JTextField textFieldCodigo;
 	private JTextField textFieldCategoria;
 	private JTextField textFieldStock;
 	private JTextField textFieldDescripcion;
 	private JTextField textFieldVencimiento;
 	private JTextField textFieldCosto;
+	private JTable tableEgresos;
 
 	public ProductoDetalle(HomeForm homeForm, Producto unProducto, List<MovimientoStock> ingresos) {
 		super(homeForm);
@@ -38,11 +39,20 @@ public class ProductoDetalle extends JDialog {
 		initView();
 		cargarCampos(unProducto);
 
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		DefaultTableModel model = (DefaultTableModel) tableIngresos.getModel();
+		DefaultTableModel modelEgresos = (DefaultTableModel) tableEgresos.getModel();
 		for (MovimientoStock movimientoStock : ingresos) {
-			model.addRow(new Object[] { movimientoStock.getRemito(), movimientoStock.getCantidad(),
-					Constants.outFecha(movimientoStock.getFechaVencimiento()),
-					Constants.outFecha(movimientoStock.getFecha()) });
+
+			if (movimientoStock.getTipoMovimiento().equals(TipoMovimiento.INGRESO)) {
+
+				model.addRow(new Object[] { movimientoStock.getOrdenCompra(), movimientoStock.getRemito(),
+						movimientoStock.getCantidad(), Constants.outFecha(movimientoStock.getFechaVencimiento()),
+						Constants.outFecha(movimientoStock.getFecha()), movimientoStock.getComentario() });
+			} else {
+
+				modelEgresos.addRow(new Object[] { movimientoStock.getCantidad(),
+						Constants.outFecha(movimientoStock.getFecha()), movimientoStock.getComentario() });
+			}
 		}
 
 	}
@@ -152,24 +162,51 @@ public class ProductoDetalle extends JDialog {
 		tp.setSize(new Dimension(0, 50));
 
 		panelMovimientos.add(tp);
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setSize(new Dimension(0, 50));
-		tp.add("Ingresos", scrollPane);
-		table = new JTable();
-		table.setSize(new Dimension(0, 50));
-		table.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "Nro Remito", "Cantidad", "Fecha Vencimiento", "Fecha Movimiento" }) {
+		JScrollPane scrollPaneIngresos = new JScrollPane();
+		scrollPaneIngresos.setSize(new Dimension(0, 50));
+		tp.add("Ingresos", scrollPaneIngresos);
+		JScrollPane scrollPaneEgresos = new JScrollPane();
+		scrollPaneEgresos.setSize(new Dimension(0, 50));
+		tp.add("Egresos", scrollPaneEgresos);
+
+		tableIngresos = new JTable();
+		tableIngresos.setSize(new Dimension(0, 50));
+		tableIngresos.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "OC", "Nro Remito", "Cantidad",
+				"Fecha Vencimiento", "Fecha Movimiento", "Comentario" }) {
 			Class[] columnTypes = new Class[] { String.class, String.class, Integer.class, Integer.class };
 
 			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
+				return String.class;
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
 			}
 		});
-		scrollPane.setViewportView(table);
-		
+
+		tableEgresos = new JTable();
+		tableEgresos.setSize(new Dimension(0, 50));
+		tableEgresos.setModel(new DefaultTableModel(new Object[][] {},
+				new String[] { "Cantidad", "Fecha Movimiento", "Comentario" }) {
+			Class[] columnTypes = new Class[] { String.class, String.class, Integer.class, Integer.class };
+
+			public Class getColumnClass(int columnIndex) {
+				return String.class;
+			}
+
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		});
+		scrollPaneIngresos.setViewportView(tableIngresos);
+		scrollPaneEgresos.setViewportView(tableEgresos);
+
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-		table.setDefaultRenderer(Object.class, rightRenderer);
+		tableIngresos.setDefaultRenderer(Object.class, rightRenderer);
+		tableEgresos.setDefaultRenderer(Object.class, rightRenderer);
 	}
 
 }

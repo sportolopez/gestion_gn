@@ -40,6 +40,7 @@ public class MovimientoStock {
 	private Date fechaVencimiento;
 	private Integer remito;
 	private String ordenCompra;
+	private String comentario;
 
 
 }

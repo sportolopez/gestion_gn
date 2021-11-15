@@ -11,14 +11,15 @@ import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 
 public class MovimientoStockTableModel extends DefaultTableModel {
 		
+	
 		public MovimientoStockTableModel(TipoMovimiento tipoMovimiento) {
 			List<String> list;
 
 			if (tipoMovimiento.equals(TipoMovimiento.INGRESO)) {
 				list = Arrays
-						.asList(new String[] { "CÓDIGO PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "VENCIMIENTO", "CANCELAR" });
+						.asList(new String[] { "CÓDIGO PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "VENCIMIENTO", "COMENTARIO", "CANCELAR" });
 			} else {
-				list = Arrays.asList(new String[] { "CÓDIGO PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "CANCELAR" });
+				list = Arrays.asList(new String[] { "CÓDIGO PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COMENTARIO", "CANCELAR" });
 			}
 			for (String columnName : list) {
 				addColumn(columnName);
@@ -43,11 +44,11 @@ public class MovimientoStockTableModel extends DefaultTableModel {
 			}
 		}
 		
-		public void registrarMovimiento(TipoMovimiento tipoMovimiento, int idProducto, String descripcion, int cantidad, String vencimiento) {
+		public void registrarMovimiento(TipoMovimiento tipoMovimiento, int idProducto, String descripcion, int cantidad, String vencimiento, String comentario) {
 			if (tipoMovimiento.equals(TipoMovimiento.INGRESO))
-				addRow(new Object[] { idProducto,descripcion, cantidad,vencimiento, Constants.ICONO_ELIMINAR });
+				addRow(new Object[] { idProducto,descripcion, cantidad,vencimiento,comentario, Constants.ICONO_ELIMINAR });
 			else
-				addRow(new Object[] { idProducto,descripcion, cantidad,  Constants.ICONO_ELIMINAR });
+				addRow(new Object[] { idProducto,descripcion, cantidad,comentario,  Constants.ICONO_ELIMINAR });
 		}
 		
 		

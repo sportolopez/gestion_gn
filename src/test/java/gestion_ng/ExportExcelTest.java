@@ -61,7 +61,7 @@ public class ExportExcelTest {
 			    file = new File(file.toString() + ".xlsx");
 			}
 			String heading = "Stock";
-			JTableToExcel.export(file, heading, "", table);
+			JTableToExcel.export(file, heading, "", table,5);
 		}
 
 	}

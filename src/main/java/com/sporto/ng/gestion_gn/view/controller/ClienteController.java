@@ -31,7 +31,6 @@ import com.sporto.ng.gestion_gn.view.ClienteDialog;
 import com.sporto.ng.gestion_gn.view.ClientePanel;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.LiberarPedidoDialog;
-import com.sporto.ng.gestion_gn.view.PagoDialog;
 import com.sporto.ng.gestion_gn.view.PedidoDialog;
 import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
 
@@ -44,7 +43,6 @@ public class ClienteController {
 	PrecioDao precioDao;
 	PedidoDao pedidoDao;
 	private PedidoDialog pedidoDialog;
-	private PagoDialog pagoDialog;
 	private LiberarPedidoDialog liberarPedidoDialog;
 
 	@Autowired
@@ -55,7 +53,6 @@ public class ClienteController {
 		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
 		pedidoDialog = new PedidoDialog(productoDao,pedidoDao,homeForm,precioDao,pedidoProductoDao);
-		pagoDialog = new PagoDialog(productoDao,pedidoDao,homeForm,precioDao,pedidoProductoDao);
 		liberarPedidoDialog = new LiberarPedidoDialog(productoDao,pedidoDao,movimientoCajaDao,homeForm);
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
@@ -87,11 +84,6 @@ public class ClienteController {
 		Constants.setListas(listaDao.findAll());
 	}
 	
-	protected void registrarPago(int idCliente) {
-		Cliente cliente = clienteDao.findById(idCliente).get();
-		pagoDialog.nuevoPago(cliente);
-		
-	}
 	
 	protected void liberarPedidos(int idCliente) {
 		Cliente cliente = clienteDao.findById(idCliente).get();

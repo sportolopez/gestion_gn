@@ -162,7 +162,7 @@ public class ProductoPanel extends JPanel {
 					    file = new File(file.toString() + ".xls");
 					}
 					String heading = "Stock";
-					JTableToExcel.export(file, heading, "", tableProductos);
+					JTableToExcel.export(file, heading, "", tableProductos,5);
 				}
 			}
 		});
@@ -200,13 +200,23 @@ public class ProductoPanel extends JPanel {
 		panelBotones.remove(panelBotoneraStock);
 		panelBotones.add(panelBotonesProducto, BorderLayout.WEST);
 		lblTitulo.setText("PRODUCTOS");
+		tableProductos.getColumnModel().getColumn(6).setMaxWidth(100);
+		tableProductos.getColumnModel().getColumn(6).setPreferredWidth(100);
+		tableProductos.getColumnModel().getColumn(7).setMaxWidth(100);
+		tableProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
 	}
 	
 	public void showStock() {
 		panelBotones.remove(panelBotonesProducto);
 		panelBotones.add(panelBotoneraStock, BorderLayout.WEST);
 		lblTitulo.setText("STOCK");
-		
+		tableProductos.getColumnModel().getColumn(6).setMinWidth(0);
+		tableProductos.getColumnModel().getColumn(6).setMaxWidth(0);
+		tableProductos.getColumnModel().getColumn(6).setPreferredWidth(0);
+		tableProductos.getColumnModel().getColumn(7).setMinWidth(0);
+		tableProductos.getColumnModel().getColumn(7).setMaxWidth(0);
+		tableProductos.getColumnModel().getColumn(7).setPreferredWidth(0);
+
 	}
 
 }

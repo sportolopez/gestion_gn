@@ -30,9 +30,11 @@ public class ClienteTable extends JTable {
 		getColumnModel().getColumn(0).setPreferredWidth(40);
 		getColumnModel().getColumn(1).setMaxWidth(200);
 		getColumnModel().getColumn(1).setPreferredWidth(130);
+		getColumnModel().getColumn(2).setMaxWidth(100);
+		getColumnModel().getColumn(2).setPreferredWidth(80);
 		getColumnModel().getColumn(3).setMaxWidth(100);
 		getColumnModel().getColumn(3).setPreferredWidth(80);
-		getColumnModel().getColumn(4).setMaxWidth(200);
+		getColumnModel().getColumn(4).setMaxWidth(200); 		
 		getColumnModel().getColumn(4).setPreferredWidth(150);
 		getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMinWidth(0);
 		getColumnModel().getColumn(ClienteTableModel.COLUMN_PEDIDO).setMaxWidth(0);

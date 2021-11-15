@@ -28,7 +28,8 @@ class ProductoTest {
 
 	@Test
 	void test() {
-		productoDao.findAll();
+		productoDao.findById(Integer.valueOf(1201)).get().getStock();
+		System.out.println();
 	}
 
 	@Test

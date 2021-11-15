@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -114,8 +115,8 @@ public class PedidoPanel extends JPanel {
 					if (!FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("xls")) {
 						file = new File(file.toString() + ".xls");
 					}
-					String heading = "Clientes";
-					JTableToExcel.export(file, heading, "", table);
+					String heading = "Pedidos";
+					JTableToExcel.export(file, heading, "", table,4);
 				}
 			}
 		});
@@ -136,17 +137,24 @@ public class PedidoPanel extends JPanel {
 				int row = target.getSelectedRow();
 				int column = target.getSelectedColumn();
 				Integer idPedido = Integer.parseInt(target.getValueAt(row, 0).toString());
+				Object valueAt = target.getValueAt(row, column);
+				if(!(valueAt instanceof ImageIcon)) {
+					return;
+				}
+				System.out.println("click en icono" +column );
+						
 				if (column == PedidoTableModel.COLUMN_ENTREGADO) {
 					cambiarEstadoPedido(idPedido,EstadoPedido.RETIRADO);
 					cargarPedidos();
 				}
-				
-				if (column == PedidoTableModel.COLUMN_ANULADO) {
+				if (column == PedidoTableModel.COLUMN_CANCELAR) {
 					cambiarEstadoPedido(idPedido,EstadoPedido.CANCELADO);
 					cargarPedidos();
 				}
-				
-
+				if (column == PedidoTableModel.COLUMN_ENTREGADO) {
+					cambiarEstadoPedido(idPedido,EstadoPedido.RETIRADO);
+					cargarPedidos();
+				}
 			}
 
 

@@ -16,6 +16,7 @@ import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 
 public class MovimientoStockTable extends JTable {
+	
 	TableRowSorter<MovimientoStockTableModel> tableRowSorter;
 
 	public MovimientoStockTable() {
@@ -36,9 +37,10 @@ public class MovimientoStockTable extends JTable {
 	}
 
 	public void registrarMovimiento(TipoMovimiento tipoMovimiento, Producto unProducto, int cantidad,
-			String vencimiento) {
+			String vencimiento, String comentario) {
 
 		final int COLUMNA_CANTIDAD = 2;
+		
 
 		MovimientoStockTableModel model = (MovimientoStockTableModel) getModel();
 
@@ -56,6 +58,7 @@ public class MovimientoStockTable extends JTable {
 			}
 
 			setValueAt(nuevaCantidad, indexProducto, COLUMNA_CANTIDAD);
+			
 
 			if (tipoMovimiento == TipoMovimiento.INGRESO) {
 				actualizarFechaSiCorresponde(vencimiento, indexProducto);
@@ -70,7 +73,7 @@ public class MovimientoStockTable extends JTable {
 				}
 			}
 			model.registrarMovimiento(tipoMovimiento, unProducto.getId(), unProducto.getDescripcion(), cantidad,
-					vencimiento);
+					vencimiento,comentario);
 		}
 
 	}

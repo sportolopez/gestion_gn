@@ -42,6 +42,7 @@ public class PedidoTable extends JTable {
 				if (column == PedidoTableModel.COLUMN_ESTADO) {
 					String valueAt = getValueAt(row, PedidoTableModel.COLUMN_ESTADO).toString();
 					tableCellRendererComponent.setBackground(EstadoPedido.valueOf(valueAt).getColor());
+					tableCellRendererComponent.setFont(Constants.FUENTE_LABEL );
 				} else {
 					tableCellRendererComponent.setBackground(Color.white);
 				}

@@ -43,6 +43,7 @@ public class HomeForm extends javax.swing.JFrame {
 	private JButton btnNewButton_3;
 	private JSeparator separator;
 	private PedidoPanel panelPedidos;
+	private JButton btnStock;
 
 	/**
 	 * Creates new form HomeForm
@@ -95,7 +96,7 @@ public class HomeForm extends javax.swing.JFrame {
 			}
 		});
 
-		JButton btnStock = new JButton("STOCK");
+		btnStock = new JButton("STOCK");
 		btnStock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();

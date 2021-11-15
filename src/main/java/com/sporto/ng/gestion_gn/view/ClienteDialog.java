@@ -58,6 +58,7 @@ public class ClienteDialog extends JDialog {
 		comboBoxLista.setModel(new DefaultComboBoxModel<Lista>(listaPrecios));
 
 		configValidations();
+		setResizable(false);
 	}
 
 	private void initComponents() {
@@ -166,6 +167,7 @@ public class ClienteDialog extends JDialog {
 		    	TipoCuenta tipoCuentaSeleccionado = (TipoCuenta) comboBoxTipoCuenta.getSelectedItem();
 		    	if(TipoCuenta.EFECTIVO.equals(tipoCuentaSeleccionado)) {
 		    		textLimite.setEditable(false);
+		    		textLimite.setText("0");
 		    	}else {
 		    		textLimite.setEditable(true);
 		    	}
@@ -183,6 +185,8 @@ public class ClienteDialog extends JDialog {
 
 	private void configValidations() {
 		textRazonSocial.setInputVerifier(new TextoVerifier("Razon Social", camposInvalidos));
+		textTelefono.setInputVerifier(new TextoVerifier("Teléfono", camposInvalidos));
+		textDomicilio.setInputVerifier(new TextoVerifier("Domicilio", camposInvalidos));
 		textLimite.setInputVerifier(new DoubleVerifier("Límite Descubierto", camposInvalidos));
 	}
 
@@ -214,13 +218,15 @@ public class ClienteDialog extends JDialog {
 		textRazonSocial.setText("");
 		textTelefono.setText("");
 		textCUIT.setText("");
-		textLimite.setText("");
+		textLimite.setText("0");
 		comboBoxTipoCuenta.setSelectedItem(TipoCuenta.EFECTIVO);
 		idClienteEditando = null;
 	}
 
 	public boolean validar() {
 		textRazonSocial.requestFocus();
+		textTelefono.requestFocus();
+		textDomicilio.requestFocus();
 		textLimite.requestFocus();
 		btnGuardar.requestFocus();
 		

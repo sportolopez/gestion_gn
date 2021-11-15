@@ -43,6 +43,14 @@ public class PedidoProductoTable extends JTable {
 
 		tableRowSorter = new TableRowSorter<PedidoProductoTableModel>((PedidoProductoTableModel) getModel());
 		setRowSorter(tableRowSorter);
+
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CODIGO).setMinWidth(60);
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CODIGO).setMaxWidth(60);
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CODIGO).setPreferredWidth(60);
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CANTIDAD).setMinWidth(60);
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CANTIDAD).setMaxWidth(60);
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CANTIDAD).setPreferredWidth(60);
+
 	}
 
 	public void registrarMovimiento(Producto unProducto, int cantidad, Double precio, String descuento) {
@@ -126,45 +134,6 @@ public class PedidoProductoTable extends JTable {
 			return;
 		}
 		tableRowSorter.setRowFilter(rf);
-	}
-
-	@Override
-	public Printable getPrintable(PrintMode printMode, MessageFormat headerFormat, MessageFormat footerFormat) {
-		// TODO Auto-generated method stub
-
-		return new MyTablePrintable(this, PrintMode.FIT_WIDTH, header, footer);
-
-		// return super.getPrintable(printMode, headerFormat, footerFormat);
-	}
-
-	public void imprimir(Pedido unPedido) throws PrinterException {
-		header = new MessageFormat[3];
-		header[0] = new MessageFormat("");
-		header[1] = new MessageFormat("Nro pedido: " + unPedido.getId());
-		header[2] = new MessageFormat("CLIENTE: " + unPedido.getCliente().getRazonSocial() + "           DOMICILIO: "
-				+ unPedido.getCliente().getDomicilio());
-
-		footer = new MessageFormat[1];
-		footer[0] = new MessageFormat(" footer ");
-
-		PrinterJob job = PrinterJob.getPrinterJob();
-		PageFormat pf = job.defaultPage();
-		Paper paper = pf.getPaper();
-		double margin = 10.;
-		paper.setImageableArea(margin, 10, paper.getWidth() - 2 * margin, paper.getImageableHeight());
-		pf.setPaper(paper);
-		job.setPrintable(this.getPrintable(JTable.PrintMode.FIT_WIDTH,
-				new MessageFormat("Nro pedido: " + unPedido.getId()), null), job.validatePage(pf));
-
-		boolean printAccepted = job.printDialog();
-		if (printAccepted) {
-			try {
-				job.print();
-			} catch (PrinterException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
 	}
 
 	public Double getTotal() {

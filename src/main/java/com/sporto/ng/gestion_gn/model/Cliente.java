@@ -58,6 +58,11 @@ public class Cliente {
 	private Double egreso;
 
 	public Double getSaldo() {
+		if(ingreso == null)
+			ingreso = (double) 0;
+		if(egreso == null)
+			egreso = (double) 0;
+			
 		return ingreso - egreso;
 	}
 }

@@ -300,7 +300,7 @@ public class LiberarPedidoDialog extends JDialog {
 		});
 		panelBotones.add(btnNewButton);
 
-		botonGuardar = new JButton("GUARDAR");
+		botonGuardar = new JButton("VISTA PREVIA");
 		botonGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				guardarMovimientos();
@@ -337,23 +337,35 @@ public class LiberarPedidoDialog extends JDialog {
 
 		}
 
-		if (estadoCC > 0) {
-			JOptionPane.showMessageDialog(this, "El cliente no puede tener un saldo a favor.", "Error",
-					JOptionPane.ERROR_MESSAGE);
-			return;
-
-		}
+//		if (estadoCC > 0) {
+//			JOptionPane.showMessageDialog(this, "El cliente no puede tener un saldo a favor.", "Error",
+//					JOptionPane.ERROR_MESSAGE);
+//			return;
+//
+//		}
 
 		List<MovimientoCaja> pagos = tablePagos.getPagos(cliente);
-		registrarIngresos(pagos);
-		actualizarPedidos(tablePedidos);
+
 
 		Impresora impresora = new Impresora();
-		impresora.imprimirPagos(cliente, pagos);
+		impresora.imprimirPagos(cliente, pagos,estadoCC);
+		impresora.getBtnImprimir().addActionListener(new ActionListener() {
+			private JDialog padre;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				registrarIngresos(pagos);
+				actualizarPedidos(tablePedidos);
+				padre.setVisible(false);
+			}
+			private ActionListener init(JDialog padre) {
+				this.padre = padre;
+				return this;
+			}
+		}.init(this));
 		impresora.setVisible(true);
 
-		JOptionPane.showMessageDialog(this, "Se registraron los movimientos.", " ", JOptionPane.INFORMATION_MESSAGE);
-		this.setVisible(false);
+		
+		
 	}
 
 	private void actualizarPedidos(LiberarPedidoTable table) {

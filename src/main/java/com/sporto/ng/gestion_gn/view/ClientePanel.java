@@ -11,9 +11,11 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,13 +35,12 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Cliente;
-import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.utils.JTableToExcel;
 import com.sporto.ng.gestion_gn.view.model.ClienteTable;
 import com.sporto.ng.gestion_gn.view.model.ClienteTableModel;
 
 import lombok.Getter;
-import java.awt.Font;
+import javax.swing.Icon;
 
 @Getter
 public class ClientePanel extends JPanel {
@@ -52,6 +53,8 @@ public class ClientePanel extends JPanel {
 	private JButton btnImportarPrecios;
 	
 	JLabel lblTitulo;
+	private JButton btnEgreso;
+	private JButton btnArqueoDelDia;
 
 	public ClientePanel(JFrame parent) {
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -98,7 +101,8 @@ public class ClientePanel extends JPanel {
 
 		JPanel panel_2 = new JPanel();
 		panelHEaderTabla.add(panel_2, BorderLayout.EAST);
-
+		
+		
 		btnExportar = new JButton(Constants.ICONO_EXPORTAR);
 		panel_2.add(btnExportar);
 		btnExportar.addActionListener(new ActionListener() {
@@ -158,6 +162,17 @@ public class ClientePanel extends JPanel {
 		btnImportarPrecios = new JButton(Constants.ICONO_IMPORTAR);
 		panelBotonera.add(btnImportarPrecios);
 		btnImportarPrecios.setMnemonic(KeyEvent.VK_I);
+		btnEgreso = new JButton(Constants.ICONO_PAGO);
+		btnEgreso.setHorizontalTextPosition(AbstractButton.LEADING); 
+		btnEgreso.setText("EGRESO");
+		btnEgreso.setMnemonic(KeyEvent.VK_I);
+		panelBotonera.add(btnEgreso);
+		
+		btnArqueoDelDia = new JButton(Constants.ICONO_CAJA);
+		btnArqueoDelDia.setText("ARQUEO CAJA");
+		btnArqueoDelDia.setMnemonic(KeyEvent.VK_I);
+		btnArqueoDelDia.setHorizontalTextPosition(SwingConstants.LEADING);
+		panelBotonera.add(btnArqueoDelDia);
 
 
 	}
@@ -187,9 +202,11 @@ public class ClientePanel extends JPanel {
 		lblTitulo.setText("CLIENTES");
 		btnNuevoCliente.setVisible(true);
 		btnImportarPrecios.setVisible(false);
-
+		btnExportar.setVisible(true);
+		btnEgreso.setVisible(false);
 		ocultarColumna(ClienteTableModel.COLUMN_PEDIDO);
 		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
+		ocultarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
 		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
 		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
@@ -201,18 +218,22 @@ public class ClientePanel extends JPanel {
 		lblTitulo.setText("PRECIOS");
 		btnNuevoCliente.setVisible(false);
 		btnImportarPrecios.setVisible(true);
+		btnExportar.setVisible(false);
+		btnEgreso.setVisible(false);
 		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
 		ocultarColumna(ClienteTableModel.COLUMN_EDITAR);
+		ocultarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 		mostrarColumna(ClienteTableModel.COLUMN_PEDIDO);
 		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
 		mostrarColumna(ClienteTableModel.COLUMN_MAIL);
-		mostrarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 	}
 
 	public void showCaja() {
 		lblTitulo.setText("CAJA");
 		btnNuevoCliente.setVisible(false);
 		btnImportarPrecios.setVisible(false);
+		btnExportar.setVisible(true);
+		btnEgreso.setVisible(true);
 		ocultarColumna(ClienteTableModel.COLUMN_PEDIDO);
 		ocultarColumna(ClienteTableModel.COLUMN_EXPORTAR);
 		ocultarColumna(ClienteTableModel.COLUMN_EDITAR);

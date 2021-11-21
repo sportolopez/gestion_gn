@@ -10,6 +10,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.sporto.ng.gestion_gn.model.Cliente;
+import com.sporto.ng.gestion_gn.model.GastoCaja;
 import com.sporto.ng.gestion_gn.model.MedioPago;
 import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.Producto;
@@ -69,6 +70,22 @@ public class PagoTable extends JTable {
 						.medioPago(MedioPago.valueOf(getValueAt(i, PagoTableModel.COLUMN_MEDIO_DE_PAGO).toString()))
 						.monto(Double.valueOf(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString()))
 						.tipoMovimiento(TipoMovimiento.INGRESO)
+						.build();
+			listMovimientos.add(unMov);
+		}
+		return listMovimientos;
+		
+	}
+
+	
+	public List<GastoCaja> getGastos(){
+		List<GastoCaja> listMovimientos = new ArrayList<GastoCaja>();
+		
+		for (int i = 0; i < getRowCount(); i++) {
+			GastoCaja unMov = GastoCaja.builder()
+						.comentario(getValueAt(i, PagoTableModel.COLUMN_COMENTARIO).toString())
+						.fecha(new Date())
+						.monto(Double.valueOf(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString()))
 						.build();
 			listMovimientos.add(unMov);
 		}

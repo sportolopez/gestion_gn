@@ -37,6 +37,7 @@ public class Constants {
 	public static ImageIcon ICONO_DETALLE = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/eye.png"));
 	public static ImageIcon ICONO_PEDIDO = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-shopping-cart-24.png"));
 	public static ImageIcon ICONO_PAGO = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/icons8-us-dollar-25.png"));
+	public static ImageIcon ICONO_CAJA = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/cajero-automatico.png"));
 	
 	private static List<Lista> LISTAS;
 	

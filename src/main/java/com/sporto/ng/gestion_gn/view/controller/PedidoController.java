@@ -31,10 +31,4 @@ public class PedidoController {
 		
 	}
 	
-	private void nuevoPedido() {
-		dialog.limpiarCampos();
-		dialog.setVisible(true);
-		
-	}
-	
 }

@@ -14,6 +14,7 @@ public class PedidoTableModel extends DefaultTableModel {
 	public static final int COLUMN_ESTADO = 3;
 	public static final int COLUMN_CANCELAR = 4;
 	public static final int COLUMN_ENTREGADO = 5;
+	public static final int COLUMN_DETALLE = 6;
 	
 	public PedidoTableModel() {
 		addColumn("ID");
@@ -22,6 +23,7 @@ public class PedidoTableModel extends DefaultTableModel {
 		addColumn("ESTADO");
 		addColumn("CANCELAR");
 		addColumn("RETIRAR");
+		addColumn("DETALLE");
 	}
 
 	public void addPedido(Pedido pedido) {
@@ -40,7 +42,7 @@ public class PedidoTableModel extends DefaultTableModel {
 		else
 			lista.add("");
 		
-
+		lista.add(Constants.ICONO_DETALLE);
 
 		addRow(lista.toArray());
 

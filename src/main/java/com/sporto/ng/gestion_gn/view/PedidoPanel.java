@@ -36,6 +36,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
+import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
+import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.utils.JTableToExcel;
@@ -54,11 +56,17 @@ public class PedidoPanel extends JPanel {
 
 	JLabel lblTitulo;
 	private PedidoDao pedidoDao;
+	private PedidoProductoDao pedidoProductoDao;
+	private JFrame jFramePapa;
+	private ProductoDao productoDao;
 
-	public PedidoPanel(JFrame parent, PedidoDao pedidoDao) {
-		this.pedidoDao = pedidoDao;
+	public PedidoPanel(JFrame parent, PedidoDao pedidoDao,ProductoDao productoDao,PedidoProductoDao pedidoProductoDao) {
+		this.productoDao = productoDao;
+		this.pedidoProductoDao = pedidoProductoDao;
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.jFramePapa = parent;
+		this.pedidoDao = pedidoDao;
 
 		JPanel panel = new JPanel();
 		add(panel);
@@ -155,12 +163,21 @@ public class PedidoPanel extends JPanel {
 					cambiarEstadoPedido(idPedido,EstadoPedido.RETIRADO);
 					cargarPedidos();
 				}
+				if (column == PedidoTableModel.COLUMN_DETALLE) {
+					cambiarEstadoPedido(idPedido,EstadoPedido.RETIRADO);
+					cargarDetalle(idPedido);
+				}
 			}
 
 
 
 		});
 
+	}
+	protected void cargarDetalle(Integer idPedido) {
+		Optional<Pedido> findById = pedidoDao.findById(idPedido);
+		PedidoDialog pedidoDialog = new PedidoDialog(productoDao,pedidoDao,jFramePapa,null,pedidoProductoDao);
+		pedidoDialog.cargarPedido(findById.get());
 	}
 	private void cambiarEstadoPedido(Integer idPedido, EstadoPedido retirado) {
 		Optional<Pedido> findById = pedidoDao.findById(idPedido);

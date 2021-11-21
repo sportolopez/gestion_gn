@@ -16,8 +16,6 @@ import com.sporto.ng.gestion_gn.model.Lista;
 
 public class ClienteTable extends JTable {
 
-	private static final int COLUMNA_LISTA = 7;
-
 	public ClienteTable() {
 
 		setRowHeight(40);
@@ -46,8 +44,8 @@ public class ClienteTable extends JTable {
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 					boolean hasFocus, int row, int column) {
 				Component tableCellRendererComponent = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-				if (column == COLUMNA_LISTA) {
-					Lista lista = Constants.getLista(table.getValueAt(row, COLUMNA_LISTA).toString());
+				if (column == ClienteTableModel.COLUMN_LISTA) {
+					Lista lista = Constants.getLista(table.getValueAt(row, ClienteTableModel.COLUMN_LISTA).toString());
 					try {
 						tableCellRendererComponent.setBackground(Color.decode("#"+lista.getColor()));
 					} catch (NumberFormatException e) {

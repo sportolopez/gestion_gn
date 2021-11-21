@@ -29,8 +29,6 @@ public class PedidoProductoTable extends JTable {
 	TableRowSorter<PedidoProductoTableModel> tableRowSorter;
 	private MessageFormat[] header;
 	private MessageFormat[] footer;
-	   private Map<String, IndexedColumn> hidden =
-		        new HashMap<String, IndexedColumn>();
 
 	public PedidoProductoTable() {
 		super();
@@ -51,6 +49,12 @@ public class PedidoProductoTable extends JTable {
 		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CANTIDAD).setMaxWidth(60);
 		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_CANTIDAD).setPreferredWidth(60);
 
+	}
+	
+	public void ocultarColumnaEliminar() {
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_ELIMINAR).setMinWidth(0);
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_ELIMINAR).setMaxWidth(0);
+		getColumnModel().getColumn(PedidoProductoTableModel.COLUMNA_ELIMINAR).setPreferredWidth(0);	
 	}
 
 	public void registrarMovimiento(Producto unProducto, int cantidad, Double precio, String descuento) {
@@ -144,45 +148,7 @@ public class PedidoProductoTable extends JTable {
 		return subTotal;
 	}
 
-	public void ocultarColumnaEliminar() {
-		hide("DESCUENTO");
-	}
-
-	public void mostrarColumnaEliminar() {
-		show("DESCUENTO");
-	}
-
-    public void hide(String columnName) {
-        int index = getColumnModel().getColumnIndex(columnName);
-        TableColumn column = getColumnModel().getColumn(index);
-        IndexedColumn ic = new IndexedColumn(index, column);
-        if (hidden.put(columnName, ic) != null) {
-            throw new IllegalArgumentException("Duplicate column name.");
-        }
-        getColumnModel().removeColumn(column);
-    }
-
-    public void show(String columnName) {
-        IndexedColumn ic = hidden.remove(columnName);
-        if (ic != null) {
-            getColumnModel().addColumn(ic.column);
-            int lastColumn = getColumnModel().getColumnCount() - 1;
-            if (ic.index < lastColumn) {
-                getColumnModel().moveColumn(lastColumn, ic.index);
-            }
-        }
-    }
-    
-    private static class IndexedColumn {
-
-        private Integer index;
-        private TableColumn column;
-
-        public IndexedColumn(Integer index, TableColumn column) {
-            this.index = index;
-            this.column = column;
-        }
-    }
+	
 
 
 }

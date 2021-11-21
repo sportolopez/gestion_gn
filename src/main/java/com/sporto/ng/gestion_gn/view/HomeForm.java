@@ -24,7 +24,10 @@ import javax.swing.UIManager;
 import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
+import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
+import com.sporto.ng.gestion_gn.dao.ProductoDao;
 
 import lombok.Getter;
 
@@ -44,19 +47,21 @@ public class HomeForm extends javax.swing.JFrame {
 	private JSeparator separator;
 	private PedidoPanel panelPedidos;
 	private JButton btnStock;
+	private ClienteDao clienteDao;
 
 	/**
 	 * Creates new form HomeForm
 	 * 
 	 * @throws IOException
 	 */
-	public HomeForm(PedidoDao pedidoDao) throws IOException {
+	public HomeForm(PedidoDao pedidoDao, ClienteDao clienteDao,PedidoProductoDao pedidoProductoDao,ProductoDao productoDao) throws IOException {
+		this.clienteDao = clienteDao;
 		setTitle("Distribuidora GN");
 		URL resource = getClass().getClassLoader().getResource("icono.png");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		this.productosPanel = new ProductoPanel(this);
 		this.panelClientes = new ClientePanel(this);
-		this.panelPedidos = new PedidoPanel(this,pedidoDao);
+		this.panelPedidos = new PedidoPanel(this,pedidoDao,productoDao,pedidoProductoDao);
 		
 		setPreferredSize(new Dimension(Constants.ANCHO, Constants.ALTO));
 		initComponents();
@@ -89,6 +94,7 @@ public class HomeForm extends javax.swing.JFrame {
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();
+				panelClientes.cargarLista(clienteDao.findAll());
 				panelClientes.showClientes();
 				layeredPane.add(panelClientes);
 				layeredPane.repaint();
@@ -111,6 +117,7 @@ public class HomeForm extends javax.swing.JFrame {
 		btnVentas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();
+				panelClientes.cargarLista(clienteDao.findAll());
 				panelClientes.showPrecios();
 				layeredPane.add(panelClientes);
 				layeredPane.repaint();
@@ -133,6 +140,7 @@ public class HomeForm extends javax.swing.JFrame {
 		btnCaja.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				layeredPane.removeAll();
+				panelClientes.cargarLista(clienteDao.findAll());
 				panelClientes.showCaja();
 				layeredPane.add(panelClientes);
 				layeredPane.repaint();

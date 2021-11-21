@@ -24,6 +24,7 @@ import java.util.Objects;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -44,6 +45,10 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 	private JEditorPane jEditorPane;
 
 	private JDialog _self;
+
+	private JButton btnImprimir;
+
+	protected boolean reimpresion = false;
 	public Impresora() {
 		
 		super(new JDialog(),true);
@@ -76,8 +81,8 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		getContentPane().add(panel_1, BorderLayout.SOUTH);
 
-		JButton btnNewButton = new JButton("IMPRIMIR");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnImprimir = new JButton("IMPRIMIR Y GUARDAR");
+		btnImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				try {
@@ -92,6 +97,10 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 					boolean printAccepted = job.printDialog();
 					if (printAccepted) {
 						job.print();
+						_self.setVisible(false);
+						if(!reimpresion )
+						JOptionPane.showMessageDialog(new JDialog(), "Se registraron los movimientos con éxito.", " ", JOptionPane.INFORMATION_MESSAGE);
+						
 					}
 				} catch (PrinterException e1) {
 					// TODO Auto-generated catch block
@@ -107,7 +116,7 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 			}
 		});
 		panel_1.add(btnCerrar);
-		panel_1.add(btnNewButton);
+		panel_1.add(btnImprimir);
 	}
 
 	public void imprimirPedido(Pedido unPedido, Collection<PedidoProducto> listaProductos) {
@@ -120,7 +129,7 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 			text = text.replace("_CLIENTE_NOMBRE_", String.valueOf(unPedido.getCliente().getRazonSocial()));
 			String domicilio = unPedido.getCliente().getDomicilio();
 			text = text.replace("_CLIENTE_DIRECCION_", Objects.toString(domicilio, ""));
-			text = text.replace("_CLIENTE_CUIT_", Objects.toString(unPedido.getCliente().getCuit(), ""));
+			text = text.replace("_CLIENTE_TELEFONO_", Objects.toString(unPedido.getCliente().getTelefono(), ""));
 			text = text.replace("_FECHA_", Constants.FORMATO_FECHA.format(new Date()));
 
 			StringBuilder sb = new StringBuilder();
@@ -154,7 +163,7 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 		}
 		
 	}
-	public void imprimirPagos(Cliente unCliente, Collection<MovimientoCaja> listaPagos) {
+	public void imprimirPagos(Cliente unCliente, Collection<MovimientoCaja> listaPagos, Double estadoCC) {
 		URL url = Impresora.class.getResource("/pagos.htm");
 		
 		try {
@@ -163,7 +172,7 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 			text = text.replace("_CLIENTE_NOMBRE_", String.valueOf(unCliente.getRazonSocial()));
 			String domicilio = unCliente.getDomicilio();
 			text = text.replace("_CLIENTE_DIRECCION_", Objects.toString(domicilio, ""));
-			text = text.replace("_CLIENTE_CUIT_", Objects.toString(unCliente.getCuit(), ""));
+			text = text.replace("_CLIENTE_TELEFONO_", Objects.toString(unCliente.getTelefono(), ""));
 			text = text.replace("_FECHA_", Constants.FORMATO_FECHA.format(new Date()));
 			
 			StringBuilder sb = new StringBuilder();
@@ -186,7 +195,7 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 			}
 			text = text.replace("_LISTA_PAGOS_", sb.toString());
 			text = text.replace("_TOTAL_", String.valueOf(total));
-			text = text.replace("_DEUDA_", String.valueOf(unCliente.getSaldo()));
+			text = text.replace("_DEUDA_", String.valueOf(estadoCC));
 			
 			jEditorPane.setText(text);
 		} catch (IOException e) {
@@ -255,7 +264,7 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 
 	public static void main(String[] args) {
 
-		Cliente cliente = Cliente.builder().id(334).cuit("2323232").razonSocial("Seba").domicilio("Un domiciio")
+		Cliente cliente = Cliente.builder().id(334).cuit("2323232").razonSocial("Sebastian Porto").domicilio("Almirante Brown 3250, Villa Ballester").telefono("3423423434")
 				.listaPrecio(Lista.builder().nombre("VIP").build()).build();
 
 		Pedido unpedido = Pedido.builder().id(334).cliente(cliente).estado(EstadoPedido.EMITIDO).fecha(new Date())
@@ -264,13 +273,13 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 		Producto nroProducto = Producto.builder().id(111).descripcion("Mayonesa").build();
 
 		Impresora impresora = new Impresora();
-//		List<PedidoProducto> productos = new ArrayList<PedidoProducto>();
-//		productos.add(PedidoProducto.builder().cantidad(1).pedido(unpedido).descuento("1 %").precio(23)
-//				.producto(nroProducto).build());
-//		productos.add(PedidoProducto.builder().cantidad(1).pedido(unpedido).descuento("1 %").precio(23)
-//				.producto(nroProducto).build());
-//		productos.add(PedidoProducto.builder().cantidad(1).pedido(unpedido).descuento("1 %").precio(23)
-//				.producto(nroProducto).build());
+		List<PedidoProducto> productos = new ArrayList<PedidoProducto>();
+		productos.add(PedidoProducto.builder().cantidad(1).pedido(unpedido).descuento("1 %").precio(23)
+				.producto(nroProducto).build());
+		productos.add(PedidoProducto.builder().cantidad(1).pedido(unpedido).descuento("1 %").precio(23)
+				.producto(nroProducto).build());
+		productos.add(PedidoProducto.builder().cantidad(1).pedido(unpedido).descuento("1 %").precio(23)
+				.producto(nroProducto).build());
 		System.out.println(cliente);
 		MovimientoCaja unMovimiento = MovimientoCaja.builder().cliente(cliente)
 					.comentario("Prueba")
@@ -284,8 +293,25 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 		pagos.add(unMovimiento);
 		pagos.add(unMovimiento);
 		pagos.add(unMovimiento);
-		impresora.imprimirPagos(cliente, pagos);
+		//impresora.imprimirPagos(cliente, pagos, cliente.getSaldo());
+		impresora.imprimirPedido(unpedido, productos);
 		impresora.setVisible(true);
 
 	}
+
+
+	public JButton getBtnImprimir() {
+		return btnImprimir;
+	}
+
+
+	public void reimprimirPedido(Pedido unPedido, Collection<PedidoProducto> listaProductosEditar) {
+		reimpresion = true;
+		btnImprimir.setText("IMPRIMIR");
+		imprimirPedido(unPedido, listaProductosEditar);
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 }

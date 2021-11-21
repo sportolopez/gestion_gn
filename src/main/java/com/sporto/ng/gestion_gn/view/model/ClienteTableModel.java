@@ -12,11 +12,12 @@ public class ClienteTableModel extends DefaultTableModel {
 
 	public static final int COLUMN_MAIL = 3;
 	public static final int COLUMN_DOMICILIO = 5;
-	public static final int COLUMN_LISTA = 7;
-	public static final int COLUMN_PEDIDO = 8;
-	public static final int COLUMN_EXPORTAR = 9;
-	public static final int COLUMN_EDITAR = 10;
-	public static final int COLUMN_LIBERAR = 11;
+	public static final int COLUMN_DEUDA = 7;
+	public static final int COLUMN_LISTA = 8;
+	public static final int COLUMN_PEDIDO = 9;
+	public static final int COLUMN_EXPORTAR = 10;
+	public static final int COLUMN_EDITAR = 11;
+	public static final int COLUMN_LIBERAR = 12;
 	
 	public ClienteTableModel() {
 		addColumn("ID");
@@ -26,6 +27,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		addColumn("TELÉFONO");
 		addColumn("DOMICILIO");
 		addColumn("DESCUBIERTO");
+		addColumn("SALDO");
 		addColumn("LISTA");
 		addColumn("NUEVO PEDIDO");
 		addColumn("PRECIOS");
@@ -42,6 +44,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		lista.add(producto.getTelefono());
 		lista.add(producto.getDomicilio());
 		lista.add(producto.getLimiteDeuda());
+		lista.add(producto.getSaldo());
 		lista.add(producto.getListaPrecio());
 		lista.add(Constants.ICONO_PEDIDO);
 		lista.add(Constants.ICONO_EXPORTAR);

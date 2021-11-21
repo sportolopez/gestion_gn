@@ -84,16 +84,21 @@ public class PedidoDialog extends JDialog {
 	private PedidoDao pedidoDao;
 	private JTextField textFieldTotal;
 	JDialog _self;
+	private JTextField textFieldSaldo;
+	private JPanel panelAgregar;
+	private JLabel lblTitulo;
+	private Pedido unPedidoEditar;
+	private JButton btnImprimir;
 
 	public PedidoDialog(ProductoDao productoDao, PedidoDao pedidoDao, JFrame owner, PrecioDao precioDao,
 			PedidoProductoDao pedidoProductoDao) {
 		super(owner);
+		this.pedidoProductoDao = pedidoProductoDao;
 		setResizable(false);
 		this._self = this;
 		this.precioDao = precioDao;
 		this.pedidoDao = pedidoDao;
 		this.productoDao = productoDao;
-		this.pedidoProductoDao = pedidoProductoDao;
 		URL resource = getClass().getClassLoader().getResource("icono.ico");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
@@ -102,10 +107,10 @@ public class PedidoDialog extends JDialog {
 		setTitle("NUEVO PEDIDO");
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-		JLabel lblNewLabel = new JLabel("NUEVO PEDIDO");
-		lblNewLabel.setFont(Constants.FUENTE_TITULO);
-		lblNewLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		getContentPane().add(lblNewLabel);
+		lblTitulo = new JLabel("NUEVO PEDIDO");
+		lblTitulo.setFont(Constants.FUENTE_TITULO);
+		lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+		getContentPane().add(lblTitulo);
 
 		JPanel panelCliente = new JPanel();
 		getContentPane().add(panelCliente);
@@ -133,6 +138,14 @@ public class PedidoDialog extends JDialog {
 		textFieldTipoCliente.setEditable(false);
 		textFieldTipoCliente.setColumns(8);
 		panelCliente.add(textFieldTipoCliente);
+		
+		JLabel lblNewLabel_3_2_1 = new JLabel("SALDO: ");
+		panelCliente.add(lblNewLabel_3_2_1);
+		
+		textFieldSaldo = new JTextField();
+		textFieldSaldo.setEditable(false);
+		textFieldSaldo.setColumns(8);
+		panelCliente.add(textFieldSaldo);
 
 		JPanel panel = new JPanel();
 		getContentPane().add(panel);
@@ -142,7 +155,7 @@ public class PedidoDialog extends JDialog {
 		lblProductos.setAlignmentX(0.5f);
 		panel.add(lblProductos);
 
-		JPanel panelAgregar = new JPanel();
+		panelAgregar = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panelAgregar.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		getContentPane().add(panelAgregar);
@@ -262,6 +275,10 @@ public class PedidoDialog extends JDialog {
 				setVisible(false);
 			}
 		});
+		
+		btnImprimir = new JButton("IMPRIMIR");
+
+		panelBotones.add(btnImprimir);
 		panelBotones.add(btnNewButton);
 
 		botonGuardar = new JButton("GUARDAR");
@@ -274,32 +291,6 @@ public class PedidoDialog extends JDialog {
 		configValidations();
 		pack();
 
-	}
-
-	public void printComponenet(Component component) {
-		PrinterJob pj = PrinterJob.getPrinterJob();
-		pj.setJobName(" Print Component ");
-
-		pj.setPrintable(new Printable() {
-			public int print(Graphics pg, PageFormat pf, int pageNum) {
-				if (pageNum > 0) {
-					return Printable.NO_SUCH_PAGE;
-				}
-
-				Graphics2D g2 = (Graphics2D) pg;
-				g2.translate(pf.getImageableX(), pf.getImageableY());
-				component.paint(g2);
-				return Printable.PAGE_EXISTS;
-			}
-		});
-		if (pj.printDialog() == false)
-			return;
-
-		try {
-			pj.print();
-		} catch (PrinterException ex) {
-			// handle exception
-		}
 	}
 
 	private void onProductoChange(String idSelected) {
@@ -438,18 +429,6 @@ public class PedidoDialog extends JDialog {
 		
 		JOptionPane.showMessageDialog(this, "El pedido " + unPedido.getId()  + " fue registrado con éxito.", " ", JOptionPane.INFORMATION_MESSAGE);
 		this.setVisible(false);
-//		impresora.addWindowListener(new WindowAdapter() {
-//			public void windowClosed(WindowEvent e) {
-//				_self.setVisible(false);
-//			}
-//
-//			@Override
-//			public void windowClosing(WindowEvent e) {
-//				// TODO Auto-generated method stub
-//				super.windowClosing(e);
-//			}
-//		});
-		//setVisible(false);
 	}
 
 	public static boolean isNumeric(String strNum) {
@@ -470,9 +449,36 @@ public class PedidoDialog extends JDialog {
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
 		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
 		textFieldTotal.setText("");
+		textFieldSaldo.setText(unCliente.getSaldo().toString());
 		listaPrecios = precioDao.findByLista(unCliente.getListaPrecio());
 		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
 		this.setVisible(true);
 	}
 
+	public void cargarPedido(Pedido unPedido) {
+		this.unPedidoEditar = unPedido;
+		Collection<PedidoProducto> listaProductosEditar = pedidoProductoDao.findByPedido(unPedido);
+		Cliente unCliente = unPedido.getCliente();
+		textFieldCliente.setText(unCliente.getRazonSocial());
+		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
+		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
+		textFieldSaldo.setText(unCliente.getSaldo().toString());
+		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
+		((PedidoProductoTableModel) table.getModel()).addAll(listaProductosEditar);
+		textFieldTotal.setText(table.getTotal().toString());
+		botonGuardar.setVisible(false);
+		table.ocultarColumnaEliminar();
+		panelAgregar.setVisible(false);
+		lblTitulo.setText("DETALLE PEDIDO "+unPedido.getId());
+		btnImprimir.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Se hace click en imprimir");
+				Impresora impresora = new Impresora();
+				impresora.reimprimirPedido(unPedido, listaProductosEditar);
+				impresora.setVisible(true);
+			}
+		});
+		this.setVisible(true);
+		
+	}
 }

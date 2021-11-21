@@ -22,8 +22,11 @@ import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.MovimientoStock;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
-public class ProductoDetalle extends JDialog {
+public class ProductoDetalle extends JDialog implements ActionListener {
 	private JTable tableIngresos;
 	private JTextField textFieldCodigo;
 	private JTextField textFieldCategoria;
@@ -146,13 +149,11 @@ public class ProductoDetalle extends JDialog {
 
 		JLabel lblCosto = new JLabel("COSTO");
 		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
-		panel2.add(lblCosto);
 
 		textFieldCosto = new JTextField();
 		textFieldCosto.setText((String) null);
 		textFieldCosto.setEditable(false);
 		textFieldCosto.setColumns(10);
-		panel2.add(textFieldCosto);
 
 		JPanel panelMovimientos = new JPanel();
 		getContentPane().add(panelMovimientos);
@@ -202,11 +203,25 @@ public class ProductoDetalle extends JDialog {
 		});
 		scrollPaneIngresos.setViewportView(tableIngresos);
 		scrollPaneEgresos.setViewportView(tableEgresos);
+		
+		JPanel panel = new JPanel();
+		getContentPane().add(panel);
+		panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		
+		JButton btnNewButton = new JButton("CERRAR");
+		btnNewButton.addActionListener(this);
+		panel.add(btnNewButton);
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
 		tableIngresos.setDefaultRenderer(Object.class, rightRenderer);
 		tableEgresos.setDefaultRenderer(Object.class, rightRenderer);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		dispose();
+		
 	}
 
 }

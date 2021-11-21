@@ -101,12 +101,12 @@ public class ProductoDialog extends JDialog {
 		panelProductos.setLayout(null);
 
 		lblCodigoLabel = new JLabel("CÓDIGO");
-		lblCodigoLabel.setBounds(31, 17, 66, 14);
+		lblCodigoLabel.setBounds(10, 24, 87, 14);
 		lblCodigoLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblCodigoLabel);
 
 		textFieldCodigo = new JTextField();
-		textFieldCodigo.setBounds(107, 17, 86, 20);
+		textFieldCodigo.setBounds(107, 20, 86, 20);
 		textFieldCodigo.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCodigo.setColumns(10);
 		textFieldCodigo.setFont(Constants.FUENTE);
@@ -114,13 +114,13 @@ public class ProductoDialog extends JDialog {
 
 		lblFechaDeVencimiento = new JLabel("VENCIMIENTO");
 		lblFechaDeVencimiento.setVisible(false);
-		lblFechaDeVencimiento.setBounds(10, 81, 87, 14);
+		lblFechaDeVencimiento.setBounds(0, 81, 97, 14);
 		lblFechaDeVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblFechaDeVencimiento);
 
 		textFechaVencimiento = new JFormattedTextField(Constants.getMascaraFecha());
 		textFechaVencimiento.setVisible(false);
-		textFechaVencimiento.setBounds(107, 78, 86, 20);
+		textFechaVencimiento.setBounds(107, 81, 86, 20);
 		textFechaVencimiento.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFechaVencimiento.setToolTipText("DD/MM/AAAA");
 		textFechaVencimiento.setFont(Constants.FUENTE);
@@ -141,38 +141,36 @@ public class ProductoDialog extends JDialog {
 		panelProductos.add(btnCancelar);
 
 		JLabel lblDescripcion = new JLabel("DESCRIPCIÓN");
-		lblDescripcion.setBounds(10, 51, 87, 14);
+		lblDescripcion.setBounds(0, 51, 97, 14);
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblDescripcion);
 
 		textAreaDescripcion = new JTextField();
-		textAreaDescripcion.setBounds(107, 48, 296, 19);
+		textAreaDescripcion.setBounds(107, 51, 296, 19);
 		textAreaDescripcion.setColumns(10);
 		panelProductos.add(textAreaDescripcion);
 
 		lblCategoria = new JLabel("CATEGORÍA");
 		lblCategoria.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCategoria.setBounds(203, 17, 81, 17);
+		lblCategoria.setBounds(203, 20, 81, 17);
 		panelProductos.add(lblCategoria);
 
 		textFieldCategoria = new JTextField();
 		textFieldCategoria.setColumns(10);
-		textFieldCategoria.setBounds(294, 14, 109, 20);
+		textFieldCategoria.setBounds(294, 17, 109, 20);
 		panelProductos.add(textFieldCategoria);
 
 		textFieldCosto = new JTextField();
-		textFieldCosto.setVisible(false);
 		textFieldCosto.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldCosto.setColumns(10);
 		textFieldCosto.setBounds(294, 78, 109, 20);
-		panelProductos.add(textFieldCosto);
-
+		textFieldCosto.setVisible(false);
+		
 		lblCosto = new JLabel("COSTO");
 		lblCosto.setVisible(false);
 		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCosto.setBounds(218, 81, 66, 14);
-		panelProductos.add(lblCosto);
-
+		
 	}
 
 	private void configValidations() {

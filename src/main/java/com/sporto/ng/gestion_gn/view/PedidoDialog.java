@@ -120,7 +120,7 @@ public class PedidoDialog extends JDialog {
 
 		textFieldCliente = new JTextField();
 		textFieldCliente.setEditable(false);
-		textFieldCliente.setColumns(8);
+		textFieldCliente.setColumns(18);
 		panelCliente.add(textFieldCliente);
 
 		JLabel lblNewLabel_3_1_1 = new JLabel("Lista:");
@@ -138,10 +138,10 @@ public class PedidoDialog extends JDialog {
 		textFieldTipoCliente.setEditable(false);
 		textFieldTipoCliente.setColumns(8);
 		panelCliente.add(textFieldTipoCliente);
-		
+
 		JLabel lblNewLabel_3_2_1 = new JLabel("SALDO: ");
 		panelCliente.add(lblNewLabel_3_2_1);
-		
+
 		textFieldSaldo = new JTextField();
 		textFieldSaldo.setEditable(false);
 		textFieldSaldo.setColumns(8);
@@ -246,7 +246,7 @@ public class PedidoDialog extends JDialog {
 				int col = table.columnAtPoint(evt.getPoint());
 				if (col == PedidoProductoTableModel.COLUMNA_ELIMINAR) {
 					((DefaultTableModel) table.getModel()).removeRow(row);
-					textFieldTotal.setText("$ " + table.getTotal().toString());
+					textFieldTotal.setText("$ " + Constants.outDouble(table.getTotal()));
 				}
 
 			}
@@ -275,7 +275,7 @@ public class PedidoDialog extends JDialog {
 				setVisible(false);
 			}
 		});
-		
+
 		btnImprimir = new JButton("IMPRIMIR");
 
 		panelBotones.add(btnImprimir);
@@ -321,7 +321,7 @@ public class PedidoDialog extends JDialog {
 				return;
 			}
 
-			textFieldPrecio.setText(unPrecio.get().getPrecio().toString());
+			textFieldPrecio.setText(Constants.outDouble(unPrecio.get().getPrecio()));
 		}
 
 	}
@@ -346,9 +346,9 @@ public class PedidoDialog extends JDialog {
 
 						Object descuentoSeleccionado = comboBoxDescuento.getSelectedItem();
 						table.registrarMovimiento(unProducto, Integer.valueOf(textFieldCantidad.getText()),
-								Double.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
+								Constants.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
 
-						textFieldTotal.setText(table.getTotal().toString());
+						textFieldTotal.setText(Constants.outDouble(table.getTotal()));
 
 						limpiarCampos();
 					}
@@ -426,8 +426,9 @@ public class PedidoDialog extends JDialog {
 		Impresora impresora = new Impresora();
 		impresora.imprimirPedido(unPedido, productos);
 		impresora.setVisible(true);
-		
-		JOptionPane.showMessageDialog(this, "El pedido " + unPedido.getId()  + " fue registrado con éxito.", " ", JOptionPane.INFORMATION_MESSAGE);
+
+		JOptionPane.showMessageDialog(this, "El pedido " + unPedido.getId() + " fue registrado con éxito.", " ",
+				JOptionPane.INFORMATION_MESSAGE);
 		this.setVisible(false);
 	}
 
@@ -449,7 +450,11 @@ public class PedidoDialog extends JDialog {
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
 		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
 		textFieldTotal.setText("");
-		textFieldSaldo.setText(unCliente.getSaldo().toString());
+		textFieldSaldo.setText(Constants.outDouble(unCliente.getSaldo()));
+
+		textCodigoProducto.setSelectedIndex(0);
+		textFieldCantidad.setText("");
+		comboBoxDescuento.setSelectedIndex(0);
 		listaPrecios = precioDao.findByLista(unCliente.getListaPrecio());
 		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
 		this.setVisible(true);
@@ -462,14 +467,14 @@ public class PedidoDialog extends JDialog {
 		textFieldCliente.setText(unCliente.getRazonSocial());
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
 		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
-		textFieldSaldo.setText(unCliente.getSaldo().toString());
+		textFieldSaldo.setText(Constants.outDouble(unCliente.getSaldo()));
 		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
 		((PedidoProductoTableModel) table.getModel()).addAll(listaProductosEditar);
-		textFieldTotal.setText(table.getTotal().toString());
+		textFieldTotal.setText(Constants.outDouble(table.getTotal()));
 		botonGuardar.setVisible(false);
 		table.ocultarColumnaEliminar();
 		panelAgregar.setVisible(false);
-		lblTitulo.setText("DETALLE PEDIDO "+unPedido.getId());
+		lblTitulo.setText("DETALLE PEDIDO " + unPedido.getId());
 		btnImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Se hace click en imprimir");
@@ -479,6 +484,6 @@ public class PedidoDialog extends JDialog {
 			}
 		});
 		this.setVisible(true);
-		
+
 	}
 }

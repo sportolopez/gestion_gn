@@ -61,6 +61,7 @@ public class ClientePanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		JPanel panel = new JPanel();
+		panel.setMaximumSize(new Dimension(3500, 50));
 		add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
 		
@@ -88,6 +89,7 @@ public class ClientePanel extends JPanel {
 		panelBuscador.setMaximumSize(new Dimension(3500, 50));
 		panelBuscador.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		panelHEaderTabla.add(panelBuscador, BorderLayout.WEST);
+		panelHEaderTabla.setMaximumSize(new Dimension(3500, 70));
 		panelBuscador.add(new JLabel("BUSCAR"));
 
 		textFieldBuscador = new JTextField();
@@ -204,14 +206,16 @@ public class ClientePanel extends JPanel {
 		btnImportarPrecios.setVisible(false);
 		btnExportar.setVisible(true);
 		btnEgreso.setVisible(false);
+		btnArqueoDelDia.setVisible(false);
 		ocultarColumna(ClienteTableModel.COLUMN_PEDIDO);
+		ocultarColumna(ClienteTableModel.COLUMN_CUIT);
 		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
 		ocultarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
 		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
 		mostrarColumna(ClienteTableModel.COLUMN_EDITAR);
 		mostrarColumna(ClienteTableModel.COLUMN_MAIL);
-		mostrarColumna(ClienteTableModel.COLUMN_DOMICILIO);
+		ocultarColumna(ClienteTableModel.COLUMN_DOMICILIO);
 	}
 	
 	public void showPrecios() {
@@ -220,9 +224,11 @@ public class ClientePanel extends JPanel {
 		btnImportarPrecios.setVisible(true);
 		btnExportar.setVisible(false);
 		btnEgreso.setVisible(false);
+		btnArqueoDelDia.setVisible(false);
 		ocultarColumna(ClienteTableModel.COLUMN_LIBERAR);
 		ocultarColumna(ClienteTableModel.COLUMN_EDITAR);
 		ocultarColumna(ClienteTableModel.COLUMN_DOMICILIO);
+		ocultarColumna(ClienteTableModel.COLUMN_CUIT);
 		mostrarColumna(ClienteTableModel.COLUMN_PEDIDO);
 		mostrarColumna(ClienteTableModel.COLUMN_EXPORTAR);
 		mostrarColumna(ClienteTableModel.COLUMN_MAIL);
@@ -234,7 +240,9 @@ public class ClientePanel extends JPanel {
 		btnImportarPrecios.setVisible(false);
 		btnExportar.setVisible(true);
 		btnEgreso.setVisible(true);
+		btnArqueoDelDia.setVisible(true);
 		ocultarColumna(ClienteTableModel.COLUMN_PEDIDO);
+		ocultarColumna(ClienteTableModel.COLUMN_CUIT);
 		ocultarColumna(ClienteTableModel.COLUMN_EXPORTAR);
 		ocultarColumna(ClienteTableModel.COLUMN_EDITAR);
 		ocultarColumna(ClienteTableModel.COLUMN_MAIL);

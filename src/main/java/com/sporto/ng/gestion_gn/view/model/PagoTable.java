@@ -9,6 +9,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.GastoCaja;
 import com.sporto.ng.gestion_gn.model.MedioPago;
@@ -51,8 +52,8 @@ public class PagoTable extends JTable {
 		return 0;
 	}
 
-	public Double getTotal() {
-		return ((PagoTableModel) getModel()).getTotal();
+	public String getTotal() {
+		return Constants.outDouble(((PagoTableModel) getModel()).getTotal());
 	}
 
 	public void addPago(MovimientoCaja unMovimientoPago) {
@@ -68,7 +69,7 @@ public class PagoTable extends JTable {
 						.comentario(getValueAt(i, PagoTableModel.COLUMN_COMENTARIO).toString())
 						.fecha(new Date())
 						.medioPago(MedioPago.valueOf(getValueAt(i, PagoTableModel.COLUMN_MEDIO_DE_PAGO).toString()))
-						.monto(Double.valueOf(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString()))
+						.monto(Constants.parseDouble(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString()))
 						.tipoMovimiento(TipoMovimiento.INGRESO)
 						.build();
 			listMovimientos.add(unMov);
@@ -85,7 +86,7 @@ public class PagoTable extends JTable {
 			GastoCaja unMov = GastoCaja.builder()
 						.comentario(getValueAt(i, PagoTableModel.COLUMN_COMENTARIO).toString())
 						.fecha(new Date())
-						.monto(Double.valueOf(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString()))
+						.monto(Constants.parseDouble(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString()))
 						.build();
 			listMovimientos.add(unMov);
 		}

@@ -31,8 +31,11 @@ public class ArqueoCajaExporter {
 	private List<Pair<Double, String>> gasto = new ArrayList<Pair<Double, String>>();
 	private List<Pair<Double, String>> transferencia = new ArrayList<Pair<Double, String>>();
 	private List<Pair<Double, String>> efectivo = new ArrayList<Pair<Double, String>>();
+	private List<Pair<Double, String>> clientesdeudores = new ArrayList<Pair<Double, String>>();
 	private XSSFSheet banco;
 	private XSSFSheet caja;
+	private XSSFSheet clientes;
+	private XSSFSheet gastos;
 	private CellStyle styleBorder;
 	private CellStyle styleHEader;
 	private CellStyle style;
@@ -74,6 +77,8 @@ public class ArqueoCajaExporter {
 		sheetResumen = workbook.createSheet("Resumen");
 		banco = workbook.createSheet("Banco");
 		caja = workbook.createSheet("Caja");
+		clientes = workbook.createSheet("Deudores");
+		gastos = workbook.createSheet("Egresos");
 		CellStyle style = workbook.createCellStyle();
 		CellStyle styleTitulo = workbook.createCellStyle();
 		XSSFFont font = workbook.createFont();
@@ -84,25 +89,34 @@ public class ArqueoCajaExporter {
 		styleTitulo.setFont(font);
 		styleTitulo.setAlignment(HorizontalAlignment.CENTER);
 		sheetResumen.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+		sheetResumen.addMergedRegion(new CellRangeAddress(10, 10, 0, 6));
 		banco.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 		caja.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+		gastos.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
+		clientes.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 		
 		sheetResumen.setColumnWidth(0, 25 * 256);
 		banco.setColumnWidth(0, 25 * 256);
 		caja.setColumnWidth(0, 25 * 256);
+		gastos.setColumnWidth(0, 25 * 256);
+		clientes.setColumnWidth(0, 25 * 256);
 		sheetResumen.setColumnWidth(1, 25 * 256);
 		banco.setColumnWidth(1, 25 * 256);
 		caja.setColumnWidth(1, 25 * 256);
+		gastos.setColumnWidth(1, 25 * 256);
+		clientes.setColumnWidth(1, 25 * 256);
 		
 		
 		createCell(sheetResumen,sheetResumen.createRow(0), 0, "Arqueo " + " - Fecha: " + Constants.FORMATO_FECHA.format(new Date()), styleTitulo);
+		createCell(sheetResumen,sheetResumen.createRow(10), 0, "Histórico al  " + " - Fecha: " + Constants.FORMATO_FECHA.format(new Date()), styleTitulo);
 		createCell(banco,banco.createRow(0), 0, "Detalle de Transferencias y Depositos " + " - Fecha: " + Constants.FORMATO_FECHA.format(new Date()), styleTitulo);
 		createCell(caja,caja.createRow(0), 0, "Detalle de Caja" + " - Fecha: " + Constants.FORMATO_FECHA.format(new Date()), styleTitulo);
+		createCell(gastos,gastos.createRow(0), 0, "Detalle de Egresos" + " - Fecha: " + Constants.FORMATO_FECHA.format(new Date()), styleTitulo);
+		createCell(clientes,clientes.createRow(0), 0, "Detalle de Deudores" + " - Fecha: " + Constants.FORMATO_FECHA.format(new Date()), styleTitulo);
 
 	}
 
 	private void createCell(XSSFSheet sheet, Row row, int columnCount, Object value, CellStyle style) {
-		//sheet.autoSizeColumn(2);
 		Cell cell = row.createCell(columnCount);
 		if (value instanceof Integer) {
 			cell.setCellValue((Integer) value);
@@ -138,21 +152,31 @@ public class ArqueoCajaExporter {
 		createCell(sheetResumen,row, 1, totalGastos, style);		
 		
 		row = sheetResumen.createRow(rowCount++);
-		createCell(sheetResumen,row, 0, "Saldo", styleBorder);
+		createCell(sheetResumen,row, 0, "Saldo Caja", styleBorder);
 		double d = Double.sum(totalEfectivo,totalTransferencia);
 		createCell(sheetResumen,row, 1, d -  (double)totalGastos, styleBorder);		
-		
+
+		row = sheetResumen.createRow(11);
+		createCell(sheetResumen,row, 0, "Total Deudas de clientes", style);
+		createCell(sheetResumen,row, 1, getTotalLista(clientesdeudores), style);	
 
 		cargarMovimientos(banco,transferencia);
 		cargarMovimientos(caja,efectivo);
+		cargarMovimientos(gastos,gasto);
+		cargarMovimientos(clientes,clientesdeudores,"CLIENTE");
 	}
 
 	private void cargarMovimientos(XSSFSheet caja,Collection<Pair<Double, String>> movimientos ) {
+		cargarMovimientos(caja, movimientos, "COMENTARIO");
+	}
+	
+	
+	private void cargarMovimientos(XSSFSheet caja,Collection<Pair<Double, String>> movimientos, String titulo ) {
 		int rowCount;
 		Row row;
 		rowCount = 1;
 		row = caja.createRow(rowCount++);
-		createCell(caja, row, 0, "COMENTARIO", styleHEader);
+		createCell(caja, row, 0, titulo, styleHEader);
 		createCell(caja, row, 1, "MONTO", styleHEader);
 		
 		for (Pair<Double, String> unMovimiento : movimientos) {
@@ -197,5 +221,9 @@ public class ArqueoCajaExporter {
 			Runtime.getRuntime().exec("cmd /c start \"\" \"" + file + "\"");
 		}
 
+	}
+
+	public void addClienteConDeuda(Double saldo, String razonSocial) {
+		clientesdeudores.add(Pair.of(saldo, razonSocial));
 	}
 }

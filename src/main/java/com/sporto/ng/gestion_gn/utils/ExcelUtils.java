@@ -104,9 +104,9 @@ public class ExcelUtils {
 					unPrecio.lista(Lista.builder().nombre(rowListas.getCell(i).getStringCellValue()).build());
 					if (cell != null) {
 						double numericCellValue = cell.getNumericCellValue();
-						unPrecio.precio((long) numericCellValue);
+						unPrecio.precio((double) numericCellValue);
 					} else {
-						unPrecio.precio((long) 0);
+						unPrecio.precio((double) 0);
 					}
 					listaPecios.add(unPrecio.build());
 				}

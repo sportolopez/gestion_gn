@@ -191,7 +191,7 @@ public class ProductoDialog extends JDialog {
 //			for (int count = 0; count < tablePrecios.getRowCount(); count++) {
 //				System.out.println("Lista:"+tablePrecios.getValueAt(count, 0).toString() + "   PRECIO: "+tablePrecios.getValueAt(count, 1).toString());
 //				preciosMap.put(tablePrecios.getValueAt(count, 0).toString(),
-//						Double.parseDouble(tablePrecios.getValueAt(count, 1).toString()));
+//						Constants.parseDouble(tablePrecios.getValueAt(count, 1).toString()));
 //			}
 
 			Date parse = null;
@@ -202,7 +202,7 @@ public class ProductoDialog extends JDialog {
 			}
 			Producto build = Producto.builder().fechaVencimiento(parse).descripcion(textAreaDescripcion.getText())
 					.activo(true).id(Integer.parseInt(textFieldCodigo.getText()))
-					.costo(Double.parseDouble(textFieldCosto.getText()))
+					.costo(Constants.parseDouble(textFieldCosto.getText()))
 					.categoria(textFieldCategoria.getText()).build();
 			return build;
 		} catch (Exception e) {

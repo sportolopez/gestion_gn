@@ -27,7 +27,7 @@ public class PrecioTest {
 	public void testInsert() {
 		Producto unProducto = productoDao.findAll().get(0);
 		Lista lista = listaDao.findAll().get(0);
-		Precio entity = Precio.builder().lista(lista).producto(unProducto).precio((long) 150).build();
+		Precio entity = Precio.builder().lista(lista).producto(unProducto).precio((double) 150).build();
 		precioDao.save(entity);
 		assertEquals(1, precioDao.count());
 	}

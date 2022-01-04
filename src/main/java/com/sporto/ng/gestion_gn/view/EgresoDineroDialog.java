@@ -99,8 +99,8 @@ public class EgresoDineroDialog extends JDialog {
 
 				double parseDouble = 0;
 				try {
-					parseDouble = Double.parseDouble(montoPago.getText());
-				} catch (NumberFormatException e1) {
+					parseDouble = Constants.parseDouble(montoPago.getText());
+				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "Ingrese un monto válido", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}

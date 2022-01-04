@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.Cliente.ClienteBuilder;
 import com.sporto.ng.gestion_gn.model.Lista;
@@ -206,7 +207,7 @@ public class ClienteDialog extends JDialog {
 		ClienteBuilder cliente = Cliente.builder().cuit(textCUIT.getText()).domicilio(textDomicilio.getText())
 				.razonSocial(textRazonSocial.getText()).email(textEmail.getText()).telefono(textTelefono.getText())
 				.listaPrecio(Lista.builder().nombre(comboBoxLista.getSelectedItem().toString()).build())
-				.limiteDeuda(Double.valueOf(textLimite.getText())).tipoCuenta((TipoCuenta) comboBoxTipoCuenta.getSelectedItem());
+				.limiteDeuda(Constants.parseDouble(textLimite.getText())).tipoCuenta((TipoCuenta) comboBoxTipoCuenta.getSelectedItem());
 		if (idClienteEditando != null)
 			cliente.id(idClienteEditando);
 		return cliente.build();

@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.Formula;
 
+import com.sporto.ng.gestion_gn.config.Constants;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,7 +56,7 @@ public class Cliente {
 	
 	@Formula("( select coalesce(sum(mc.monto),0) from movimiento_caja mc where mc.cliente_id = id and mc.tipo_movimiento = 'INGRESO')")
 	private Double ingreso;
-	@Formula("(select coalesce(sum(pp.precio * pp.cantidad * (1-SUBSTRING(pp.descuento,1,1)/100)),0) from pedido_producto pp, pedido p where pp.pedido_id = p.id and p.cliente_id = id and (p.estado = 'LIBERADO' or p.estado = 'ENTREGADO'))")
+	@Formula("(select coalesce(sum(pp.precio * pp.cantidad * (1-SUBSTRING(pp.descuento,1,1)/100)),0) from pedido_producto pp, pedido p where pp.pedido_id = p.id and p.cliente_id = id and (p.estado = 'LIBERADO' or p.estado = 'RETIRADO'))")
 	private Double egreso;
 
 	public Double getSaldo() {
@@ -62,7 +64,7 @@ public class Cliente {
 			ingreso = (double) 0;
 		if(egreso == null)
 			egreso = (double) 0;
-			
-		return ingreso - egreso;
+
+		return Constants.round(ingreso, 2)	- Constants.round(egreso, 2);
 	}
 }

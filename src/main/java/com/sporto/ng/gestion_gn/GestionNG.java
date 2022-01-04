@@ -2,6 +2,7 @@ package com.sporto.ng.gestion_gn;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Locale;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -32,6 +33,15 @@ public class GestionNG {
 				JOptionPane.showMessageDialog(new Splash(), sw.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
+		
+		System.out.println("Default locale:" + Locale.getDefault().toString());
+
+		System.out.println("\nSetting default locale to es");
+		Locale swedishLocale = new Locale("es", "ES");
+		Locale.setDefault(swedishLocale);
+
+		System.out.println("New default locale:" + Locale.getDefault().toString());
+		
 		// https://thebadprogrammer.com/swing-uimanager-keys/
 		UIManager.put("Button.font", Constants.FUENTE_BUTTON);
 		UIManager.put("TableHeader.font", Constants.FUENTE_TABLE_HEADER);
@@ -41,6 +51,10 @@ public class GestionNG {
 		UIManager.put("FileChooser.fileNameLabelText", "Nombre de archivo");
 		UIManager.put("FileChooser.filesOfTypeLabelText", "Tipo de archivo");
 		UIManager.put("FileChooser.lookInLabelText", "Buscar en");
+		
+        System.out.print((double)3.1415926535);
+        
+        
 		Splash s = new Splash();
 		s.setVisible(true);
 		System.out.println("Inicio");

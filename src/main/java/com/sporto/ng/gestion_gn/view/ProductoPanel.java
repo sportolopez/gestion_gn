@@ -120,7 +120,6 @@ public class ProductoPanel extends JPanel {
 		panelBotoneraStock.add(btnEgresoStock);
 
 		lblListadoActual = new JLabel("LISTADO ACTUAL");
-		lblListadoActual.setBorder(new EmptyBorder(10, 0, 10, 0));
 		lblListadoActual.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListadoActual.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblListadoActual.setMaximumSize(new Dimension(3500, 50));
@@ -137,6 +136,7 @@ public class ProductoPanel extends JPanel {
 		panelBuscador.setMaximumSize(new Dimension(3500, 50));
 		panelBuscador.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		panelHEaderTabla.add(panelBuscador, BorderLayout.WEST);
+		panelHEaderTabla.setMaximumSize(new Dimension(3500, 70));
 		panelBuscador.add(lblBuscar);
 
 		textFieldBuscadorProductos = new JTextField();

@@ -48,7 +48,7 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 	public void add(int idProducto, String descripcion, int cantidad, Double precio, String descuento) {
 		double productoConDescuento = calcularSubtotal(precio, descuento, cantidad);
 
-		addRow(new Object[] { idProducto, descripcion, cantidad, precio, descuento, productoConDescuento,
+		addRow(new Object[] { idProducto, descripcion, cantidad, Constants.outDouble(precio), descuento, Constants.outDouble(productoConDescuento),
 				Constants.ICONO_ELIMINAR });
 	}
 
@@ -60,7 +60,7 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 			Producto nroProducto = Producto.builder().id(Integer.parseInt(getValueAt(i, 0).toString()))
 					.descripcion(getValueAt(i, 1).toString()).build();
 			int cantidad = Integer.parseInt(getValueAt(i, 2).toString());
-			double precio = Double.parseDouble(getValueAt(i, 3).toString());
+			double precio = Constants.parseDouble(getValueAt(i, 3).toString());
 			String descuento = (getValueAt(i, 4).toString());
 
 			PedidoProducto unPedidoProducto = PedidoProducto.builder().cantidad(cantidad).descuento(descuento)
@@ -78,13 +78,14 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 		double descuentoParsed = 1 - (double) Integer.parseInt(descuento.substring(0, 1)) / 100;
 
 		double d = precio * descuentoParsed;
-		return d * cantidad;
+		double e = d * cantidad;
+		return Constants.round(e, 2) ;
 	}
 
 	public void addAll(Collection<PedidoProducto> listaProductos) {
 		
 		for (PedidoProducto pedidoProducto : listaProductos) {
-			addRow(new Object[] { pedidoProducto.getProducto().getId(),pedidoProducto.getProducto().getDescripcion(),pedidoProducto.getCantidad(),pedidoProducto.getPrecio(),pedidoProducto.getDescuento(),pedidoProducto.calcularSubtotal()});
+			addRow(new Object[] { pedidoProducto.getProducto().getId(),pedidoProducto.getProducto().getDescripcion(),pedidoProducto.getCantidad(),Constants.outDouble(pedidoProducto.getPrecio()),pedidoProducto.getDescuento(),Constants.outDouble(pedidoProducto.calcularSubtotal())});
 		}
 	}
 

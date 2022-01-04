@@ -28,7 +28,7 @@ public class Splash extends JFrame {
 		imglabel.setBounds(0, 0, 631, 500);
 		JLabel lblNewLabel = new JLabel("Version: "+Constants.VERSION);
 		imglabel.add(lblNewLabel);
-		lblNewLabel.setBounds(510, 475, 120, 14);
+		lblNewLabel.setBounds(480, 475, 200, 14);
 		
 		
 		

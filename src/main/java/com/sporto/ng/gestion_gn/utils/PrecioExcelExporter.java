@@ -64,8 +64,10 @@ public class PrecioExcelExporter {
             cell.setCellValue((Boolean) value);
         }else if (value instanceof Long) {
             cell.setCellValue((long) value);
+        }else if (value instanceof Double) {
+            cell.setCellValue((double) value);
         }else {
-        	  cell.setCellValue((String) value);
+        	  cell.setCellValue(value.toString());
         }
         	
         cell.setCellStyle(style);
@@ -85,7 +87,7 @@ public class PrecioExcelExporter {
              
             createCell(row, columnCount++, unPrecio.getProducto().getId(), style);
             createCell(row, columnCount++, unPrecio.getProducto().getDescripcion(), style);
-            createCell(row, columnCount++, unPrecio.getPrecio(), style);
+            createCell(row, columnCount++, Constants.outDouble(unPrecio.getPrecio()), style);
              
         }
     }

@@ -24,13 +24,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_gn.dao.MovimientoStockDao;
+import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
+import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.utils.ExcelUtils;
-import com.sporto.ng.gestion_gn.view.ProductoDetalle;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.MovimientoStockDialog;
+import com.sporto.ng.gestion_gn.view.ProductoDetalle;
 import com.sporto.ng.gestion_gn.view.ProductoDialog;
 import com.sporto.ng.gestion_gn.view.ProductoPanel;
 import com.sporto.ng.gestion_gn.view.model.ButtonColumn;
@@ -46,7 +48,7 @@ public class ProductoController {
 	private boolean esEdicion = false;
 
 	@Autowired
-	public ProductoController(ProductoDao dao, HomeForm homeForm, MovimientoStockDao movimientoDao) {
+	public ProductoController(ProductoDao dao, HomeForm homeForm, MovimientoStockDao movimientoDao, PedidoProductoDao pedidoProductoDao) {
 		super();
 		this.dao = dao;
 		this.productoDialog = new ProductoDialog();
@@ -110,7 +112,7 @@ public class ProductoController {
 				Producto findById = dao.findById(idProducto).get();
 
 				ProductoDetalle detalleProducto = new ProductoDetalle(homeForm, findById,
-						movimientoDao.findByProducto(findById));
+						movimientoDao.findByProducto(findById), pedidoProductoDao.findByProductoAndPedidoEstadoNot(findById, EstadoPedido.CANCELADO));
 				detalleProducto.setVisible(true);
 
 			}

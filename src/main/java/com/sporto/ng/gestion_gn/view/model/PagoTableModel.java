@@ -25,7 +25,7 @@ public class PagoTableModel extends DefaultTableModel {
 	public void addPago(MovimientoCaja unPago) {
 		ArrayList<Object> lista = new ArrayList<Object>();
 		lista.add(unPago.getMedioPago());
-		lista.add(unPago.getMonto());
+		lista.add(Constants.outDouble(unPago.getMonto()));
 		lista.add(unPago.getComentario());
 		lista.add(Constants.ICONO_ELIMINAR);
 		addRow(lista.toArray());
@@ -46,7 +46,7 @@ public class PagoTableModel extends DefaultTableModel {
 	public Double getTotal() {
 		double total = 0;
 		for (int count = 0; count < getRowCount(); count++) {
-			total += Double.parseDouble(getValueAt(count, COLUMN_MONTO).toString());
+			total += Constants.parseDouble(getValueAt(count, COLUMN_MONTO).toString());
 		}
 		return total;
 	}

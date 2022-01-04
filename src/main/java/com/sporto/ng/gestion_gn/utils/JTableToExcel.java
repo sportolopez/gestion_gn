@@ -119,11 +119,14 @@ public class JTableToExcel {
 
 		format.setAlignment(Alignment.CENTRE); // Centro de visualización horizontal
 
-		sheet.setColumnView(0, 15); // Establecer el ancho de la columna
-		sheet.setColumnView(1, 20); // Establecer el ancho de la columna
-		sheet.setColumnView(2, 40); // Establecer el ancho de la columna
+		sheet.setColumnView(0, 10); // Establecer el ancho de la columna
+		sheet.setColumnView(1, 25); // Establecer el ancho de la columna
+		sheet.setColumnView(2, 20); // Establecer el ancho de la columna
 		sheet.setColumnView(3, 15); // Establecer el ancho de la columna
 		sheet.setColumnView(4, 20); // Establecer el ancho de la columna
+		sheet.setColumnView(5, 25); // Establecer el ancho de la columna
+		sheet.setColumnView(6, 25); // Establecer el ancho de la columna
+		sheet.setColumnView(7, 25); // Establecer el ancho de la columna
 
 		for (int col = 0; col < colNum; col++) {
 

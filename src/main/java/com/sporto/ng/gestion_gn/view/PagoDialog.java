@@ -323,7 +323,7 @@
 ////
 ////						Object descuentoSeleccionado = comboBoxDescuento.getSelectedItem();
 ////						table.registrarMovimiento(unProducto, Integer.valueOf(textFieldCantidad.getText()),
-////								Double.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
+////								Constants.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
 ////
 ////						textFieldTotal.setText(table.getTotal().toString());
 ////						

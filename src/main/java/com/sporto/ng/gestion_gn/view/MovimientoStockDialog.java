@@ -44,7 +44,7 @@ import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
 
 public class MovimientoStockDialog extends JDialog {
-	private int columnaBorrar = 4;
+	private int columnaBorrar = 5;
 	private MovimientoStockTable table;
 	private JTextField textFieldCantidad;
 	private JFormattedTextField textFieldVencimiento;
@@ -145,9 +145,9 @@ public class MovimientoStockDialog extends JDialog {
 		if (tipoMovimiento.equals(TipoMovimiento.INGRESO)) {
 			panelAgregar.add(lblVencimiento);
 			panelAgregar.add(textFieldVencimiento);
-			columnaBorrar = 4;
+			columnaBorrar = 5;
 		} else
-			columnaBorrar = 3;
+			columnaBorrar = 4;
 		textFieldVencimiento.setColumns(10);
 
 		JButton agregarStockBtn = new JButton("REGISTRAR " + tipoMovimiento.name());
@@ -244,6 +244,7 @@ public class MovimientoStockDialog extends JDialog {
 		textFieldCantidad.setText("");
 		textFieldVencimiento.setValue(null);
 		textCodigoProducto.setSelectedIndex(0);
+		textFieldComentario.setText("");
 	}
 
 	public JButton getBotonGuardar() {

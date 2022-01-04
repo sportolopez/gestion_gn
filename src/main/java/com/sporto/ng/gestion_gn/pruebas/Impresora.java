@@ -143,17 +143,17 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 					sb.append("<tr >");
 				sb.append("    <td class='desc'>" + pedidoProducto.getProducto().getId() + " "
 						+ pedidoProducto.getProducto().getDescripcion() + "</td>");
-				sb.append("    <td class='unit'>$ " + pedidoProducto.getPrecio() + "</td>");
+				sb.append("    <td class='unit'>$ " + Constants.outDouble(pedidoProducto.getPrecio()) + "</td>");
 				sb.append("	   <td class='qty'>" + pedidoProducto.getCantidad() + "</td>");
 				sb.append("    <td class='qty'>" + pedidoProducto.getDescuento() + "</td>");
 				double calcularSubtotal = pedidoProducto.calcularSubtotal();
 				total +=calcularSubtotal;
-				sb.append("    <td class='total'>$ " + calcularSubtotal + "</td>");
+				sb.append("    <td class='total'>$ " + Constants.outDouble(calcularSubtotal) + "</td>");
 				sb.append("</tr>");
 
 			}
 			text = text.replace("_LISTA_PRODUCTOS_", sb.toString());
-			text = text.replace("_TOTAL_", String.valueOf(total));
+			text = text.replace("_TOTAL_", Constants.outDouble(total));
 
 			jEditorPane.setText(text);
 		} catch (IOException e) {
@@ -186,7 +186,7 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 					sb.append("<tr >");
 				sb.append("    <td class='desc'>" + unMovimiento.getMedioPago() +  "</td>");
 				sb.append("	   <td class='total'>" + unMovimiento.getComentario()+ "</td>");
-				sb.append("    <td class='unit'>$ " + unMovimiento.getMonto() + "</td>");
+				sb.append("    <td class='unit'>$ " + Constants.outDouble(unMovimiento.getMonto()) + "</td>");
 				
 				double calcularSubtotal = unMovimiento.getMonto();
 				total +=calcularSubtotal;
@@ -194,8 +194,8 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 				
 			}
 			text = text.replace("_LISTA_PAGOS_", sb.toString());
-			text = text.replace("_TOTAL_", String.valueOf(total));
-			text = text.replace("_DEUDA_", String.valueOf(estadoCC));
+			text = text.replace("_TOTAL_", Constants.outDouble(total));
+			text = text.replace("_DEUDA_", Constants.outDouble(estadoCC));
 			
 			jEditorPane.setText(text);
 		} catch (IOException e) {

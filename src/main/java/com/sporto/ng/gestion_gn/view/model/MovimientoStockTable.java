@@ -67,7 +67,7 @@ public class MovimientoStockTable extends JTable {
 			
 			if (tipoMovimiento == TipoMovimiento.EGRESO) {
 				if(unProducto.getStock()-cantidad<0) {
-					JOptionPane.showMessageDialog(new JFrame(), "No puede registar un stock negativo", "Error",
+					JOptionPane.showMessageDialog(new JFrame(), "Supera al stock existente", "Error",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}

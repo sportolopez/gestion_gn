@@ -1,7 +1,9 @@
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\Java2sAutoTextField.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\HomeForm.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\SwingTester.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\ClienteTable.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\EstadoPedido.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\GastoCaja.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\Report.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\ExcelUtils.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\dao\PedidoProductoDao.java
@@ -18,6 +20,7 @@ C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\Movimi
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\Java2sAutoComboBox.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\MyTablePrintable.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\ProductoTableModel.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\dao\GastoCajaDao.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\PrecioExcelExporter.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\MovimientoStockTableModel.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\PedidoPanel.java
@@ -35,6 +38,7 @@ C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\valida
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\dao\PrecioDao.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\TipoCuenta.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\PedidoDialog.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\HTMLTest2.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\Producto.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\PagoTable.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\PedidoTable.java
@@ -46,6 +50,7 @@ C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\Pri
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\MovimientoStockTable.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\ClienteDialog.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\PedidoProducto.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\EgresoDineroDialog.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\controller\ProductoController.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\ProductoPanel.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\Splash.java
@@ -66,6 +71,7 @@ C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\Movim
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\config\Constants.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\ButtonColumn.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\Searchable.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\utils\ArqueoCajaExporter.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\PedidoTableModel.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\TestPrinting.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\TipoMovimiento.java
@@ -74,6 +80,7 @@ C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\Produc
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\MedioPago.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\model\PedidoProductoTableImpresion.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\dao\MovimientoCajaDao.java
+C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\Impresora.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\model\PedidoProductoId.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\pruebas\IconosJTabbedPane.java
 C:\Users\sebap\git\gestion_ng\src\main\java\com\sporto\ng\gestion_gn\view\ImpresionPedido.java

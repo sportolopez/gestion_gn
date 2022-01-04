@@ -24,7 +24,7 @@ import lombok.Setter;
 @IdClass(PrecioId.class)
 public class Precio implements Serializable {
 	
-	private Long precio;
+	private Double precio;
 	@Id
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Lista lista;

@@ -6,6 +6,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -72,21 +73,21 @@ public class PedidoProductoTable extends JTable {
 
 			int nuevaCantidad = cantidadEnTabla + cantidad;
 
-			double nuevoSubtotal = model.calcularSubtotal(precioEnTabla, descuento, nuevaCantidad);
+			double nuevoSubtotal =  model.calcularSubtotal(precioEnTabla, descuento, nuevaCantidad);
 
 			if (unProducto.getStock() - nuevaCantidad < 0) {
-				JOptionPane.showMessageDialog(new JFrame(), "No puede registar un stock negativo", "Error",
+				JOptionPane.showMessageDialog(new JFrame(), "Supera al stock existente", "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			setValueAt(nuevaCantidad, indexProducto, COLUMNA_CANTIDAD);
 			setValueAt(descuento, indexProducto, COLUMNA_DESCUENTO);
-			setValueAt(nuevoSubtotal, indexProducto, COLUMNA_SUBTOTAL);
+			setValueAt(Constants.outDouble(nuevoSubtotal), indexProducto, COLUMNA_SUBTOTAL);
 
 		} else {
 
 			if (unProducto.getStock() - cantidad < 0) {
-				JOptionPane.showMessageDialog(new JFrame(), "No puede registar un stock negativo", "Error",
+				JOptionPane.showMessageDialog(new JFrame(), "Supera al stock existente", "Error",
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -143,7 +144,7 @@ public class PedidoProductoTable extends JTable {
 	public Double getTotal() {
 		Double subTotal = (double) 0;
 		for (int i = 0; i < getRowCount(); i++) {
-			subTotal += (Double) getValueAt(i, PedidoProductoTableModel.COLUMNA_SUBTOTAL);
+			subTotal += Constants.parseDouble(getValueAt(i, PedidoProductoTableModel.COLUMNA_SUBTOTAL).toString());
 		}
 		return subTotal;
 	}

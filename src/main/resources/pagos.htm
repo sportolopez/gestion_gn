@@ -82,7 +82,7 @@ table th, table td {
 }
 
 table th {
-	padding: 5px 20px;
+	padding: 2px 20px;
 	border-bottom: 1px solid #C1CED9;
 	white-space: nowrap;
 	font-weight: bold;
@@ -95,7 +95,7 @@ table .service, table .desc {
 }
 
 table td {
-	padding: 10px;
+	padding: 2px 10px;
 	text-align: right;
 }
 
@@ -106,6 +106,10 @@ table td.service, table td.desc {
 table td.unit, table td.qty, table td.total {
 	font-size: 1em;
 	text-align: center;
+}
+
+table td.unit{
+	text-align: right;
 }
 
 table td.grand {
@@ -139,7 +143,7 @@ footer {
 }
 
 .tdValor {
-	width: 100px; 
+	
 	font-weight : normal;
 	font-size: 8px;
 	font-weight: normal;
@@ -148,6 +152,7 @@ footer {
 }
 
 .tdClave {
+	width: 80px; 
 	padding: 0px;
 	font-weight: bold;
 	text-align: right;
@@ -165,7 +170,9 @@ footer {
 				<td class="tdClave">CLIENTE:</td>
 				<td class="tdValor">_CLIENTE_NOMBRE_</td>
 				<td class="tdClave">DIRECCION:</td>
-				<td class="tdValor" width="200">_CLIENTE_DIRECCION_</td>
+				<td class="tdValor">_CLIENTE_DIRECCION_</td>
+			</tr>
+			<tr>
 				<td class="tdClave">TELEFONO:</td>
 				<td class="tdValor">_CLIENTE_TELEFONO_</td>
 				<td class="tdClave">FECHA:</td>

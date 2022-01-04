@@ -8,6 +8,8 @@ import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.sporto.ng.gestion_gn.config.Constants;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +40,6 @@ public class PedidoProducto implements Serializable {
 	public double calcularSubtotal() {
 		double descuentoParsed = 1 - (double)Integer.parseInt(descuento.substring(0, 1)) / 100;
 		double d = precio * descuentoParsed;
-		return d * cantidad;
+		return Constants.round(d * cantidad, 2);
 	}
 }

@@ -7,6 +7,7 @@ import javax.swing.JComponent;
 import javax.swing.JTextField;
 
 import com.jgoodies.common.base.Strings;
+import com.sporto.ng.gestion_gn.config.Constants;
 
 public class DoubleVerifier extends InputVerifier {
 
@@ -40,7 +41,7 @@ public class DoubleVerifier extends InputVerifier {
 		}
 		
 		try {
-			Double value = Double.valueOf(text);
+			Double value = Constants.parseDouble(text);
 			boolean b = value > 0;
 			if(b) 
 				camposInvalidos.remove(campo);

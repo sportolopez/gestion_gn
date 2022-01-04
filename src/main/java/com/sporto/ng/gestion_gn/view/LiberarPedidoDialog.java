@@ -2,16 +2,12 @@ package com.sporto.ng.gestion_gn.view;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -30,32 +26,22 @@ import javax.swing.table.DefaultTableModel;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.MovimientoCajaDao;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
-import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
-import com.sporto.ng.gestion_gn.dao.PrecioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.EstadoPedido;
-import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.MedioPago;
 import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.Pedido;
-import com.sporto.ng.gestion_gn.model.PedidoProducto;
-import com.sporto.ng.gestion_gn.model.Precio;
-import com.sporto.ng.gestion_gn.model.PrecioId;
-import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.pruebas.Impresora;
 import com.sporto.ng.gestion_gn.view.model.LiberarPedidoTable;
 import com.sporto.ng.gestion_gn.view.model.LiberarPedidoTableModel;
 import com.sporto.ng.gestion_gn.view.model.PagoTable;
 import com.sporto.ng.gestion_gn.view.model.PagoTableModel;
-import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableModel;
 
 public class LiberarPedidoDialog extends JDialog {
 	private LiberarPedidoTable tablePedidos;
 	private JButton botonGuardar;
-	private ProductoDao productoDao;
-	private List<Precio> listaPrecios;
 	private Cliente cliente;
 	private PedidoDao pedidoDao;
 	private JTextField textFieldEstadoCC;
@@ -71,19 +57,18 @@ public class LiberarPedidoDialog extends JDialog {
 	private JTextField textFieldSaldo;
 	private MovimientoCajaDao movimientoCajaDao;
 
-	public LiberarPedidoDialog(ProductoDao productoDao, PedidoDao pedidoDao, MovimientoCajaDao movimientoCajaDao,
+	public LiberarPedidoDialog(PedidoDao pedidoDao, MovimientoCajaDao movimientoCajaDao,
 			JFrame owner) {
 		super(owner);
 		setResizable(false);
 		this.pedidoDao = pedidoDao;
-		this.productoDao = productoDao;
 		this.movimientoCajaDao = movimientoCajaDao;
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("icono.ico")));
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 678, 533);
-		setTitle("Ingresar Stock");
+		setTitle("Liberar pedidos");
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
 		JLabel lblNewLabel = new JLabel("LIBERAR PEDIDOS");
@@ -169,14 +154,14 @@ public class LiberarPedidoDialog extends JDialog {
 		pagoComentario.setColumns(15);
 		panelPagosInputs.add(pagoComentario);
 
-		JButton agregarStockBtn_1 = new JButton("REGISTRAR ");
-		agregarStockBtn_1.addActionListener(new ActionListener() {
+		JButton registrarBtn = new JButton("REGISTRAR ");
+		registrarBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				double parseDouble = 0;
 				try {
-					parseDouble = Double.parseDouble(montoPago.getText());
-				} catch (NumberFormatException e1) {
+					parseDouble = Constants.parseDouble(montoPago.getText());
+				} catch (RuntimeException e1) {
 					JOptionPane.showMessageDialog(null, "Ingrese un monto válido", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -191,7 +176,7 @@ public class LiberarPedidoDialog extends JDialog {
 				actualizarEstadoCC();
 			}
 		});
-		panelPagosInputs.add(agregarStockBtn_1);
+		panelPagosInputs.add(registrarBtn);
 
 		JScrollPane scrollPanePagos = new JScrollPane();
 		tablePagos = new PagoTable();
@@ -265,11 +250,11 @@ public class LiberarPedidoDialog extends JDialog {
 
 						Boolean valueAt = (Boolean) target.getValueAt(i, col);
 						if (valueAt) {
-							Double valueAt2 = (Double) target.getValueAt(i, LiberarPedidoTableModel.COLUMN_TOTAL);
+							Double valueAt2 = Constants.parseDouble(target.getValueAt(i, LiberarPedidoTableModel.COLUMN_TOTAL).toString());
 							total += valueAt2;
 						}
 					}
-					totalPedidos.setText(total.toString());
+					totalPedidos.setText(Constants.outDouble(total));
 					actualizarEstadoCC();
 				}
 			}
@@ -303,6 +288,13 @@ public class LiberarPedidoDialog extends JDialog {
 		botonGuardar = new JButton("VISTA PREVIA");
 		botonGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				double ingresos = Constants.parseDouble(totalPagos.getText());
+				double egresos = Constants.parseDouble(totalPedidos.getText());
+				if(ingresos == 0 && egresos == 0) {
+					JOptionPane.showMessageDialog(new JDialog(), "Debe registar un ingreso o liberar un pedido.", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				guardarMovimientos();
 			}
 		});
@@ -328,7 +320,7 @@ public class LiberarPedidoDialog extends JDialog {
 	public void guardarMovimientos() {
 
 		double limiteDeuda = cliente.getLimiteDeuda() * -1;
-		Double estadoCC = Double.valueOf(textFieldEstadoCC.getText());
+		Double estadoCC = Constants.parseDouble(textFieldEstadoCC.getText());
 
 		if (estadoCC < limiteDeuda) {
 			JOptionPane.showMessageDialog(this, "El cliente supera su liminte de descubierto.", "Error",
@@ -354,6 +346,7 @@ public class LiberarPedidoDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				registrarIngresos(pagos);
+				
 				actualizarPedidos(tablePedidos);
 				padre.setVisible(false);
 			}
@@ -405,8 +398,8 @@ public class LiberarPedidoDialog extends JDialog {
 		textFieldCliente.setText(unCliente.getRazonSocial());
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
 		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
-		textFieldDescubierto.setText(String.valueOf(unCliente.getLimiteDeuda()));
-		textFieldSaldo.setText(unCliente.getSaldo().toString());
+		textFieldDescubierto.setText(Constants.outDouble(unCliente.getLimiteDeuda()));
+		textFieldSaldo.setText(Constants.outDouble(unCliente.getSaldo()));
 		((DefaultTableModel) tablePagos.getModel()).setRowCount(0);
 		((DefaultTableModel) tablePedidos.getModel()).setRowCount(0);
 
@@ -420,12 +413,12 @@ public class LiberarPedidoDialog extends JDialog {
 
 	private void actualizarEstadoCC() {
 
-		double ingresos = Double.parseDouble(totalPagos.getText());
-		double egresos = Double.parseDouble(totalPedidos.getText());
+		double ingresos = Constants.parseDouble(totalPagos.getText());
+		double egresos = Constants.parseDouble(totalPedidos.getText());
 
 		double estadoCC = cliente.getSaldo() + ingresos - egresos;
 
-		textFieldEstadoCC.setText(Double.valueOf(estadoCC).toString());
+		textFieldEstadoCC.setText(Constants.outDouble(estadoCC));
 
 	}
 

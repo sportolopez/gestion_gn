@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
+import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Pedido;
 
 public class LiberarPedidoTableModel extends DefaultTableModel {
@@ -24,7 +25,7 @@ public class LiberarPedidoTableModel extends DefaultTableModel {
 	public void addPedido(Pedido pedido) {
 		ArrayList<Object> lista = new ArrayList<Object>();
 		lista.add(pedido.getId());
-		lista.add(pedido.getMonto());
+		lista.add(Constants.outDouble(pedido.getMonto()));
 		lista.add(Boolean.FALSE);
 		addRow(lista.toArray());
 

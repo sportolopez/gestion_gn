@@ -3,16 +3,23 @@ package com.sporto.ng.gestion_gn.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -20,11 +27,9 @@ import javax.swing.table.DefaultTableModel;
 
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.MovimientoStock;
+import com.sporto.ng.gestion_gn.model.PedidoProducto;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ProductoDetalle extends JDialog implements ActionListener {
 	private JTable tableIngresos;
@@ -36,7 +41,7 @@ public class ProductoDetalle extends JDialog implements ActionListener {
 	private JTextField textFieldCosto;
 	private JTable tableEgresos;
 
-	public ProductoDetalle(HomeForm homeForm, Producto unProducto, List<MovimientoStock> ingresos) {
+	public ProductoDetalle(HomeForm homeForm, Producto unProducto, List<MovimientoStock> ingresos, List<PedidoProducto> productosBloqueados) {
 		super(homeForm);
 
 		initView();
@@ -53,11 +58,18 @@ public class ProductoDetalle extends JDialog implements ActionListener {
 						Constants.outFecha(movimientoStock.getFecha()), movimientoStock.getComentario() });
 			} else {
 
-				modelEgresos.addRow(new Object[] { movimientoStock.getCantidad(),
+				modelEgresos.addRow(new Object[] { "Egreso manual", movimientoStock.getCantidad(),
 						Constants.outFecha(movimientoStock.getFecha()), movimientoStock.getComentario() });
 			}
 		}
 
+		for (PedidoProducto unProductoBloqueado : productosBloqueados) {
+			
+			modelEgresos.addRow(new Object[] {unProductoBloqueado.getPedido().getId(), unProductoBloqueado.getCantidad(),
+					Constants.outFecha(unProductoBloqueado.getPedido().getFecha()), " Estado: "+ unProductoBloqueado.getPedido().getEstado() });
+			
+			
+		}
 	}
 
 	private void cargarCampos(Producto unProducto) {
@@ -168,7 +180,7 @@ public class ProductoDetalle extends JDialog implements ActionListener {
 		tp.add("Ingresos", scrollPaneIngresos);
 		JScrollPane scrollPaneEgresos = new JScrollPane();
 		scrollPaneEgresos.setSize(new Dimension(0, 50));
-		tp.add("Egresos", scrollPaneEgresos);
+		tp.add("Egresos y Bloqueos ", scrollPaneEgresos);
 
 		tableIngresos = new JTable();
 		tableIngresos.setSize(new Dimension(0, 50));
@@ -189,7 +201,7 @@ public class ProductoDetalle extends JDialog implements ActionListener {
 		tableEgresos = new JTable();
 		tableEgresos.setSize(new Dimension(0, 50));
 		tableEgresos.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "Cantidad", "Fecha Movimiento", "Comentario" }) {
+				new String[] { "Pedido", "Cantidad", "Fecha Movimiento", "Comentario" }) {
 			Class[] columnTypes = new Class[] { String.class, String.class, Integer.class, Integer.class };
 
 			public Class getColumnClass(int columnIndex) {

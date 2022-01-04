@@ -19,7 +19,7 @@ public class PedidoTableModel extends DefaultTableModel {
 	public PedidoTableModel() {
 		addColumn("ID");
 		addColumn("CLIENTE");
-		addColumn("CUIT/CUIL");
+		addColumn("FECHA PEDIDO");
 		addColumn("ESTADO");
 		addColumn("CANCELAR");
 		addColumn("RETIRAR");
@@ -30,7 +30,7 @@ public class PedidoTableModel extends DefaultTableModel {
 		ArrayList<Object> lista = new ArrayList<Object>();
 		lista.add(pedido.getId());
 		lista.add(pedido.getCliente().getRazonSocial());
-		lista.add(pedido.getCliente().getCuit());
+		lista.add(Constants.outFecha(pedido.getFecha()));
 		lista.add(pedido.getEstado());
 		if(pedido.getEstado().equals(EstadoPedido.EMITIDO))
 			lista.add(Constants.ICONO_CANCELAR);

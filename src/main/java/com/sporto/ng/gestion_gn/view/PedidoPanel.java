@@ -71,6 +71,7 @@ public class PedidoPanel extends JPanel {
 		JPanel panel = new JPanel();
 		add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
+		panel.setMaximumSize(new Dimension(3500, 50));
 
 		lblTitulo = new JLabel("PEDIDOS");
 		lblTitulo.setFont(Constants.FUENTE_TITULO);
@@ -88,6 +89,7 @@ public class PedidoPanel extends JPanel {
 		add(lblListadoActual);
 
 		JPanel panelHEaderTabla = new JPanel();
+		panelHEaderTabla.setMaximumSize(new Dimension(3500, 70));
 		add(panelHEaderTabla);
 		panelHEaderTabla.setLayout(new BorderLayout(50, 50));
 		JPanel panelBuscador = new JPanel();
@@ -164,7 +166,6 @@ public class PedidoPanel extends JPanel {
 					cargarPedidos();
 				}
 				if (column == PedidoTableModel.COLUMN_DETALLE) {
-					cambiarEstadoPedido(idPedido,EstadoPedido.RETIRADO);
 					cargarDetalle(idPedido);
 				}
 			}
@@ -187,7 +188,7 @@ public class PedidoPanel extends JPanel {
 	}
 	
 	public void cargarPedidos() {
-		Iterable<Pedido> findAll = pedidoDao.findAll();
+		Iterable<Pedido> findAll = pedidoDao.findAllByOrderByIdDesc();
 		((PedidoTableModel) table.getModel()).setRowCount(0);
 		for (Pedido pedido : findAll) {
 			table.agregarPedido(pedido);

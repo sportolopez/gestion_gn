@@ -70,7 +70,7 @@ public class ClienteController {
 		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
 		pedidoDialog = new PedidoDialog(productoDao, pedidoDao, homeForm, precioDao, pedidoProductoDao);
-		liberarPedidoDialog = new LiberarPedidoDialog(productoDao, pedidoDao, movimientoCajaDao, homeForm);
+		liberarPedidoDialog = new LiberarPedidoDialog(pedidoDao,movimientoCajaDao, homeForm);
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
 		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());
@@ -177,7 +177,15 @@ public class ClienteController {
 			for (GastoCaja gastosCaja : gastos) {
 				arqueoCajaExporter.addGasto(gastosCaja.getMonto(), gastosCaja.getComentario());
 			}
-
+			
+			
+			
+			List<Cliente> clientes = clienteDao.findAll();
+			for (Cliente cliente : clientes) {
+				if(cliente.getSaldo()<0)
+					arqueoCajaExporter.addClienteConDeuda(cliente.getSaldo(),cliente.getRazonSocial());
+			}
+			
 			try {
 				arqueoCajaExporter.export(file);
 			} catch (IOException e) {

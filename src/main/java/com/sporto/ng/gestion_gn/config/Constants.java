@@ -2,6 +2,8 @@ package com.sporto.ng.gestion_gn.config;
 
 import java.awt.Font;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,6 +13,7 @@ import javax.swing.ImageIcon;
 import javax.swing.text.MaskFormatter;
 
 import com.sporto.ng.gestion_gn.model.Lista;
+import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableModel;
 
 public class Constants {
 	public static final Font FUENTE_TABLE_HEADER = new Font("Dialog", Font.BOLD, 12);
@@ -23,7 +26,7 @@ public class Constants {
 	public static DateFormat FORMATO_FECHA = new SimpleDateFormat("dd/MM/yyyy");
 	public static int ANCHO = 1100;
 	public static int ALTO = 700;
-	public static String VERSION = "20211113.1";
+	public static String VERSION = "20211125.1";
 	
 	public static ImageIcon ICONO_AGREGAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/agregar.png"));
 	public static ImageIcon ICONO_QUITAR = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/eliminar.png"));
@@ -40,6 +43,7 @@ public class Constants {
 	public static ImageIcon ICONO_CAJA = new ImageIcon(Constants.class.getClassLoader().getResource("iconos/cajero-automatico.png"));
 	
 	private static List<Lista> LISTAS;
+	
 	
 	public static MaskFormatter getMascaraFecha(){
 		try {
@@ -67,5 +71,29 @@ public class Constants {
 				return lista;
 		}
 		return Lista.builder().nombre("-").build();
+	}
+	
+	public static double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    long factor = (long) Math.pow(10, places);
+	    value = value * factor;
+	    long tmp = Math.round(value);
+	    return (double) tmp / factor;
+	}
+	public static double round(double value) {
+		return round(value,2);
+	}
+	
+	public static String outDouble(double value) {
+		return String.format("%1$,.2f",value);
+	}
+	
+	public static Double parseDouble(String value) {
+		try {
+			return NumberFormat.getInstance().parse(value).doubleValue();
+		} catch (ParseException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

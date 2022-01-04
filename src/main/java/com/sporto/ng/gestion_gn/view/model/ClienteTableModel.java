@@ -10,8 +10,10 @@ import com.sporto.ng.gestion_gn.model.Cliente;
 
 public class ClienteTableModel extends DefaultTableModel {
 
+	public static final int COLUMN_CUIT = 2;
 	public static final int COLUMN_MAIL = 3;
 	public static final int COLUMN_DOMICILIO = 5;
+	public static final int COLUMN_DESCUBIERTO = 6;
 	public static final int COLUMN_DEUDA = 7;
 	public static final int COLUMN_LISTA = 8;
 	public static final int COLUMN_PEDIDO = 9;
@@ -43,8 +45,8 @@ public class ClienteTableModel extends DefaultTableModel {
 		lista.add(producto.getEmail());
 		lista.add(producto.getTelefono());
 		lista.add(producto.getDomicilio());
-		lista.add(producto.getLimiteDeuda());
-		lista.add(producto.getSaldo());
+		lista.add(Constants.outDouble(producto.getLimiteDeuda()));
+		lista.add(Constants.outDouble(producto.getSaldo()));
 		lista.add(producto.getListaPrecio());
 		lista.add(Constants.ICONO_PEDIDO);
 		lista.add(Constants.ICONO_EXPORTAR);

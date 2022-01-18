@@ -163,9 +163,8 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 		}
 		
 	}
-	public void imprimirPagos(Cliente unCliente, Collection<MovimientoCaja> listaPagos, Double estadoCC) {
+	public void imprimirPagos(Cliente unCliente, List<MovimientoCaja> listaPagos, Double estadoCC) {
 		URL url = Impresora.class.getResource("/pagos.htm");
-		
 		try {
 			String text = Resources.toString(url, StandardCharsets.UTF_8);
 
@@ -173,8 +172,12 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 			String domicilio = unCliente.getDomicilio();
 			text = text.replace("_CLIENTE_DIRECCION_", Objects.toString(domicilio, ""));
 			text = text.replace("_CLIENTE_TELEFONO_", Objects.toString(unCliente.getTelefono(), ""));
-			text = text.replace("_FECHA_", Constants.FORMATO_FECHA.format(new Date()));
+			if(listaPagos.size()>0)
+				text = text.replace("_FECHA_", Constants.FORMATO_FECHA.format(listaPagos.get(0).getFecha()));
+			else
+				text = text.replace("_FECHA_", Constants.FORMATO_FECHA.format(new Date()));
 			
+				
 			StringBuilder sb = new StringBuilder();
 			int index = 0;
 			double total = 0;
@@ -309,8 +312,12 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 		reimpresion = true;
 		btnImprimir.setText("IMPRIMIR");
 		imprimirPedido(unPedido, listaProductosEditar);
-		// TODO Auto-generated method stub
-		
+	}
+	
+	public void reimprimirPago(Cliente unCliente, List<MovimientoCaja> listaPagos, Double estadoCC) {
+		reimpresion = true;
+		btnImprimir.setText("IMPRIMIR");
+		imprimirPagos(unCliente, listaPagos, estadoCC);
 	}
 	
 	

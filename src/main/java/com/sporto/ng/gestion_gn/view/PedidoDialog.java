@@ -2,19 +2,11 @@ package com.sporto.ng.gestion_gn.view;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -79,7 +69,7 @@ public class PedidoDialog extends JDialog {
 	private JTextField textFieldPrecio;
 	private List<Precio> listaPrecios;
 	private Cliente cliente;
-	private JComboBox comboBoxDescuento;
+	private JTextField comboBoxDescuento;
 	private PedidoProductoDao pedidoProductoDao;
 	private PedidoDao pedidoDao;
 	private JTextField textFieldTotal;
@@ -224,10 +214,14 @@ public class PedidoDialog extends JDialog {
 		JLabel lblNewLabel_3_3 = new JLabel("DESCUENTO");
 		panelAgregar.add(lblNewLabel_3_3);
 
-		comboBoxDescuento = new JComboBox();
-		comboBoxDescuento.setModel(new DefaultComboBoxModel(
-				new String[] { "0 %", "1 %", "2 %", "3 %", "4 %", "5 %", "6 %", "7 %", "8 %", "9 %" }));
+		comboBoxDescuento = new JTextField();
+		comboBoxDescuento.setColumns(3);
+//		comboBoxDescuento.setModel(new DefaultComboBoxModel(
+//				new String[] { "0 %", "1 %", "2 %", "3 %", "4 %", "5 %", "6 %", "7 %", "8 %", "9 %" }));
 		panelAgregar.add(comboBoxDescuento);
+		
+		JLabel lblNewLabel_3_3_1 = new JLabel("%");
+		panelAgregar.add(lblNewLabel_3_3_1);
 		panelAgregar.add(agregarStockBtn);
 
 		JPanel panelBotones = new JPanel();
@@ -330,7 +324,9 @@ public class PedidoDialog extends JDialog {
 		if (null == unProducto) {
 			textFieldStockActual.setText("");
 		} else {
-			textFieldStockActual.setText(unProducto.getStock().toString());
+			Integer cantidadEnTabla = table.getCantidadEnTabla(unProducto.getId());
+			int neto = unProducto.getStock()- cantidadEnTabla;
+			textFieldStockActual.setText(Integer.toString(neto));
 		}
 	}
 
@@ -344,7 +340,7 @@ public class PedidoDialog extends JDialog {
 					if (validar()) {
 						Producto unProducto = obtenerProducto(selectedItem);
 
-						Object descuentoSeleccionado = comboBoxDescuento.getSelectedItem();
+						Object descuentoSeleccionado = comboBoxDescuento.getText();
 						table.registrarMovimiento(unProducto, Integer.valueOf(textFieldCantidad.getText()),
 								Constants.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
 
@@ -370,7 +366,7 @@ public class PedidoDialog extends JDialog {
 		textFieldStockActual.setText("");
 		textFieldPrecio.setText("");
 		textCodigoProducto.setSelectedIndex(0);
-		comboBoxDescuento.setSelectedIndex(0);
+		comboBoxDescuento.setText("0");
 	}
 
 	public JButton getBotonGuardar() {
@@ -384,11 +380,13 @@ public class PedidoDialog extends JDialog {
 	private void configValidations() {
 		textFieldVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos, true));
 		textFieldCantidad.setInputVerifier(new NumeroVerifier("Cantidad", camposInvalidos, 0, 9999));
+		comboBoxDescuento.setInputVerifier(new NumeroVerifier("Descuento", camposInvalidos, -1, 100));
 	}
 
 	public boolean validar() {
 		textFieldVencimiento.requestFocus();
 		textFieldCantidad.requestFocus();
+		comboBoxDescuento.requestFocus();
 		botonGuardar.requestFocus();
 		if (camposInvalidos.size() > 0) {
 			JOptionPane.showMessageDialog(new JFrame(), "Campos invalidos:" + camposInvalidos, "Error",
@@ -454,7 +452,7 @@ public class PedidoDialog extends JDialog {
 
 		textCodigoProducto.setSelectedIndex(0);
 		textFieldCantidad.setText("");
-		comboBoxDescuento.setSelectedIndex(0);
+		comboBoxDescuento.setText("0");
 		listaPrecios = precioDao.findByLista(unCliente.getListaPrecio());
 		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
 		this.setVisible(true);

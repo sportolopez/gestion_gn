@@ -21,7 +21,7 @@ public class PedidoTableModel extends DefaultTableModel {
 		addColumn("CLIENTE");
 		addColumn("FECHA PEDIDO");
 		addColumn("ESTADO");
-		addColumn("CANCELAR");
+		addColumn("ANULAR");
 		addColumn("RETIRAR");
 		addColumn("DETALLE");
 	}
@@ -32,7 +32,7 @@ public class PedidoTableModel extends DefaultTableModel {
 		lista.add(pedido.getCliente().getRazonSocial());
 		lista.add(Constants.outFecha(pedido.getFecha()));
 		lista.add(pedido.getEstado());
-		if(pedido.getEstado().equals(EstadoPedido.EMITIDO))
+		if(pedido.getEstado().equals(EstadoPedido.EMITIDO) || pedido.getEstado().equals(EstadoPedido.LIBERADO) || pedido.getEstado().equals(EstadoPedido.RETIRADO))
 			lista.add(Constants.ICONO_CANCELAR);
 		else
 			lista.add("");

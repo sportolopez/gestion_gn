@@ -65,7 +65,7 @@ public class ClienteDialog extends JDialog {
 	private void initComponents() {
 		setTitle("Cliente");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 502, 261);
+		setBounds(100, 100, 600, 261);
 		JPanel panelProductos = new JPanel();
 		panelProductos.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(panelProductos);
@@ -77,9 +77,9 @@ public class ClienteDialog extends JDialog {
 		panelProductos.add(lblCodigoLabel);
 
 		textRazonSocial = new JTextField();
-		textRazonSocial.setBounds(153, 22, 116, 20);
+		textRazonSocial.setBounds(153, 22, 200, 20);
 		textRazonSocial.setHorizontalAlignment(SwingConstants.RIGHT);
-		textRazonSocial.setColumns(10);
+		textRazonSocial.setColumns(20);
 		panelProductos.add(textRazonSocial);
 
 		JLabel lblEmail = new JLabel("EMAIL");
@@ -89,21 +89,21 @@ public class ClienteDialog extends JDialog {
 
 		textEmail = new JTextField();
 		textEmail.setText("");
-		textEmail.setBounds(153, 50, 116, 20);
+		textEmail.setBounds(153, 50, 200, 20);
 		textEmail.setHorizontalAlignment(SwingConstants.RIGHT);
 		textEmail.setToolTipText("");
 		panelProductos.add(textEmail);
-		textEmail.setColumns(10);
+		textEmail.setColumns(20);
 
 		JLabel lblTelefono = new JLabel("TELÉFONO");
-		lblTelefono.setBounds(288, 51, 70, 14);
+		lblTelefono.setBounds(381, 53, 70, 14);
 		lblTelefono.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblTelefono);
 
 		textTelefono = new JTextField();
-		textTelefono.setBounds(368, 48, 109, 20);
+		textTelefono.setBounds(461, 50, 109, 20);
 		textTelefono.setHorizontalAlignment(SwingConstants.RIGHT);
-		textTelefono.setColumns(10);
+		textTelefono.setColumns(20);
 		panelProductos.add(textTelefono);
 
 		btnGuardar = new JButton("GUARDAR");
@@ -120,44 +120,46 @@ public class ClienteDialog extends JDialog {
 		panelProductos.add(btnCancelar);
 
 		JLabel lblDescripcion = new JLabel("DIRECCIÓN");
-		lblDescripcion.setBounds(47, 78, 96, 14);
+		lblDescripcion.setBounds(10, 78, 133, 14);
 		lblDescripcion.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(lblDescripcion);
 
 		textDomicilio = new JTextField();
-		textDomicilio.setBounds(153, 75, 116, 19);
-		textDomicilio.setColumns(10);
+		textDomicilio.setBounds(153, 75, 200, 19);
+		textDomicilio.setColumns(20);
+		textDomicilio.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelProductos.add(textDomicilio);
 
 		JLabel lblCuit = new JLabel("CUIT");
 		lblCuit.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCuit.setBounds(288, 22, 70, 17);
+		lblCuit.setBounds(381, 24, 70, 17);
 		panelProductos.add(lblCuit);
 
 		textCUIT = new JTextField();
-		textCUIT.setColumns(10);
-		textCUIT.setBounds(368, 20, 109, 20);
+		textCUIT.setColumns(20);
+		textCUIT.setHorizontalAlignment(SwingConstants.RIGHT);
+		textCUIT.setBounds(461, 22, 109, 20);
 		panelProductos.add(textCUIT);
 
 		textLimite = new JTextField();
 		textLimite.setHorizontalAlignment(SwingConstants.RIGHT);
-		textLimite.setColumns(10);
-		textLimite.setBounds(368, 105, 109, 20);
+		textLimite.setColumns(20);
+		textLimite.setBounds(461, 107, 109, 20);
 		textLimite.setText("0");
 		panelProductos.add(textLimite);
 
 		JLabel lblCosto = new JLabel("DESCUBIERTO");
 		lblCosto.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblCosto.setBounds(270, 108, 88, 14);
+		lblCosto.setBounds(363, 110, 88, 14);
 		panelProductos.add(lblCosto);
 
 		JLabel lblListaDePrecio = new JLabel("LISTA");
 		lblListaDePrecio.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblListaDePrecio.setBounds(298, 79, 56, 14);
+		lblListaDePrecio.setBounds(391, 81, 56, 14);
 		panelProductos.add(lblListaDePrecio);
 
 		comboBoxLista = new JComboBox<Lista>();
-		comboBoxLista.setBounds(367, 76, 109, 22);
+		comboBoxLista.setBounds(460, 78, 109, 22);
 		panelProductos.add(comboBoxLista);
 		
 		comboBoxTipoCuenta = new JComboBox<TipoCuenta>();
@@ -199,7 +201,7 @@ public class ClienteDialog extends JDialog {
 		textCUIT.setText(unCliente.getCuit());
 		textEmail.setText(unCliente.getEmail());
 		comboBoxLista.setSelectedItem(unCliente.getListaPrecio());
-		textLimite.setText(String.valueOf(unCliente.getLimiteDeuda()));
+		textLimite.setText(Constants.outDouble(unCliente.getLimiteDeuda()));
 		comboBoxTipoCuenta.setSelectedItem(unCliente.getTipoCuenta());
 	}
 

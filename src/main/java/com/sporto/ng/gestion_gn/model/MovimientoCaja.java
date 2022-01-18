@@ -38,5 +38,5 @@ public class MovimientoCaja {
 	private Date fecha;
 	private Double monto;
 	private String comentario;
-	
+	private String denominacion;	
 }

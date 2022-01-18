@@ -14,6 +14,6 @@ import com.sporto.ng.gestion_gn.model.Producto;
 public interface PedidoProductoDao extends CrudRepository<PedidoProducto, PedidoProductoId> {
 
 	public Collection<PedidoProducto> findByPedido(Pedido pedido);
-	public List<PedidoProducto> findByProductoAndPedidoEstadoNot(Producto findById, EstadoPedido estado);
+	public List<PedidoProducto> findByProductoAndPedidoEstadoNotOrderByPedidoFechaDesc(Producto findById, EstadoPedido estado);
 	
 }

@@ -38,7 +38,7 @@ public class PedidoProducto implements Serializable {
 	private int cantidad;
 	
 	public double calcularSubtotal() {
-		double descuentoParsed = 1 - (double)Integer.parseInt(descuento.substring(0, 1)) / 100;
+		double descuentoParsed = 1 - (double)Integer.parseInt(descuento) / 100;
 		double d = precio * descuentoParsed;
 		return Constants.round(d * cantidad, 2);
 	}

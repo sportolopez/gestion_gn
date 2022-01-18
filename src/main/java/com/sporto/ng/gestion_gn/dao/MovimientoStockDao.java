@@ -15,4 +15,6 @@ public interface MovimientoStockDao extends CrudRepository<MovimientoStock, Inte
 	List<MovimientoStock> findAll();
 	
 	List<MovimientoStock> findByProducto(Producto producto);
+	
+	List<MovimientoStock> findByProductoOrderByFechaDesc(Producto producto);
 }

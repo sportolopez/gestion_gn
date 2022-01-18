@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -26,15 +25,16 @@ import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Cliente;
+import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.GastoCaja;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.MedioPago;
 import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.Precio;
-import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.utils.ArqueoCajaExporter;
 import com.sporto.ng.gestion_gn.utils.ExcelUtils;
 import com.sporto.ng.gestion_gn.utils.PrecioExcelExporter;
+import com.sporto.ng.gestion_gn.view.ClienteDetalle;
 import com.sporto.ng.gestion_gn.view.ClienteDialog;
 import com.sporto.ng.gestion_gn.view.ClientePanel;
 import com.sporto.ng.gestion_gn.view.EgresoDineroDialog;
@@ -49,6 +49,7 @@ public class ClienteController {
 	ClienteDao clienteDao;
 	ClientePanel clientePanel;
 	ClienteDialog clienteDialog;
+	ClienteDetalle clienteDetalle;
 	PrecioDao precioDao;
 	PedidoDao pedidoDao;
 	private PedidoDialog pedidoDialog;
@@ -97,6 +98,8 @@ public class ClienteController {
 				if (col == ClienteTableModel.COLUMN_EXPORTAR)
 					exportarPrecios(
 							clientePanel.getTableClientes().getValueAt(row, ClienteTableModel.COLUMN_LISTA).toString());
+				if (col == ClienteTableModel.COLUMN_DETALLE)
+					detalleCliente(listaPrecios, idCliente);
 
 			}
 
@@ -162,7 +165,7 @@ public class ClienteController {
 
 			for (MovimientoCaja movimientoCaja : movimientos) {
 				if (movimientoCaja.getMedioPago().equals(MedioPago.EFECTIVO))
-					arqueoCajaExporter.addEfectivo(movimientoCaja.getMonto(), movimientoCaja.getComentario());
+					arqueoCajaExporter.addEfectivo(movimientoCaja.getMonto(), movimientoCaja.getDenominacion());
 				if (movimientoCaja.getMedioPago().equals(MedioPago.TRANSFERENCIA))
 					arqueoCajaExporter.addTransferencia(movimientoCaja.getMonto(), movimientoCaja.getComentario());
 				if (movimientoCaja.getMedioPago().equals(MedioPago.DEPOSITO))
@@ -203,6 +206,12 @@ public class ClienteController {
 	private void editarCliente(List<Lista> listas, int idCliente) {
 		clienteDialog.cargarCampos(clienteDao.findById(idCliente).get());
 		clienteDialog.setVisible(true);
+	}
+
+	private void detalleCliente(List<Lista> listas, int idCliente) {
+		Cliente cliente = clienteDao.findById(idCliente).get();
+		clienteDetalle = new ClienteDetalle(homeForm,cliente,movimientoCajaDao.findGroupByLiberado(cliente.getId()), pedidoDao.findByClienteAndEstadoIn(cliente, new EstadoPedido[]{EstadoPedido.LIBERADO,EstadoPedido.RETIRADO}), movimientoCajaDao);
+		clienteDetalle.setVisible(true);
 	}
 
 	private void exportarClientes() {

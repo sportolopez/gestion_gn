@@ -20,6 +20,7 @@ public class ClienteTableModel extends DefaultTableModel {
 	public static final int COLUMN_EXPORTAR = 10;
 	public static final int COLUMN_EDITAR = 11;
 	public static final int COLUMN_LIBERAR = 12;
+	public static final int COLUMN_DETALLE = 13;
 	
 	public ClienteTableModel() {
 		addColumn("ID");
@@ -35,6 +36,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		addColumn("PRECIOS");
 		addColumn("EDITAR");
 		addColumn("OPERAR");
+		addColumn("DETALLE");
 	}
 
 	public void addCliente(Cliente producto) {
@@ -52,6 +54,7 @@ public class ClienteTableModel extends DefaultTableModel {
 		lista.add(Constants.ICONO_EXPORTAR);
 		lista.add(Constants.ICONO_EDITAR);
 		lista.add(Constants.ICONO_PAGO);
+		lista.add(Constants.ICONO_DETALLE);
 		
 		addRow(lista.toArray());
 
@@ -59,7 +62,7 @@ public class ClienteTableModel extends DefaultTableModel {
 	
 	@Override
 	public Class getColumnClass(int column) {
-		if (column == COLUMN_EDITAR || column == COLUMN_EXPORTAR || column == COLUMN_PEDIDO || column == COLUMN_LIBERAR)
+		if (column == COLUMN_EDITAR || column == COLUMN_EXPORTAR || column == COLUMN_PEDIDO || column == COLUMN_LIBERAR || column == COLUMN_DETALLE)
 			return ImageIcon.class;
 		return Object.class;
 	}

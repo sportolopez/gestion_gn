@@ -158,7 +158,7 @@ public class PedidoPanel extends JPanel {
 					cargarPedidos();
 				}
 				if (column == PedidoTableModel.COLUMN_CANCELAR) {
-					cambiarEstadoPedido(idPedido,EstadoPedido.CANCELADO);
+					cambiarEstadoPedido(idPedido,EstadoPedido.ANULADO);
 					cargarPedidos();
 				}
 				if (column == PedidoTableModel.COLUMN_ENTREGADO) {

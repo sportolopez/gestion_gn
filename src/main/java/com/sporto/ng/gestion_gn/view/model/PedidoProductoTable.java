@@ -69,7 +69,7 @@ public class PedidoProductoTable extends JTable {
 		Integer indexProducto = getIndexProducto(unProducto.getId());
 		if (indexProducto != null) {
 			Integer cantidadEnTabla = (Integer) getValueAt(indexProducto, COLUMNA_CANTIDAD);
-			double precioEnTabla = (double) getValueAt(indexProducto, COLUMNA_PRECIO);
+			double precioEnTabla = Constants.parseDouble(getValueAt(indexProducto, COLUMNA_PRECIO).toString());
 
 			int nuevaCantidad = cantidadEnTabla + cantidad;
 
@@ -81,7 +81,7 @@ public class PedidoProductoTable extends JTable {
 				return;
 			}
 			setValueAt(nuevaCantidad, indexProducto, COLUMNA_CANTIDAD);
-			setValueAt(descuento, indexProducto, COLUMNA_DESCUENTO);
+			setValueAt(descuento + " %", indexProducto, COLUMNA_DESCUENTO);
 			setValueAt(Constants.outDouble(nuevoSubtotal), indexProducto, COLUMNA_SUBTOTAL);
 
 		} else {
@@ -123,7 +123,7 @@ public class PedidoProductoTable extends JTable {
 	public Integer getCantidadEnTabla(int idProducto) {
 		final int COLUMNA_CANTIDAD = 2;
 		for (int i = 0; i < getRowCount(); i++) {
-			Integer idProductoTable = (Integer) getValueAt(i, COLUMNA_CANTIDAD);
+			Integer idProductoTable = (Integer) getValueAt(i, PedidoProductoTableModel.COLUMNA_CODIGO);
 			if (idProductoTable.equals(idProducto)) {
 				return Integer.valueOf(getValueAt(i, COLUMNA_CANTIDAD).toString());
 			}

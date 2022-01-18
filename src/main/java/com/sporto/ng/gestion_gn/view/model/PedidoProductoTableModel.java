@@ -75,7 +75,7 @@ public class PedidoProductoTableModel extends DefaultTableModel {
 
 	public double calcularSubtotal(double precio, String descuento, int cantidad) {
 
-		double descuentoParsed = 1 - (double) Integer.parseInt(descuento.substring(0, 1)) / 100;
+		double descuentoParsed = 1 - (double) Integer.parseInt(descuento) / 100;
 
 		double d = precio * descuentoParsed;
 		double e = d * cantidad;

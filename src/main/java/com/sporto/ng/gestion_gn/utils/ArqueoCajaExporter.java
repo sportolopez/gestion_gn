@@ -66,8 +66,13 @@ public class ArqueoCajaExporter {
 		fontHeader.setFontHeight(14);
 		fontHeader.setBold(true);
 		style.setFont(font);
+		style.setBorderBottom(BorderStyle.THIN);
+		style.setBorderTop(BorderStyle.THIN);
+		style.setBorderLeft(BorderStyle.THIN);
+		style.setBorderRight(BorderStyle.THIN);
 		styleHEader.setFont(fontHeader);
 		styleHEader.setBorderBottom(BorderStyle.MEDIUM);
+		styleHEader.setBorderTop(BorderStyle.MEDIUM);
 		styleBorder.setFont(font);
 		styleBorder.setBorderTop(BorderStyle.MEDIUM);
 		
@@ -137,9 +142,15 @@ public class ArqueoCajaExporter {
 		int rowCount = 2;
 
 		Row row = sheetResumen.createRow(rowCount++);
-		createCell(sheetResumen,row, 0, "Total Caja Efectivo", style);
-		Double totalEfectivo = getTotalLista(efectivo);
-		createCell(sheetResumen,row, 1, totalEfectivo, style);
+		rowTotalEfectivoDenominacion(row,"1000");
+		row = sheetResumen.createRow(rowCount++);
+		rowTotalEfectivoDenominacion(row,"500");
+		row = sheetResumen.createRow(rowCount++);
+		rowTotalEfectivoDenominacion(row,"200");
+		row = sheetResumen.createRow(rowCount++);
+		rowTotalEfectivoDenominacion(row,"100");
+		row = sheetResumen.createRow(rowCount++);
+		rowTotalEfectivoDenominacion(row,"Varios");
 	    
 		row = sheetResumen.createRow(rowCount++);
 		createCell(sheetResumen,row, 0, "Total Banco", style);
@@ -153,7 +164,7 @@ public class ArqueoCajaExporter {
 		
 		row = sheetResumen.createRow(rowCount++);
 		createCell(sheetResumen,row, 0, "Saldo Caja", styleBorder);
-		double d = Double.sum(totalEfectivo,totalTransferencia);
+		double d = Double.sum(getTotalLista(efectivo),totalTransferencia);
 		createCell(sheetResumen,row, 1, d -  (double)totalGastos, styleBorder);		
 
 		row = sheetResumen.createRow(11);
@@ -164,6 +175,12 @@ public class ArqueoCajaExporter {
 		cargarMovimientos(caja,efectivo);
 		cargarMovimientos(gastos,gasto);
 		cargarMovimientos(clientes,clientesdeudores,"CLIENTE");
+	}
+
+	private void rowTotalEfectivoDenominacion(Row row,String denominacion) {
+		createCell(sheetResumen,row, 0, "Total en Billetes de "+denominacion, style);
+		Double totalEfectivo = getTotalListaDenominacion(efectivo,denominacion);
+		createCell(sheetResumen,row, 1, totalEfectivo, style);
 	}
 
 	private void cargarMovimientos(XSSFSheet caja,Collection<Pair<Double, String>> movimientos ) {
@@ -197,6 +214,15 @@ public class ArqueoCajaExporter {
 		return total;
 	}
 
+	private Double getTotalListaDenominacion(List<Pair<Double, String>> lista,String denominacion) {
+		Double total = (double) 0;
+		for (Pair<Double, String> pair : lista) {
+			if(denominacion.equals(pair.getSecond()))
+				total += pair.getFirst();
+		}
+		return total;
+	}
+	
 	public void export(File file) throws IOException {
 
 		if (file.exists()) {// El archivo ya existe

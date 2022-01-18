@@ -32,20 +32,23 @@ import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.MedioPago;
 import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.Pedido;
+import com.sporto.ng.gestion_gn.model.TipoCuenta;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.pruebas.Impresora;
 import com.sporto.ng.gestion_gn.view.model.LiberarPedidoTable;
 import com.sporto.ng.gestion_gn.view.model.LiberarPedidoTableModel;
 import com.sporto.ng.gestion_gn.view.model.PagoTable;
 import com.sporto.ng.gestion_gn.view.model.PagoTableModel;
+import javax.swing.DefaultComboBoxModel;
 
 public class LiberarPedidoDialog extends JDialog {
+	private static final String DENOMINACION_VARIOS = "Varios";
 	private LiberarPedidoTable tablePedidos;
 	private JButton botonGuardar;
 	private Cliente cliente;
 	private PedidoDao pedidoDao;
 	private JTextField textFieldEstadoCC;
-	private JTextField montoPago;
+	private JTextField cantidadBilletes;
 	private JTextField pagoComentario;
 	private JTextField totalPagos;
 	private JTextField textFieldCliente;
@@ -56,7 +59,7 @@ public class LiberarPedidoDialog extends JDialog {
 	private PagoTable tablePagos;
 	private JTextField textFieldSaldo;
 	private MovimientoCajaDao movimientoCajaDao;
-
+	
 	public LiberarPedidoDialog(PedidoDao pedidoDao, MovimientoCajaDao movimientoCajaDao,
 			JFrame owner) {
 		super(owner);
@@ -136,16 +139,56 @@ public class LiberarPedidoDialog extends JDialog {
 
 		JLabel lblNewLabel_1_2 = new JLabel("MEDIO DE PAGO:");
 		panelPagosInputs.add(lblNewLabel_1_2);
-
+		
+		JLabel lblCantidadMonto = new JLabel("CANTIDAD:");
+		
+		JLabel lblDenominacion = new JLabel("EN BILLETES DE:");
+		JComboBox pagoDenominacion = new JComboBox(new Object[]{});
+		
+		
+		pagoDenominacion.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	String denominacion = (String) pagoDenominacion.getSelectedItem();
+		    	if(DENOMINACION_VARIOS.equals(denominacion)) {
+		    		lblCantidadMonto.setText("MONTO:");
+		    	}else {
+		    		lblCantidadMonto.setText("CANTIDAD:");
+		    	}
+		    			
+		    }
+		});
+		
 		JComboBox<MedioPago> pagoMedioPago = new JComboBox(MedioPago.values());
+		pagoMedioPago.addActionListener (new ActionListener () {
+		    public void actionPerformed(ActionEvent e) {
+		    	MedioPago mediodepago = (MedioPago) pagoMedioPago.getSelectedItem();
+		    	if(!MedioPago.EFECTIVO.equals(mediodepago)) {
+		    		lblDenominacion.setVisible(false);
+		    		pagoDenominacion.setVisible(false);
+		    	}else {
+		    		lblDenominacion.setVisible(true);
+		    		pagoDenominacion.setVisible(true);
+		    	}
+		    			
+		    }
+		});
 		panelPagosInputs.add(pagoMedioPago);
+		
+				
+				
+				
+				panelPagosInputs.add(lblDenominacion);
+		
+		
+		
+		pagoDenominacion.setModel(new DefaultComboBoxModel(new String[] {"1000", "500", "200", "100", DENOMINACION_VARIOS}));
+		panelPagosInputs.add(pagoDenominacion);
 
-		JLabel lblNewLabel_3_1_3 = new JLabel("MONTO:");
-		panelPagosInputs.add(lblNewLabel_3_1_3);
+		panelPagosInputs.add(lblCantidadMonto);
 
-		montoPago = new JTextField();
-		montoPago.setColumns(8);
-		panelPagosInputs.add(montoPago);
+		cantidadBilletes = new JTextField();
+		cantidadBilletes.setColumns(8);
+		panelPagosInputs.add(cantidadBilletes);
 
 		JLabel lblNewLabel_3_1_2_1 = new JLabel("COMENTARIO:");
 		panelPagosInputs.add(lblNewLabel_3_1_2_1);
@@ -160,7 +203,16 @@ public class LiberarPedidoDialog extends JDialog {
 
 				double parseDouble = 0;
 				try {
-					parseDouble = Constants.parseDouble(montoPago.getText());
+					double cantidadBilletesDouble = Double.parseDouble(cantidadBilletes.getText());
+					
+					if(!DENOMINACION_VARIOS.equals(pagoDenominacion.getSelectedItem().toString())) {
+						double denominacion = Double.parseDouble(pagoDenominacion.getSelectedItem().toString());
+						parseDouble = cantidadBilletesDouble * denominacion ;
+					}else {
+						parseDouble = cantidadBilletesDouble;
+					}
+						
+					
 				} catch (RuntimeException e1) {
 					JOptionPane.showMessageDialog(null, "Ingrese un monto válido", "Error", JOptionPane.ERROR_MESSAGE);
 					return;
@@ -168,8 +220,10 @@ public class LiberarPedidoDialog extends JDialog {
 
 				MovimientoCaja unMovimientoPago = MovimientoCaja.builder().cliente(cliente)
 						.comentario(pagoComentario.getText()).fecha(new Date())
-						.medioPago((MedioPago) pagoMedioPago.getSelectedItem()).monto(parseDouble)
-						.tipoMovimiento(TipoMovimiento.INGRESO).build();
+						.medioPago((MedioPago) pagoMedioPago.getSelectedItem())
+						.monto(parseDouble)
+						.tipoMovimiento(TipoMovimiento.INGRESO)
+						.denominacion(pagoDenominacion.getSelectedItem().toString()).build();
 				tablePagos.addPago(unMovimientoPago);
 				limpiarCampos();
 				totalPagos.setText(tablePagos.getTotal().toString());
@@ -305,7 +359,7 @@ public class LiberarPedidoDialog extends JDialog {
 
 	protected void limpiarCampos() {
 		pagoComentario.setText("");
-		montoPago.setText("");
+		cantidadBilletes.setText("");
 
 	}
 

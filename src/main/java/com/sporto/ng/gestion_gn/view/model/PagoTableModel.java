@@ -12,12 +12,14 @@ public class PagoTableModel extends DefaultTableModel {
 
 	public static final int COLUMN_MEDIO_DE_PAGO = 0;
 	public static final int COLUMN_MONTO = 1;
-	public static final int COLUMN_COMENTARIO = 2;
-	public static final int COLUMN_ELIMINAR = 3;
+	public static final int COLUMN_DENOMINACION = 2;
+	public static final int COLUMN_COMENTARIO = 3;
+	public static final int COLUMN_ELIMINAR = 4;
 	
 	public PagoTableModel() {
 		addColumn("MEDIO DE PAGO");
 		addColumn("MONTO");
+		addColumn("DENOMINACION");
 		addColumn("COMENTARIO");
 		addColumn("BORRAR");
 	}
@@ -26,6 +28,7 @@ public class PagoTableModel extends DefaultTableModel {
 		ArrayList<Object> lista = new ArrayList<Object>();
 		lista.add(unPago.getMedioPago());
 		lista.add(Constants.outDouble(unPago.getMonto()));
+		lista.add(unPago.getDenominacion());
 		lista.add(unPago.getComentario());
 		lista.add(Constants.ICONO_ELIMINAR);
 		addRow(lista.toArray());

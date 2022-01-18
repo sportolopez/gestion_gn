@@ -112,7 +112,7 @@ public class ProductoController {
 				Producto findById = dao.findById(idProducto).get();
 
 				ProductoDetalle detalleProducto = new ProductoDetalle(homeForm, findById,
-						movimientoDao.findByProducto(findById), pedidoProductoDao.findByProductoAndPedidoEstadoNot(findById, EstadoPedido.CANCELADO));
+						movimientoDao.findByProductoOrderByFechaDesc(findById), pedidoProductoDao.findByProductoAndPedidoEstadoNotOrderByPedidoFechaDesc(findById, EstadoPedido.ANULADO));
 				detalleProducto.setVisible(true);
 
 			}

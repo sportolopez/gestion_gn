@@ -8,6 +8,7 @@ com\sporto\ng\gestion_gn\pruebas\TableToolTipsDemo$MyTableModel.class
 com\sporto\ng\gestion_gn\view\model\LiberarPedidoTable.class
 com\sporto\ng\gestion_gn\dao\PedidoProductoDao.class
 com\sporto\ng\gestion_gn\utils\Printer.class
+com\sporto\ng\gestion_gn\view\ArqueoCajaDialog.class
 com\sporto\ng\gestion_gn\model\PedidoProducto$PedidoProductoBuilder.class
 com\sporto\ng\gestion_gn\utils\Java2sAutoComboBox$1.class
 com\sporto\ng\gestion_gn\view\EgresoDineroDialog$2.class
@@ -76,6 +77,7 @@ com\sporto\ng\gestion_gn\view\controller\ProductoController$2.class
 com\sporto\ng\gestion_gn\dao\ClienteDao.class
 com\sporto\ng\gestion_gn\pruebas\Impresora$1.class
 com\sporto\ng\gestion_gn\model\Precio.class
+com\sporto\ng\gestion_gn\view\ClienteDetalle.class
 com\sporto\ng\gestion_gn\model\Precio$PrecioBuilder.class
 com\sporto\ng\gestion_gn\pruebas\TablePrintDemo1$1.class
 com\sporto\ng\gestion_gn\utils\TableToExcel.class
@@ -136,6 +138,7 @@ com\sporto\ng\gestion_gn\utils\Java2sAutoTextField.class
 com\sporto\ng\gestion_gn\view\EgresoDineroDialog$3.class
 com\sporto\ng\gestion_gn\view\ClienteDialog$1.class
 com\sporto\ng\gestion_gn\dao\MovimientoCajaDao.class
+com\sporto\ng\gestion_gn\view\ClienteDetalle$1.class
 com\sporto\ng\gestion_gn\view\HomeForm$6.class
 com\sporto\ng\gestion_gn\view\LiberarPedidoDialog$6.class
 com\sporto\ng\gestion_gn\view\MovimientoStockDialog$3.class
@@ -170,7 +173,9 @@ com\sporto\ng\gestion_gn\model\TipoCuenta.class
 com\sporto\ng\gestion_gn\view\HomeForm$4.class
 com\sporto\ng\gestion_gn\view\MovimientoStockDialog$5.class
 com\sporto\ng\gestion_gn\view\MovimientoStockDialog.class
+com\sporto\ng\gestion_gn\view\ClienteDetalle$3.class
 com\sporto\ng\gestion_gn\view\model\PagoTableModel.class
+com\sporto\ng\gestion_gn\view\LiberarPedidoDialog$7.class
 com\sporto\ng\gestion_gn\view\MovimientoStockDialog$4.class
 com\sporto\ng\gestion_gn\view\ProductoDetalle.class
 com\sporto\ng\gestion_gn\view\HomeForm$5.class
@@ -180,5 +185,6 @@ com\sporto\ng\gestion_gn\model\Cliente$ClienteBuilder.class
 com\sporto\ng\gestion_gn\pruebas\TablePrintDemo3$FancyPrintable.class
 com\sporto\ng\gestion_gn\model\Pedido.class
 com\sporto\ng\gestion_gn\view\model\MovimientoStockTableModel.class
+com\sporto\ng\gestion_gn\view\ClienteDetalle$2.class
 com\sporto\ng\gestion_gn\view\controller\ProductoController$8.class
 com\sporto\ng\gestion_gn\view\PedidoDialog$2.class

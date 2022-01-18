@@ -11,6 +11,8 @@ import javax.swing.JTable;
 
 import jxl.Workbook;
 import jxl.format.Alignment;
+import jxl.format.Border;
+import jxl.format.BorderLineStyle;
 import jxl.format.Colour;
 import jxl.format.UnderlineStyle;
 import jxl.format.VerticalAlignment;
@@ -97,6 +99,7 @@ public class JTableToExcel {
  
                  format.setAlignment (Alignment.CENTRE); // Centro de visualización horizontal
                  format.setVerticalAlignment (VerticalAlignment.CENTRE); // Pantalla central vertical
+                 format.setBorder(Border.ALL, BorderLineStyle.THICK);
                  sheet.mergeCells(0, 0, colNum-1, 0); // fusionar celdas
                  sheet.setRowView(0, 600); // Establecer altura de fila
                  sheet.addCell(new Label(0, 0, heading, format)); // Complete la hoja de trabajo
@@ -118,7 +121,7 @@ public class JTableToExcel {
 		WritableCellFormat format = new WritableCellFormat(font); // define el objeto de formato
 
 		format.setAlignment(Alignment.CENTRE); // Centro de visualización horizontal
-
+		format.setBorder(Border.ALL, BorderLineStyle.THIN);
 		sheet.setColumnView(0, 10); // Establecer el ancho de la columna
 		sheet.setColumnView(1, 25); // Establecer el ancho de la columna
 		sheet.setColumnView(2, 20); // Establecer el ancho de la columna
@@ -178,7 +181,7 @@ public class JTableToExcel {
 		WritableCellFormat format = new WritableCellFormat(font); // define el objeto de formato
 
 		format.setAlignment(Alignment.CENTRE); // Centrar horizontalmente
-
+		format.setBorder(Border.ALL, BorderLineStyle.THIN);
 		for (int i = 0; i < colNum; i++) {// columna
 
 			for (int j = 1; j <= rowNum; j++) {// fila
@@ -190,7 +193,7 @@ public class JTableToExcel {
 				else
 					str = valueAt.toString();
 
-				Label labelN = new Label(i, j + 1, str);
+				Label labelN = new Label(i, j + 1, str,format);
 
 				try {
 

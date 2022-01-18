@@ -19,4 +19,10 @@ public interface MovimientoCajaDao extends CrudRepository<MovimientoCaja, Intege
 	List<MovimientoCaja> findByFecha(int dia, int mes, int year);
 	
 	List<MovimientoCaja> findByCliente(Cliente cliente);
+	
+	@Query(value="select sum(monto) as monto, fecha, cliente_id, id,comentario, medio_pago, tipo_movimiento, denominacion from movimiento_caja M where M.cliente_id =?1 group by fecha order by fecha desc", nativeQuery = true)
+	List<MovimientoCaja> findGroupByLiberado(int cliente_id);
+	
+	@Query(value="select monto, fecha, cliente_id, id,comentario, medio_pago, tipo_movimiento, denominacion from movimiento_caja M where M.cliente_id =?1 and M.fecha = ?2", nativeQuery = true)
+	List<MovimientoCaja> findLiberado(int cliente_id, String fecha);
 }

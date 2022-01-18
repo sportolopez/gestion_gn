@@ -34,6 +34,7 @@ import com.sporto.ng.gestion_gn.model.Precio;
 import com.sporto.ng.gestion_gn.utils.ArqueoCajaExporter;
 import com.sporto.ng.gestion_gn.utils.ExcelUtils;
 import com.sporto.ng.gestion_gn.utils.PrecioExcelExporter;
+import com.sporto.ng.gestion_gn.view.ArqueoCajaDialog;
 import com.sporto.ng.gestion_gn.view.ClienteDetalle;
 import com.sporto.ng.gestion_gn.view.ClienteDialog;
 import com.sporto.ng.gestion_gn.view.ClientePanel;
@@ -72,11 +73,14 @@ public class ClienteController {
 		List<Lista> listaPrecios = listaDao.findAll();
 		pedidoDialog = new PedidoDialog(productoDao, pedidoDao, homeForm, precioDao, pedidoProductoDao);
 		liberarPedidoDialog = new LiberarPedidoDialog(pedidoDao,movimientoCajaDao, homeForm);
+		ArqueoCajaDialog arqueoCajaDialog = new ArqueoCajaDialog();
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
 		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());
 		clientePanel.getBtnImportarPrecios().addActionListener(i -> importarExcel());
 		clientePanel.getBtnEgreso().addActionListener(i -> egresoDinero());
+		//clientePanel.getBtnArqueoDelDia().addActionListener(i -> abrirArqueoCaja(arqueoCajaDialog));
+		//arqueoCajaDialog.getBtnArqueoDelDia().addActionListener(l);
 		clientePanel.getBtnArqueoDelDia().addActionListener(i -> exportarArqueo());
 		clientePanel.getBtnNuevoCliente().addActionListener(i -> nuevoCliente());
 		cargarListaInicial();
@@ -106,6 +110,13 @@ public class ClienteController {
 		});
 
 		Constants.setListas(listaDao.findAll());
+	}
+
+	private void abrirArqueoCaja(ArqueoCajaDialog arqueoCajaDialog) {
+		
+		
+		arqueoCajaDialog.setVisible(true);
+		
 	}
 
 	private void egresoDinero() {

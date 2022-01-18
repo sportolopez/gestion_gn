@@ -13,11 +13,13 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Precio;
 import com.sporto.ng.gestion_gn.model.Precio.PrecioBuilder;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.Producto.ProductoBuilder;
+import com.sporto.ng.gestion_gn.view.validations.ExcelParseException;
 
 public class ExcelUtils {
 
@@ -45,7 +47,11 @@ public class ExcelUtils {
 			builder.descripcion(rowProducto.getCell(2).getStringCellValue());
 			Cell cellCosto = rowProducto.getCell(3);
 			if (cellCosto != null)
-				builder.costo(cellCosto.getNumericCellValue());
+				try {
+					builder.costo((cellCosto.getNumericCellValue()));
+				} catch (Exception e) {
+					throw new ExcelParseException("Ingrese un monto correcto ("+ cellCosto.toString() +") . Fila: "+(int)(rowProducto.getRowNum()+1));
+				}
 
 			Cell cellFecha = rowProducto.getCell(4);
 			if (cellFecha != null) {
@@ -103,7 +109,12 @@ public class ExcelUtils {
 					Cell cell = row.getCell(i);
 					unPrecio.lista(Lista.builder().nombre(rowListas.getCell(i).getStringCellValue()).build());
 					if (cell != null) {
-						double numericCellValue = cell.getNumericCellValue();
+						double numericCellValue;
+						try {
+							numericCellValue = (cell.getNumericCellValue());
+						} catch (Exception e) {
+							throw new ExcelParseException("Ingrese un monto correcto ("+ cell.toString() +") . Fila: "+ (int)(row.getRowNum()+1) );
+						}
 						unPrecio.precio((double) numericCellValue);
 					} else {
 						unPrecio.precio((double) 0);

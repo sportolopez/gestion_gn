@@ -17,7 +17,7 @@ import org.springframework.context.annotation.PropertySource;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.view.HomeForm;
 import com.sporto.ng.gestion_gn.view.Splash;
-
+import com.sporto.ng.gestion_gn.view.validations.ExcelParseException;
 
 @SpringBootApplication
 @ComponentScan
@@ -30,10 +30,14 @@ public class GestionNG {
 				PrintWriter pw = new PrintWriter(sw);
 				e.printStackTrace(pw);
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(new Splash(), sw.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+				if (e instanceof ExcelParseException) {
+					JOptionPane.showMessageDialog(new Splash(), e.getMessage(), "Error al procesar el Excel",
+							JOptionPane.WARNING_MESSAGE);
+				} else
+					JOptionPane.showMessageDialog(new Splash(), sw.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		
+
 		System.out.println("Default locale:" + Locale.getDefault().toString());
 
 		System.out.println("\nSetting default locale to es");
@@ -41,7 +45,7 @@ public class GestionNG {
 		Locale.setDefault(swedishLocale);
 
 		System.out.println("New default locale:" + Locale.getDefault().toString());
-		
+
 		// https://thebadprogrammer.com/swing-uimanager-keys/
 		UIManager.put("Button.font", Constants.FUENTE_BUTTON);
 		UIManager.put("TableHeader.font", Constants.FUENTE_TABLE_HEADER);
@@ -51,10 +55,9 @@ public class GestionNG {
 		UIManager.put("FileChooser.fileNameLabelText", "Nombre de archivo");
 		UIManager.put("FileChooser.filesOfTypeLabelText", "Tipo de archivo");
 		UIManager.put("FileChooser.lookInLabelText", "Buscar en");
-		
-        System.out.print((double)3.1415926535);
-        
-        
+
+		System.out.print((double) 3.1415926535);
+
 		Splash s = new Splash();
 		s.setVisible(true);
 		System.out.println("Inicio");

@@ -1,26 +1,34 @@
 package com.sporto.ng.gestion_gn.view;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-
-import com.sporto.ng.gestion_gn.config.Constants;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
-
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import com.sporto.ng.gestion_gn.config.Constants;
 
 public class ArqueoCajaDialog  extends JDialog{
 	private JTable table;
+	private JButton btnArqueoDelDia;
+	
+	public JButton getBtnArqueoDelDia() {
+		return btnArqueoDelDia;
+	}
+
 	public ArqueoCajaDialog() {
+		setPreferredSize(new Dimension(500, 600));
+		setResizable(false);
 	
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		JLabel lblNewLabel = new JLabel("ARQUEO CAJA "+Constants.outFecha(new Date()));
@@ -34,6 +42,11 @@ public class ArqueoCajaDialog  extends JDialog{
 		getContentPane().add(panel);
 		
 		table = new JTable();
+		table.setEnabled(false);
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		table.setDefaultRenderer(Object.class, rightRenderer);
+		table.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		table.setRowHeight(40);
 		table.setFont(Constants.FUENTE);
 		table.setModel(new DefaultTableModel(
@@ -58,7 +71,7 @@ public class ArqueoCajaDialog  extends JDialog{
 		getContentPane().add(panel_1);
 		
 		
-		JButton btnArqueoDelDia = new JButton(Constants.ICONO_CAJA);
+		btnArqueoDelDia = new JButton(Constants.ICONO_CAJA);
 		btnArqueoDelDia.setText("EXPORTAR");
 		btnArqueoDelDia.setMnemonic(KeyEvent.VK_I);
 		btnArqueoDelDia.setHorizontalTextPosition(SwingConstants.LEADING);

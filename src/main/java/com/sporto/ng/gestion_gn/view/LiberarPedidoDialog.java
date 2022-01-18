@@ -165,21 +165,18 @@ public class LiberarPedidoDialog extends JDialog {
 		    	if(!MedioPago.EFECTIVO.equals(mediodepago)) {
 		    		lblDenominacion.setVisible(false);
 		    		pagoDenominacion.setVisible(false);
+		    		lblCantidadMonto.setText("MONTO:");
 		    	}else {
 		    		lblDenominacion.setVisible(true);
 		    		pagoDenominacion.setVisible(true);
+		    		lblCantidadMonto.setText("CANTIDAD:");
 		    	}
 		    			
 		    }
 		});
 		panelPagosInputs.add(pagoMedioPago);
 		
-				
-				
-				
-				panelPagosInputs.add(lblDenominacion);
-		
-		
+		panelPagosInputs.add(lblDenominacion);
 		
 		pagoDenominacion.setModel(new DefaultComboBoxModel(new String[] {"1000", "500", "200", "100", DENOMINACION_VARIOS}));
 		panelPagosInputs.add(pagoDenominacion);
@@ -202,13 +199,17 @@ public class LiberarPedidoDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 
 				double parseDouble = 0;
+				String denominacionString = pagoDenominacion.getSelectedItem().toString();
 				try {
-					double cantidadBilletesDouble = Double.parseDouble(cantidadBilletes.getText());
+					double cantidadBilletesDouble = Constants.parseDouble(cantidadBilletes.getText());
 					
-					if(!DENOMINACION_VARIOS.equals(pagoDenominacion.getSelectedItem().toString())) {
-						double denominacion = Double.parseDouble(pagoDenominacion.getSelectedItem().toString());
+					if(MedioPago.EFECTIVO.equals((MedioPago) pagoMedioPago.getSelectedItem())
+							&&
+							!DENOMINACION_VARIOS.equals(denominacionString)) {
+						double denominacion = Double.parseDouble(denominacionString);
 						parseDouble = cantidadBilletesDouble * denominacion ;
 					}else {
+						denominacionString = "";
 						parseDouble = cantidadBilletesDouble;
 					}
 						
@@ -223,7 +224,7 @@ public class LiberarPedidoDialog extends JDialog {
 						.medioPago((MedioPago) pagoMedioPago.getSelectedItem())
 						.monto(parseDouble)
 						.tipoMovimiento(TipoMovimiento.INGRESO)
-						.denominacion(pagoDenominacion.getSelectedItem().toString()).build();
+						.denominacion(denominacionString).build();
 				tablePagos.addPago(unMovimientoPago);
 				limpiarCampos();
 				totalPagos.setText(tablePagos.getTotal().toString());

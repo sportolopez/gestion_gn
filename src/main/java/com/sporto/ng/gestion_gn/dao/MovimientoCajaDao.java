@@ -25,4 +25,7 @@ public interface MovimientoCajaDao extends CrudRepository<MovimientoCaja, Intege
 	
 	@Query(value="select monto, fecha, cliente_id, id,comentario, medio_pago, tipo_movimiento, denominacion from movimiento_caja M where M.cliente_id =?1 and M.fecha = ?2", nativeQuery = true)
 	List<MovimientoCaja> findLiberado(int cliente_id, String fecha);
+	
+
+	
 }

@@ -16,4 +16,6 @@ public interface GastoCajaDao extends CrudRepository<GastoCaja, Integer> {
 	@Query("select  M from GastoCaja M where day(M.fecha) = ?1 and month(M.fecha) = ?2 and year(M.fecha) = ?3")
 	List<GastoCaja> findByFecha(int dia, int mes, int year);
 	
+	@Query(value="select nombre from caja_egreso_motivo", nativeQuery = true)
+	List<String> findMotivosEgreso();
 }

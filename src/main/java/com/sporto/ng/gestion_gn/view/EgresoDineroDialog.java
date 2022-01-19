@@ -32,12 +32,13 @@ import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.view.model.PagoTable;
 import com.sporto.ng.gestion_gn.view.model.PagoTableModel;
+import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableModel;
 
 public class EgresoDineroDialog extends JDialog {
 	private JButton botonGuardar;
 	
 	private JTextField montoPago;
-	private JTextField pagoComentario;
+	private JComboBox<String> pagoComentario;
 	private JTextField totalPagos;
 	private PagoTable tablePagos;
 	private GastoCajaDao gastoCajaDao;
@@ -89,8 +90,8 @@ public class EgresoDineroDialog extends JDialog {
 		JLabel lblNewLabel_3_1_2_1 = new JLabel("COMENTARIO:");
 		panelPagosInputs.add(lblNewLabel_3_1_2_1);
 
-		pagoComentario = new JTextField();
-		pagoComentario.setColumns(15);
+		List<String> findMotivosEgreso = gastoCajaDao.findMotivosEgreso();
+		pagoComentario = new JComboBox<String>(findMotivosEgreso.toArray(new String[findMotivosEgreso.size()]));
 		panelPagosInputs.add(pagoComentario);
 
 		JButton agregarStockBtn_1 = new JButton("REGISTRAR ");
@@ -106,7 +107,7 @@ public class EgresoDineroDialog extends JDialog {
 				}
 
 				MovimientoCaja unMovimientoPago = MovimientoCaja.builder()
-						.comentario(pagoComentario.getText()).fecha(new Date())
+						.comentario(pagoComentario.getSelectedItem().toString()).fecha(new Date())
 						.medioPago((MedioPago) pagoMedioPago.getSelectedItem()).monto(parseDouble)
 						.tipoMovimiento(TipoMovimiento.INGRESO).build();
 				tablePagos.addPago(unMovimientoPago);
@@ -118,7 +119,9 @@ public class EgresoDineroDialog extends JDialog {
 
 		JScrollPane scrollPanePagos = new JScrollPane();
 		tablePagos = new PagoTable();
-
+		tablePagos.getColumnModel().getColumn(PagoTableModel.COLUMN_DENOMINACION).setMinWidth(0);
+		tablePagos.getColumnModel().getColumn(PagoTableModel.COLUMN_DENOMINACION).setMaxWidth(0);
+		
 		tablePagos.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -169,7 +172,7 @@ public class EgresoDineroDialog extends JDialog {
 	}
 
 	protected void limpiarCampos() {
-		pagoComentario.setText("");
+		pagoComentario.setSelectedIndex(0);
 		montoPago.setText("");
 
 	}

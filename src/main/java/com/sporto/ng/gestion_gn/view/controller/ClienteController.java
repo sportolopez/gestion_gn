@@ -73,15 +73,14 @@ public class ClienteController {
 		List<Lista> listaPrecios = listaDao.findAll();
 		pedidoDialog = new PedidoDialog(productoDao, pedidoDao, homeForm, precioDao, pedidoProductoDao);
 		liberarPedidoDialog = new LiberarPedidoDialog(pedidoDao,movimientoCajaDao, homeForm);
-		ArqueoCajaDialog arqueoCajaDialog = new ArqueoCajaDialog();
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));
 		clientePanel.getBtnExportar().addActionListener(i -> exportarClientes());
 		clientePanel.getBtnImportarPrecios().addActionListener(i -> importarExcel());
 		clientePanel.getBtnEgreso().addActionListener(i -> egresoDinero());
-		//clientePanel.getBtnArqueoDelDia().addActionListener(i -> abrirArqueoCaja(arqueoCajaDialog));
-		//arqueoCajaDialog.getBtnArqueoDelDia().addActionListener(l);
-		clientePanel.getBtnArqueoDelDia().addActionListener(i -> exportarArqueo());
+		clientePanel.getBtnArqueoDelDia().addActionListener(i -> abrirArqueoCaja());
+		
+		//clientePanel.getBtnArqueoDelDia().addActionListener(i -> exportarArqueo());
 		clientePanel.getBtnNuevoCliente().addActionListener(i -> nuevoCliente());
 		cargarListaInicial();
 
@@ -112,11 +111,12 @@ public class ClienteController {
 		Constants.setListas(listaDao.findAll());
 	}
 
-	private void abrirArqueoCaja(ArqueoCajaDialog arqueoCajaDialog) {
-		
-		
+	private void abrirArqueoCaja() {
+		ArqueoCajaExporter arqueoCajaExporter = new ArqueoCajaExporter();
+		completarExporter(arqueoCajaExporter);
+		ArqueoCajaDialog arqueoCajaDialog = new ArqueoCajaDialog(arqueoCajaExporter,homeForm);
+		arqueoCajaDialog.getBtnArqueoDelDia().addActionListener(i -> exportarArqueo());
 		arqueoCajaDialog.setVisible(true);
-		
 	}
 
 	private void egresoDinero() {
@@ -160,6 +160,8 @@ public class ClienteController {
 
 	protected void exportarArqueo() {
 		ArqueoCajaExporter arqueoCajaExporter = new ArqueoCajaExporter();
+		completarExporter(arqueoCajaExporter);
+		
 		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		jfc.setDialogTitle("Guardar como..");
 		jfc.setFileFilter(new FileNameExtensionFilter(".xlsx", "xlsx"));
@@ -168,37 +170,7 @@ public class ClienteController {
 			if (!FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("xlsx")) {
 				file = new File(file.toString() + ".xlsx");
 			}
-			Calendar calendar = Calendar.getInstance();
-			List<MovimientoCaja> movimientos = movimientoCajaDao.findByFecha(
-					calendar.get(Calendar.DAY_OF_MONTH),
-					calendar.get(Calendar.MONTH) + 1, 
-					calendar.get(Calendar.YEAR));
-
-			for (MovimientoCaja movimientoCaja : movimientos) {
-				if (movimientoCaja.getMedioPago().equals(MedioPago.EFECTIVO))
-					arqueoCajaExporter.addEfectivo(movimientoCaja.getMonto(), movimientoCaja.getDenominacion());
-				if (movimientoCaja.getMedioPago().equals(MedioPago.TRANSFERENCIA))
-					arqueoCajaExporter.addTransferencia(movimientoCaja.getMonto(), movimientoCaja.getComentario());
-				if (movimientoCaja.getMedioPago().equals(MedioPago.DEPOSITO))
-					arqueoCajaExporter.addTransferencia(movimientoCaja.getMonto(), movimientoCaja.getComentario());
-			}
-
-			List<GastoCaja> gastos = gastoCajaDao.findByFecha(
-					calendar.get(Calendar.DAY_OF_MONTH),
-					calendar.get(Calendar.MONTH) + 1, 
-					calendar.get(Calendar.YEAR));
 			
-			for (GastoCaja gastosCaja : gastos) {
-				arqueoCajaExporter.addGasto(gastosCaja.getMonto(), gastosCaja.getComentario());
-			}
-			
-			
-			
-			List<Cliente> clientes = clienteDao.findAll();
-			for (Cliente cliente : clientes) {
-				if(cliente.getSaldo()<0)
-					arqueoCajaExporter.addClienteConDeuda(cliente.getSaldo(),cliente.getRazonSocial());
-			}
 			
 			try {
 				arqueoCajaExporter.export(file);
@@ -206,6 +178,40 @@ public class ClienteController {
 				e.printStackTrace();
 			}
 
+		}
+	}
+
+	private void completarExporter(ArqueoCajaExporter arqueoCajaExporter) {
+		Calendar calendar = Calendar.getInstance();
+		List<MovimientoCaja> movimientos = movimientoCajaDao.findByFecha(
+				calendar.get(Calendar.DAY_OF_MONTH),
+				calendar.get(Calendar.MONTH) + 1, 
+				calendar.get(Calendar.YEAR));
+
+		for (MovimientoCaja movimientoCaja : movimientos) {
+			if (movimientoCaja.getMedioPago().equals(MedioPago.EFECTIVO))
+				arqueoCajaExporter.addEfectivo(movimientoCaja.getMonto(), movimientoCaja.getDenominacion());
+			if (movimientoCaja.getMedioPago().equals(MedioPago.TRANSFERENCIA))
+				arqueoCajaExporter.addTransferencia(movimientoCaja.getMonto(), movimientoCaja.getComentario());
+			if (movimientoCaja.getMedioPago().equals(MedioPago.DEPOSITO))
+				arqueoCajaExporter.addTransferencia(movimientoCaja.getMonto(), movimientoCaja.getComentario());
+		}
+
+		List<GastoCaja> gastos = gastoCajaDao.findByFecha(
+				calendar.get(Calendar.DAY_OF_MONTH),
+				calendar.get(Calendar.MONTH) + 1, 
+				calendar.get(Calendar.YEAR));
+		
+		for (GastoCaja gastosCaja : gastos) {
+			arqueoCajaExporter.addGasto(gastosCaja.getMonto(), gastosCaja.getComentario());
+		}
+		
+		
+		
+		List<Cliente> clientes = clienteDao.findAll();
+		for (Cliente cliente : clientes) {
+			if(cliente.getSaldo()<0)
+				arqueoCajaExporter.addClienteConDeuda(cliente.getSaldo(),cliente.getRazonSocial());
 		}
 	}
 

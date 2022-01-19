@@ -23,6 +23,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.util.Pair;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.model.Denominacion;
 
 public class ArqueoCajaExporter {
 	private XSSFWorkbook workbook;
@@ -138,21 +139,19 @@ public class ArqueoCajaExporter {
 		cell.setCellStyle(style);
 	}
 
+	
+	
 	private void writeDataLines() {
 		int rowCount = 2;
 
 		Row row = sheetResumen.createRow(rowCount++);
-		rowTotalEfectivoDenominacion(row,"1000");
-		row = sheetResumen.createRow(rowCount++);
-		rowTotalEfectivoDenominacion(row,"500");
-		row = sheetResumen.createRow(rowCount++);
-		rowTotalEfectivoDenominacion(row,"200");
-		row = sheetResumen.createRow(rowCount++);
-		rowTotalEfectivoDenominacion(row,"100");
-		row = sheetResumen.createRow(rowCount++);
-		rowTotalEfectivoDenominacion(row,"Varios");
-	    
-		row = sheetResumen.createRow(rowCount++);
+		Denominacion[] values = Denominacion.values();
+		
+		for (int i = 0; i < values.length; i++) {
+			rowTotalEfectivoDenominacion(row,values[i]);
+			row = sheetResumen.createRow(rowCount++);
+		}
+
 		createCell(sheetResumen,row, 0, "Total Banco", style);
 		Double totalTransferencia = getTotalLista(transferencia);
 		createCell(sheetResumen,row, 1, totalTransferencia, style);
@@ -164,8 +163,7 @@ public class ArqueoCajaExporter {
 		
 		row = sheetResumen.createRow(rowCount++);
 		createCell(sheetResumen,row, 0, "Saldo Caja", styleBorder);
-		double d = Double.sum(getTotalLista(efectivo),totalTransferencia);
-		createCell(sheetResumen,row, 1, d -  (double)totalGastos, styleBorder);		
+		createCell(sheetResumen,row, 1, getSaldoCaja(), styleBorder);		
 
 		row = sheetResumen.createRow(11);
 		createCell(sheetResumen,row, 0, "Total Deudas de clientes", style);
@@ -177,9 +175,15 @@ public class ArqueoCajaExporter {
 		cargarMovimientos(clientes,clientesdeudores,"CLIENTE");
 	}
 
-	private void rowTotalEfectivoDenominacion(Row row,String denominacion) {
-		createCell(sheetResumen,row, 0, "Total en Billetes de "+denominacion, style);
-		Double totalEfectivo = getTotalListaDenominacion(efectivo,denominacion);
+	public Double getSaldoCaja() {
+		double d = Double.sum(getTotalLista(efectivo),getTotalLista(transferencia));
+		double saldoCaja = d -  (double)getTotalLista(gasto);
+		return saldoCaja;
+	}
+
+	private void rowTotalEfectivoDenominacion(Row row,Denominacion denominacion) {
+		createCell(sheetResumen,row, 0, "Total en Billetes de "+denominacion.getStringValue(), style);
+		Double totalEfectivo = getTotalListaDenominacion(denominacion);
 		createCell(sheetResumen,row, 1, totalEfectivo, style);
 	}
 
@@ -206,12 +210,29 @@ public class ArqueoCajaExporter {
 		}
 	}
 	
+	public Double getTotalBanco() {
+		return getTotalLista(transferencia);
+	}
+	
+	public Double getTotalGastos() {
+		return getTotalLista(gasto);
+	}
+	
+	public Double getTotalEfectivo() {
+		return getTotalLista(efectivo);
+	}
+	
+	
 	private Double getTotalLista(List<Pair<Double, String>> lista) {
 		Double total = (double) 0;
 		for (Pair<Double, String> pair : lista) {
 			total += pair.getFirst();
 		}
 		return total;
+	}
+	
+	public  Double getTotalListaDenominacion(Denominacion denominacion) {
+		return getTotalListaDenominacion(efectivo, denominacion.getStringValue());
 	}
 
 	private Double getTotalListaDenominacion(List<Pair<Double, String>> lista,String denominacion) {

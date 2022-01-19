@@ -30,6 +30,7 @@ import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 import com.sporto.ng.gestion_gn.pruebas.Impresora;
+import java.awt.Font;
 
 public class ClienteDetalle extends JDialog implements ActionListener {
 	private static final int COLUMNA_ID = 4;
@@ -43,6 +44,7 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 	private JTable tablePedidos;
 	private Cliente unCliente;
 	private MovimientoCajaDao movimientoCajaDao;
+	private JTextField textFieldTotal;
 
 	public ClienteDetalle(HomeForm homeForm, Cliente unCliente, List<MovimientoCaja> pagos,
 			List<Pedido> pedidosRealizados, MovimientoCajaDao movimientoCajaDao) {
@@ -54,7 +56,7 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 		cargarCampos(unCliente);
 
 		DefaultTableModel model = (DefaultTableModel) tableIngresos.getModel();
-		DefaultTableModel modelEgresos = (DefaultTableModel) tablePedidos.getModel();
+		DefaultTableModel modelPedidos = (DefaultTableModel) tablePedidos.getModel();
 		for (MovimientoCaja movimientoStock : pagos) {
 
 			if (movimientoStock.getTipoMovimiento().equals(TipoMovimiento.INGRESO)) {
@@ -64,13 +66,17 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 						Constants.ICONO_DETALLE, movimientoStock.getFecha() });
 			}
 		}
-
+		double contador = 0 ;
 		for (Pedido unPedido : pedidosRealizados) {
-
-			modelEgresos.addRow(new Object[] { unPedido.getId(), Constants.outFecha(unPedido.getFecha()),
+			contador += unPedido.getMonto();
+			modelPedidos.addRow(new Object[] { unPedido.getId(), Constants.outFecha(unPedido.getFecha()),
 					Constants.outDouble(unPedido.getMonto()) });
 
 		}
+		
+		textFieldTotal.setText(Constants.outDouble(contador));
+		
+		
 	}
 
 	private void cargarCampos(Cliente unCliente) {
@@ -178,11 +184,28 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 		panelMovimientos.add(tp);
 		JScrollPane scrollPaneIngresos = new JScrollPane();
 		scrollPaneIngresos.setSize(new Dimension(0, 50));
+		
 		tp.add("Pagos", scrollPaneIngresos);
 		JScrollPane scrollPaneEgresos = new JScrollPane();
-		scrollPaneEgresos.setSize(new Dimension(0, 50));
-		tp.add("Pedidos", scrollPaneEgresos);
+		JPanel panelPedidos = new JPanel();
+		panelPedidos.setSize(new Dimension(0, 50));
+		panelPedidos.setLayout(new BoxLayout(panelPedidos, BoxLayout.Y_AXIS));
+		panelPedidos.add(scrollPaneEgresos);
+		tp.add("Pedidos", panelPedidos);
 
+		JPanel panelTotal = new JPanel();
+		panelPedidos.add(panelTotal);
+		panelTotal.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		
+		JLabel lblTotal = new JLabel("TOTAL EN PEDIDOS: ");
+		lblTotal.setFont(new Font("Tahoma", Font.BOLD, 12));
+		panelTotal.add(lblTotal);
+		
+		textFieldTotal = new JTextField();
+		textFieldTotal.setEditable(false);
+		panelTotal.add(textFieldTotal);
+		textFieldTotal.setColumns(10);
+		
 		tableIngresos = new JTable();
 		tableIngresos.setRowHeight(35);
 		tableIngresos.setFont(Constants.FUENTE);
@@ -244,13 +267,14 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 		scrollPaneIngresos.setViewportView(tableIngresos);
 		scrollPaneEgresos.setViewportView(tablePedidos);
 
-		JPanel panel = new JPanel();
-		getContentPane().add(panel);
-		panel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 
-		JButton btnNewButton = new JButton("CERRAR");
-		btnNewButton.addActionListener(this);
-		panel.add(btnNewButton);
+		
+		JPanel panel_1 = new JPanel();
+		getContentPane().add(panel_1);
+		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		
+		JButton btnNewButton_1 = new JButton("CERRAR");
+		panel_1.add(btnNewButton_1);
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);

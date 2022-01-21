@@ -44,7 +44,7 @@ public class Pedido {
 //    private Collection<PedidoProducto> productos;
 //    
     
-	@Formula("(select sum(pp.precio * pp.cantidad * (1-SUBSTRING(pp.descuento,1,1)/100)) from pedido_producto pp where pp.pedido_id = id)")
+	@Formula("(select sum(pp.precio * pp.cantidad * (1-pp.descuento/100)) from pedido_producto pp where pp.pedido_id = id)")
 	private Double monto;
 	
 	

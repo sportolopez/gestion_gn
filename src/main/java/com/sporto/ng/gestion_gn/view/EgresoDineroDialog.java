@@ -53,10 +53,10 @@ public class EgresoDineroDialog extends JDialog {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 678, 533);
-		setTitle("Ingresar Stock");
+		setTitle("Registrar Gasto");
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
-		JLabel lblNewLabel = new JLabel("REGISTROS DE GASTOS");
+		JLabel lblNewLabel = new JLabel("REGISTRO DE GASTOS");
 		lblNewLabel.setFont(Constants.FUENTE_TITULO);
 		lblNewLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		getContentPane().add(lblNewLabel);

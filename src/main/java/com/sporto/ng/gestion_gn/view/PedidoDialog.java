@@ -579,6 +579,7 @@ public class PedidoDialog extends JDialog {
 		comboBoxDescuento.setText("0");
 		listaPrecios = precioDao.findByLista(unCliente.getListaPrecio());
 		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
+		((DefaultTableModel)tableServicios.getModel()).setRowCount(0);
 		this.setVisible(true);
 	}
 

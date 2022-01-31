@@ -17,6 +17,7 @@ import jxl.format.Colour;
 import jxl.format.UnderlineStyle;
 import jxl.format.VerticalAlignment;
 import jxl.write.Label;
+import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
@@ -124,7 +125,7 @@ public class JTableToExcel {
 		format.setBorder(Border.ALL, BorderLineStyle.THIN);
 		sheet.setColumnView(0, 10); // Establecer el ancho de la columna
 		sheet.setColumnView(1, 25); // Establecer el ancho de la columna
-		sheet.setColumnView(2, 20); // Establecer el ancho de la columna
+		sheet.setColumnView(2, 30); // Establecer el ancho de la columna
 		sheet.setColumnView(3, 15); // Establecer el ancho de la columna
 		sheet.setColumnView(4, 20); // Establecer el ancho de la columna
 		sheet.setColumnView(5, 25); // Establecer el ancho de la columna
@@ -193,7 +194,14 @@ public class JTableToExcel {
 				else
 					str = valueAt.toString();
 
-				Label labelN = new Label(i, j + 1, str,format);
+				WritableCell labelN ;
+				
+				String columnName = table.getModel().getColumnName(i);
+				System.out.println(columnName);
+				if(columnName.equalsIgnoreCase("STOCK"))
+					labelN = new jxl.write.Number(i, j + 1, Double.parseDouble(str),format);
+				else
+					labelN = new Label(i, j + 1, str,format);
 
 				try {
 
@@ -205,5 +213,17 @@ public class JTableToExcel {
 				}
 			}
 		}
+	}
+	
+	public static boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        double d = Double.parseDouble(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
 	}
 }

@@ -56,7 +56,10 @@ public class Cliente {
 	
 	@Formula("( select coalesce(sum(mc.monto),0) from movimiento_caja mc where mc.cliente_id = id and mc.tipo_movimiento = 'INGRESO')")
 	private Double ingreso;
-	@Formula("(select coalesce(sum(pp.precio * pp.cantidad * (1-pp.descuento/100)),0) from pedido_producto pp, pedido p where pp.pedido_id = p.id and p.cliente_id = id and (p.estado = 'LIBERADO' or p.estado = 'RETIRADO'))")
+	@Formula("(SELECT ((select coalesce(sum(ps.precio),0)   from pedido_servicio ps, pedido p where ps.pedido_id = p.id and p.cliente_id = id and (p.estado = 'LIBERADO' or p.estado = 'RETIRADO')) "
+			+ "		+ "
+			+ "		(select coalesce(sum(pp.precio * pp.cantidad * (1-pp.descuento/100)),0)  from pedido_producto pp, pedido p where pp.pedido_id = p.id and p.cliente_id = id and (p.estado = 'LIBERADO' or p.estado = 'RETIRADO')))  "
+			+ "		)")
 	private Double egreso;
 
 	public Double getSaldo() {

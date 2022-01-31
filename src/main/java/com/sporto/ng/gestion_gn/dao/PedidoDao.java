@@ -15,4 +15,6 @@ public interface PedidoDao extends CrudRepository<Pedido, Integer> {
 	List<Pedido> findByClienteAndEstadoIn(Cliente cliente, EstadoPedido[] estado);
     List<Pedido> findAllByOrderByIdDesc();
 	
+    
+    
 }

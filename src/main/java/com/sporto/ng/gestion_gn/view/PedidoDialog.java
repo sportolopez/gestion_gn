@@ -1,7 +1,9 @@
 package com.sporto.ng.gestion_gn.view;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +19,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -28,6 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.logging.log4j.util.Strings;
@@ -35,30 +41,37 @@ import org.apache.logging.log4j.util.Strings;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
 import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
+import com.sporto.ng.gestion_gn.dao.PedidoServicioDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.EstadoPedido;
+import com.sporto.ng.gestion_gn.model.ItemImprimible;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.PedidoProducto;
+import com.sporto.ng.gestion_gn.model.PedidoServicio;
 import com.sporto.ng.gestion_gn.model.Precio;
 import com.sporto.ng.gestion_gn.model.PrecioId;
 import com.sporto.ng.gestion_gn.model.Producto;
+import com.sporto.ng.gestion_gn.model.Servicio;
 import com.sporto.ng.gestion_gn.pruebas.Impresora;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoComboBox;
 import com.sporto.ng.gestion_gn.utils.Java2sAutoTextField;
 import com.sporto.ng.gestion_gn.view.model.PedidoProductoTable;
 import com.sporto.ng.gestion_gn.view.model.PedidoProductoTableModel;
+import com.sporto.ng.gestion_gn.view.validations.DoubleVerifier;
 import com.sporto.ng.gestion_gn.view.validations.FechaVerifier;
 import com.sporto.ng.gestion_gn.view.validations.NumeroVerifier;
 
 public class PedidoDialog extends JDialog {
+
 	private PedidoProductoTable table;
 	private JTextField textFieldCantidad;
 	private JFormattedTextField textFieldVencimiento;
 	private JButton botonGuardar;
 	private java.util.Set<String> camposInvalidos = new HashSet<String>();
+	private java.util.Set<String> camposInvalidosServicios = new HashSet<String>();
 	private Java2sAutoComboBox textCodigoProducto;
 	private JTextField textFieldStockActual;
 	private JTextField textFieldLista;
@@ -77,13 +90,19 @@ public class PedidoDialog extends JDialog {
 	private JTextField textFieldSaldo;
 	private JPanel panelAgregar;
 	private JLabel lblTitulo;
-	private Pedido unPedidoEditar;
 	private JButton btnImprimir;
+	private JTextField textFieldPrecioServicio;
+	private JTextField textFieldComentarioServicio;
+	private JComboBox comboBoxServicio;
+	private JTable tableServicios;
+	private PedidoServicioDao pedidoServicioDao;
+	private JPanel panelAgregarServicio;
 
 	public PedidoDialog(ProductoDao productoDao, PedidoDao pedidoDao, JFrame owner, PrecioDao precioDao,
-			PedidoProductoDao pedidoProductoDao) {
+			PedidoProductoDao pedidoProductoDao, PedidoServicioDao pedidoServicioDao) {
 		super(owner);
 		this.pedidoProductoDao = pedidoProductoDao;
+		this.pedidoServicioDao = pedidoServicioDao;
 		setResizable(false);
 		this._self = this;
 		this.precioDao = precioDao;
@@ -219,7 +238,7 @@ public class PedidoDialog extends JDialog {
 //		comboBoxDescuento.setModel(new DefaultComboBoxModel(
 //				new String[] { "0 %", "1 %", "2 %", "3 %", "4 %", "5 %", "6 %", "7 %", "8 %", "9 %" }));
 		panelAgregar.add(comboBoxDescuento);
-		
+
 		JLabel lblNewLabel_3_3_1 = new JLabel("%");
 		panelAgregar.add(lblNewLabel_3_3_1);
 		panelAgregar.add(agregarStockBtn);
@@ -229,6 +248,7 @@ public class PedidoDialog extends JDialog {
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 
 		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setPreferredSize(new Dimension(2, 200));
 		getContentPane().add(scrollPane);
 
 		table = new PedidoProductoTable();
@@ -240,13 +260,57 @@ public class PedidoDialog extends JDialog {
 				int col = table.columnAtPoint(evt.getPoint());
 				if (col == PedidoProductoTableModel.COLUMNA_ELIMINAR) {
 					((DefaultTableModel) table.getModel()).removeRow(row);
-					textFieldTotal.setText("$ " + Constants.outDouble(table.getTotal()));
+					textFieldTotal.setText("$ " + Constants.outDouble(getTotal()));
 				}
 
 			}
 		});
 
 		scrollPane.setViewportView(table);
+
+		JPanel panelServicio = new JPanel();
+		getContentPane().add(panelServicio);
+
+		JLabel lblServicios = new JLabel("SERVICIOS");
+		lblServicios.setFont(new Font("Tahoma", Font.BOLD, 16));
+		lblServicios.setAlignmentX(0.5f);
+		panelServicio.add(lblServicios);
+
+		panelAgregarServicio = new JPanel();
+		getContentPane().add(panelAgregarServicio);
+
+		JLabel lblNewLabel_3_1_3 = new JLabel("SERVICIO:");
+		panelAgregarServicio.add(lblNewLabel_3_1_3);
+
+		comboBoxServicio = new JComboBox();
+		comboBoxServicio.setModel(new DefaultComboBoxModel(pedidoServicioDao.findAllServicios().toArray()));
+		panelAgregarServicio.add(comboBoxServicio);
+
+		JLabel lblNewLabel_3_4_1 = new JLabel("COMENTARIO:");
+		panelAgregarServicio.add(lblNewLabel_3_4_1);
+
+		textFieldComentarioServicio = new JTextField();
+		textFieldComentarioServicio.setColumns(8);
+		panelAgregarServicio.add(textFieldComentarioServicio);
+
+		JLabel lblNewLabel_3_4 = new JLabel("PRECIO:");
+		panelAgregarServicio.add(lblNewLabel_3_4);
+
+		textFieldPrecioServicio = new JTextField();
+		textFieldPrecioServicio.setColumns(8);
+		panelAgregarServicio.add(textFieldPrecioServicio);
+
+		JButton agregarServicio = new JButton("REGISTRAR ");
+		agregarServicio.addActionListener(registrarServicio());
+		panelAgregarServicio.add(agregarServicio);
+
+		JScrollPane scrollPaneServicio = new JScrollPane();
+		scrollPaneServicio.setPreferredSize(new Dimension(2, 150));
+
+		configurarTableServicio();
+
+		scrollPaneServicio.setViewportView(tableServicios);
+		getContentPane().add(scrollPaneServicio);
 
 		JPanel panelTotal = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) panelTotal.getLayout();
@@ -271,7 +335,7 @@ public class PedidoDialog extends JDialog {
 		});
 
 		btnImprimir = new JButton("IMPRIMIR");
-
+		btnImprimir.setVisible(false);
 		panelBotones.add(btnImprimir);
 		panelBotones.add(btnNewButton);
 
@@ -285,6 +349,43 @@ public class PedidoDialog extends JDialog {
 		configValidations();
 		pack();
 
+	}
+
+	private void configurarTableServicio() {
+		final int COLUMNA_ELIMINAR = 3;
+		tableServicios = new JTable();
+		tableServicios.setRowHeight(30);
+		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+		rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+		tableServicios.setDefaultRenderer(Object.class, rightRenderer);
+		tableServicios.setModel(
+				new DefaultTableModel(new Object[][] {}, new String[] { "Servicio", "Comentario", "Monto", "Eliminar" }
+
+				) {
+					public Class getColumnClass(int column) {
+						if (column == COLUMNA_ELIMINAR)
+							return ImageIcon.class;
+						return Object.class;
+					}
+
+					@Override
+					public boolean isCellEditable(int row, int col) {
+						return false;
+					}
+
+				});
+		tableServicios.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(java.awt.event.MouseEvent evt) {
+				int row = tableServicios.rowAtPoint(evt.getPoint());
+				int col = tableServicios.columnAtPoint(evt.getPoint());
+				if (col == COLUMNA_ELIMINAR) {
+					((DefaultTableModel) tableServicios.getModel()).removeRow(row);
+					textFieldTotal.setText("$ " + Constants.outDouble(getTotal()));
+				}
+
+			}
+		});
 	}
 
 	private void onProductoChange(String idSelected) {
@@ -325,7 +426,7 @@ public class PedidoDialog extends JDialog {
 			textFieldStockActual.setText("");
 		} else {
 			Integer cantidadEnTabla = table.getCantidadEnTabla(unProducto.getId());
-			int neto = unProducto.getStock()- cantidadEnTabla;
+			int neto = unProducto.getStock() - cantidadEnTabla;
 			textFieldStockActual.setText(Integer.toString(neto));
 		}
 	}
@@ -344,7 +445,7 @@ public class PedidoDialog extends JDialog {
 						table.registrarMovimiento(unProducto, Integer.valueOf(textFieldCantidad.getText()),
 								Constants.parseDouble(textFieldPrecio.getText()), descuentoSeleccionado.toString());
 
-						textFieldTotal.setText(Constants.outDouble(table.getTotal()));
+						textFieldTotal.setText("$ " + Constants.outDouble(getTotal()));
 
 						limpiarCampos();
 					}
@@ -369,6 +470,11 @@ public class PedidoDialog extends JDialog {
 		comboBoxDescuento.setText("0");
 	}
 
+	public void limpiarCamposServicio() {
+		textFieldComentarioServicio.setText("");
+		textFieldPrecioServicio.setText("");
+	}
+
 	public JButton getBotonGuardar() {
 		return botonGuardar;
 	}
@@ -381,6 +487,7 @@ public class PedidoDialog extends JDialog {
 		textFieldVencimiento.setInputVerifier(new FechaVerifier("Fecha de Vencimiento", camposInvalidos, true));
 		textFieldCantidad.setInputVerifier(new NumeroVerifier("Cantidad", camposInvalidos, 0, 9999));
 		comboBoxDescuento.setInputVerifier(new NumeroVerifier("Descuento", camposInvalidos, -1, 100));
+		textFieldPrecioServicio.setInputVerifier(new DoubleVerifier("Monto", camposInvalidosServicios));
 	}
 
 	public boolean validar() {
@@ -390,6 +497,19 @@ public class PedidoDialog extends JDialog {
 		botonGuardar.requestFocus();
 		if (camposInvalidos.size() > 0) {
 			JOptionPane.showMessageDialog(new JFrame(), "Campos invalidos:" + camposInvalidos, "Error",
+					JOptionPane.ERROR_MESSAGE);
+			return false;
+		}
+		return true;
+
+	}
+
+	public boolean validarServicio() {
+		textFieldComentarioServicio.requestFocus();
+		textFieldPrecioServicio.requestFocus();
+		botonGuardar.requestFocus();
+		if (camposInvalidosServicios.size() > 0) {
+			JOptionPane.showMessageDialog(new JFrame(), "Campos invalidos:" + camposInvalidosServicios, "Error",
 					JOptionPane.ERROR_MESSAGE);
 			return false;
 		}
@@ -411,8 +531,9 @@ public class PedidoDialog extends JDialog {
 			pedidoDao.save(unPedido);
 			Collection<PedidoProducto> pedidoProductos = tableModel.getPedidoProductos(unPedido);
 			pedidoProductoDao.saveAll(pedidoProductos);
-
-			imprimir(unPedido, pedidoProductos);
+			List<PedidoServicio> pedidosServicios = getPedidosServicios(unPedido);
+			pedidoServicioDao.saveAll(pedidosServicios);
+			imprimir(unPedido, pedidoProductos,pedidosServicios);
 
 		} catch (NumberFormatException e) {
 			throw new RuntimeException(e);
@@ -420,9 +541,12 @@ public class PedidoDialog extends JDialog {
 
 	}
 
-	private void imprimir(Pedido unPedido, Collection<PedidoProducto> productos) {
+	private <T extends ItemImprimible,E extends ItemImprimible> void imprimir(Pedido unPedido, Collection<T> productos, Collection<E> servicios) {
 		Impresora impresora = new Impresora();
-		impresora.imprimirPedido(unPedido, productos);
+		ArrayList<ItemImprimible> arrayList = new ArrayList<ItemImprimible>();
+		arrayList.addAll(productos);
+		arrayList.addAll(servicios);
+		impresora.imprimirPedido(unPedido, arrayList);
 		impresora.setVisible(true);
 
 		JOptionPane.showMessageDialog(this, "El pedido " + unPedido.getId() + " fue registrado con éxito.", " ",
@@ -447,7 +571,7 @@ public class PedidoDialog extends JDialog {
 		textFieldCliente.setText(unCliente.getRazonSocial());
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
 		textFieldTipoCliente.setText(unCliente.getTipoCuenta().name());
-		textFieldTotal.setText("");
+		textFieldTotal.setText("$ 0");
 		textFieldSaldo.setText(Constants.outDouble(unCliente.getSaldo()));
 
 		textCodigoProducto.setSelectedIndex(0);
@@ -459,8 +583,8 @@ public class PedidoDialog extends JDialog {
 	}
 
 	public void cargarPedido(Pedido unPedido) {
-		this.unPedidoEditar = unPedido;
 		Collection<PedidoProducto> listaProductosEditar = pedidoProductoDao.findByPedido(unPedido);
+		Collection<PedidoServicio> listaServiciosEditar = pedidoServicioDao.findByPedido(unPedido);
 		Cliente unCliente = unPedido.getCliente();
 		textFieldCliente.setText(unCliente.getRazonSocial());
 		textFieldLista.setText(unCliente.getListaPrecio().getNombre());
@@ -468,20 +592,87 @@ public class PedidoDialog extends JDialog {
 		textFieldSaldo.setText(Constants.outDouble(unCliente.getSaldo()));
 		((PedidoProductoTableModel) table.getModel()).setRowCount(0);
 		((PedidoProductoTableModel) table.getModel()).addAll(listaProductosEditar);
-		textFieldTotal.setText(Constants.outDouble(table.getTotal()));
+		addAllServicios(listaServiciosEditar);
+		
+		textFieldTotal.setText("$ " + Constants.outDouble(getTotal()));
 		botonGuardar.setVisible(false);
 		table.ocultarColumnaEliminar();
+		tableServicios.getColumnModel().getColumn(3).setMinWidth(0);	
+		tableServicios.getColumnModel().getColumn(3).setMaxWidth(0);	
+		tableServicios.getColumnModel().getColumn(3).setPreferredWidth(0);	
 		panelAgregar.setVisible(false);
+		panelAgregarServicio.setVisible(false);
+		
 		lblTitulo.setText("DETALLE PEDIDO " + unPedido.getId());
+		btnImprimir.setVisible(true);
 		btnImprimir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Se hace click en imprimir");
 				Impresora impresora = new Impresora();
-				impresora.reimprimirPedido(unPedido, listaProductosEditar);
+				impresora.reimprimirPedido(unPedido, listaProductosEditar, listaServiciosEditar);
 				impresora.setVisible(true);
 			}
 		});
 		this.setVisible(true);
 
 	}
+
+	private ActionListener registrarServicio() {
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				String selectedItem = (String) comboBoxServicio.getSelectedItem();
+				if (Strings.isNotEmpty(selectedItem)) {
+
+					if (validarServicio()) {
+						DefaultTableModel model = (DefaultTableModel) tableServicios.getModel();
+						model.addRow(new Object[] { selectedItem, textFieldComentarioServicio.getText(),
+								Constants.outDouble(Constants.parseDouble(textFieldPrecioServicio.getText())), Constants.ICONO_ELIMINAR });
+
+						textFieldTotal.setText("$ " + Constants.outDouble(getTotal()));
+
+						limpiarCamposServicio();
+					}
+
+				}
+			}
+
+		};
+	}
+
+	private Double getTotal() {
+		Double subTotal = (double) 0;
+		for (int i = 0; i < table.getRowCount(); i++) {
+			subTotal += Constants
+					.parseDouble(table.getValueAt(i, PedidoProductoTableModel.COLUMNA_SUBTOTAL).toString());
+		}
+		for (int i = 0; i < tableServicios.getRowCount(); i++) {
+			subTotal += Constants.parseDouble(tableServicios.getValueAt(i, 2).toString());
+		}
+		return subTotal;
+	}
+
+	private List<PedidoServicio> getPedidosServicios(Pedido unPedido) {
+		int nRow = tableServicios.getRowCount();
+		List<PedidoServicio> listPedido = new ArrayList<PedidoServicio>();
+		for (int i = 0; i < nRow; i++) {
+
+			Servicio nroProducto = Servicio.builder().nombre(tableServicios.getValueAt(i, 0).toString()).build();
+			String comentario = (tableServicios.getValueAt(i, 1).toString());
+			double precio = Constants.parseDouble(tableServicios.getValueAt(i, 2).toString());
+			PedidoServicio unPedidoServicio = PedidoServicio.builder().comentario(comentario).precio(precio)
+					.servicio(nroProducto).pedido(unPedido).build();
+			listPedido.add(unPedidoServicio);
+		}
+		return listPedido;
+	}
+
+	private void addAllServicios(Collection<PedidoServicio> servicios) {
+		DefaultTableModel model = (DefaultTableModel) tableServicios.getModel();
+		for (PedidoServicio pedidoServicio : servicios) {
+			model.addRow(new Object[] { pedidoServicio.getServicio().getNombre(), pedidoServicio.getComentario(),
+					Constants.outDouble(pedidoServicio.getPrecio()), Constants.ICONO_ELIMINAR });
+		}
+	}
+
 }

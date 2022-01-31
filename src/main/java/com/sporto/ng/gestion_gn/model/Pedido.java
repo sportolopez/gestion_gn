@@ -44,7 +44,11 @@ public class Pedido {
 //    private Collection<PedidoProducto> productos;
 //    
     
-	@Formula("(select sum(pp.precio * pp.cantidad * (1-pp.descuento/100)) from pedido_producto pp where pp.pedido_id = id)")
+	@Formula("(SELECT ("
+			+ "	(select coalesce(sum(pp.precio * pp.cantidad * (1-pp.descuento/100)),0) from pedido_producto pp where pp.pedido_id = id)"
+			+ " + "
+			+ "	(select coalesce(sum(ps.precio),0)  from pedido_servicio ps  where ps.pedido_id = id) "
+			+ "))")
 	private Double monto;
 	
 	

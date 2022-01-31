@@ -22,6 +22,7 @@ import com.sporto.ng.gestion_gn.dao.ListaDao;
 import com.sporto.ng.gestion_gn.dao.MovimientoCajaDao;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
 import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
+import com.sporto.ng.gestion_gn.dao.PedidoServicioDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.Cliente;
@@ -61,7 +62,7 @@ public class ClienteController {
 
 	@Autowired
 	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao,
-			PedidoDao pedidoDao, ProductoDao productoDao, PedidoProductoDao pedidoProductoDao,
+			PedidoDao pedidoDao, ProductoDao productoDao, PedidoProductoDao pedidoProductoDao,PedidoServicioDao pedidoServicioDao,
 			GastoCajaDao gastoCajaDao, MovimientoCajaDao movimientoCajaDao) {
 		this.clienteDao = clienteDao;
 		this.homeForm = homeForm;
@@ -71,7 +72,7 @@ public class ClienteController {
 		this.movimientoCajaDao = movimientoCajaDao;
 		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
-		pedidoDialog = new PedidoDialog(productoDao, pedidoDao, homeForm, precioDao, pedidoProductoDao);
+		pedidoDialog = new PedidoDialog(productoDao, pedidoDao, homeForm, precioDao, pedidoProductoDao, pedidoServicioDao);
 		liberarPedidoDialog = new LiberarPedidoDialog(pedidoDao,movimientoCajaDao, homeForm);
 		clienteDialog = new ClienteDialog(listaPrecios.toArray(new Lista[listaPrecios.size()]));
 		clienteDialog.getBtnGuardar().addActionListener(l -> guardarCliente(clienteDialog));

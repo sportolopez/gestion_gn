@@ -1,0 +1,24 @@
+package com.sporto.ng.gestion_gn.model;
+
+import java.io.Serializable;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@Setter(value = AccessLevel.PACKAGE)
+@Getter
+@EqualsAndHashCode
+@Builder
+public class PedidoServicioId implements Serializable {
+	
+	private Integer pedido;
+
+	private String servicio;
+}

@@ -141,13 +141,6 @@ public class PedidoProductoTable extends JTable {
 		tableRowSorter.setRowFilter(rf);
 	}
 
-	public Double getTotal() {
-		Double subTotal = (double) 0;
-		for (int i = 0; i < getRowCount(); i++) {
-			subTotal += Constants.parseDouble(getValueAt(i, PedidoProductoTableModel.COLUMNA_SUBTOTAL).toString());
-		}
-		return subTotal;
-	}
 
 	
 

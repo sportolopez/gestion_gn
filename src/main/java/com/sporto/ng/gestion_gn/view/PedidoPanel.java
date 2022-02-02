@@ -37,6 +37,7 @@ import org.apache.commons.io.FilenameUtils;
 import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
 import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
+import com.sporto.ng.gestion_gn.dao.PedidoServicioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.Pedido;
@@ -59,10 +60,12 @@ public class PedidoPanel extends JPanel {
 	private PedidoProductoDao pedidoProductoDao;
 	private JFrame jFramePapa;
 	private ProductoDao productoDao;
+	private PedidoServicioDao pedidoServicioDao;
 
-	public PedidoPanel(JFrame parent, PedidoDao pedidoDao,ProductoDao productoDao,PedidoProductoDao pedidoProductoDao) {
+	public PedidoPanel(JFrame parent, PedidoDao pedidoDao,ProductoDao productoDao,PedidoProductoDao pedidoProductoDao,PedidoServicioDao pedidoServicioDao) {
 		this.productoDao = productoDao;
 		this.pedidoProductoDao = pedidoProductoDao;
+		this.pedidoServicioDao = pedidoServicioDao;
 		setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		this.jFramePapa = parent;
@@ -177,7 +180,7 @@ public class PedidoPanel extends JPanel {
 	}
 	protected void cargarDetalle(Integer idPedido) {
 		Optional<Pedido> findById = pedidoDao.findById(idPedido);
-		PedidoDialog pedidoDialog = new PedidoDialog(productoDao,pedidoDao,jFramePapa,null,pedidoProductoDao);
+		PedidoDialog pedidoDialog = new PedidoDialog(productoDao,pedidoDao,jFramePapa,null,pedidoProductoDao, pedidoServicioDao);
 		pedidoDialog.cargarPedido(findById.get());
 	}
 	private void cambiarEstadoPedido(Integer idPedido, EstadoPedido retirado) {

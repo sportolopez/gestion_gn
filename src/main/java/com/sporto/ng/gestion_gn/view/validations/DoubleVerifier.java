@@ -49,7 +49,7 @@ public class DoubleVerifier extends InputVerifier {
 				camposInvalidos.add(campo);
 			
 			return true;
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			System.out.println(e);
 			camposInvalidos.add(campo);
 			return true;

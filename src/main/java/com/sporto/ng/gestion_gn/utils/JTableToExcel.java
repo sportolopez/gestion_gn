@@ -125,7 +125,7 @@ public class JTableToExcel {
 		format.setBorder(Border.ALL, BorderLineStyle.THIN);
 		sheet.setColumnView(0, 10); // Establecer el ancho de la columna
 		sheet.setColumnView(1, 25); // Establecer el ancho de la columna
-		sheet.setColumnView(2, 35); // Establecer el ancho de la columna
+		sheet.setColumnView(2, 40); // Establecer el ancho de la columna
 		sheet.setColumnView(3, 15); // Establecer el ancho de la columna
 		sheet.setColumnView(4, 20); // Establecer el ancho de la columna
 		sheet.setColumnView(5, 25); // Establecer el ancho de la columna

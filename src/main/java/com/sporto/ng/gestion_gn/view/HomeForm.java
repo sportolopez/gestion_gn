@@ -27,6 +27,7 @@ import com.sporto.ng.gestion_gn.config.Constants;
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.PedidoDao;
 import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
+import com.sporto.ng.gestion_gn.dao.PedidoServicioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
 
 import lombok.Getter;
@@ -54,14 +55,14 @@ public class HomeForm extends javax.swing.JFrame {
 	 * 
 	 * @throws IOException
 	 */
-	public HomeForm(PedidoDao pedidoDao, ClienteDao clienteDao,PedidoProductoDao pedidoProductoDao,ProductoDao productoDao) throws IOException {
+	public HomeForm(PedidoDao pedidoDao, ClienteDao clienteDao,PedidoProductoDao pedidoProductoDao,PedidoServicioDao pedidoServicioDao,ProductoDao productoDao) throws IOException {
 		this.clienteDao = clienteDao;
 		setTitle("Distribuidora GN");
 		URL resource = getClass().getClassLoader().getResource("icono.png");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		this.productosPanel = new ProductoPanel(this);
 		this.panelClientes = new ClientePanel(this);
-		this.panelPedidos = new PedidoPanel(this,pedidoDao,productoDao,pedidoProductoDao);
+		this.panelPedidos = new PedidoPanel(this,pedidoDao,productoDao,pedidoProductoDao,pedidoServicioDao);
 		
 		setPreferredSize(new Dimension(Constants.ANCHO, Constants.ALTO));
 		initComponents();

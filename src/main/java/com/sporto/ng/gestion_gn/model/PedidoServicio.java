@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.ManyToOne;
 
-import com.sporto.ng.gestion_gn.config.Constants;
-
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,34 +20,38 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter(value = AccessLevel.PACKAGE)
 @Getter
-@IdClass(PedidoProductoId.class)
-public class PedidoProducto implements ItemImprimible, Serializable {
+@IdClass(PedidoServicioId.class)
+public class PedidoServicio implements ItemImprimible, Serializable {
 
 	@Id
 	@ManyToOne
 	private Pedido pedido;
 	@Id
 	@ManyToOne
-	private Producto producto;
+	private Servicio servicio;
 
 	private double precio;
-	private String descuento;
-	private int cantidad;
+	private String comentario;
 	
-	public double calcularSubtotal() {
-		double descuentoParsed = 1 - (double)Integer.parseInt(descuento) / 100;
-		double d = precio * descuentoParsed;
-		return Constants.round(d * cantidad, 2);
-	}
-
 	@Override
 	public String getId() {
-		return String.valueOf(producto.getId());
+		return servicio.getNombre();
 	}
-
 	@Override
 	public String getDescripcion() {
-		return producto.getDescripcion();
+		return comentario;
 	}
-
+	@Override
+	public int getCantidad() {
+		return 1;
+	}
+	@Override
+	public String getDescuento() {
+		return "";
+	}
+	@Override
+	public double calcularSubtotal() {
+		return precio;
+	}
+	
 }

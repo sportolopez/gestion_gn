@@ -212,6 +212,73 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 
 	}
 
+	public void imprimirCliente(Cliente unCliente, List<MovimientoCaja> listaPagos, Double estadoCC,List<Pedido> listaPedidos) {
+		URL url = Impresora.class.getResource("/cliente.htm");
+		try {
+			String text = Resources.toString(url, StandardCharsets.UTF_8);
+
+			text = text.replace("_CLIENTE_NOMBRE_", String.valueOf(unCliente.getRazonSocial()));
+			String domicilio = unCliente.getDomicilio();
+			text = text.replace("_CLIENTE_DIRECCION_", Objects.toString(domicilio, ""));
+			text = text.replace("_CLIENTE_TELEFONO_", Objects.toString(unCliente.getTelefono(), ""));
+			if (listaPagos.size() > 0)
+				text = text.replace("_FECHA_", Constants.FORMATO_FECHA.format(listaPagos.get(0).getFecha()));
+			else
+				text = text.replace("_FECHA_", Constants.FORMATO_FECHA.format(new Date()));
+
+			StringBuilder sb = new StringBuilder();
+			
+			
+			
+			int index = 0;
+			double total = 0;
+			for (MovimientoCaja unMovimiento : listaPagos) {
+
+				if ((index++ % 2) == 0)
+					sb.append("<tr class='impar'>");
+				else
+					sb.append("<tr >");
+				sb.append("    <td class='desc'>" + unMovimiento.getMedioPago() + "</td>");
+				sb.append("	   <td class='total'>" + unMovimiento.getComentario() + "</td>");
+				sb.append("    <td class='unit'>$ " + Constants.outDouble(unMovimiento.getMonto()) + "</td>");
+
+				double calcularSubtotal = unMovimiento.getMonto();
+				total += calcularSubtotal;
+				sb.append("</tr>");
+
+			}
+			text = text.replace("_LISTA_PAGOS_", sb.toString());
+			sb = new StringBuilder();
+			text = text.replace("_TOTAL_", Constants.outDouble(total));
+			text = text.replace("_DEUDA_", Constants.outDouble(estadoCC));
+
+			
+			for (Pedido unPedido : listaPedidos) {
+
+				if ((index++ % 2) == 0)
+					sb.append("<tr class='impar'>");
+				else
+					sb.append("<tr >");
+				sb.append("    <td class='desc'>" + unPedido.getId()+ "</td>");
+				sb.append("    <td class='desc'>" + Constants.outFecha(unPedido.getFecha())+ "</td>");
+				sb.append("	   <td class='desc'>" + unPedido.getEstado() + "</td>");
+				sb.append("	   <td class='unit'>" + Constants.outDouble(unPedido.getMonto())+ "</td>");
+
+				total += unPedido.getMonto();
+				sb.append("</tr>");
+
+			}
+			text = text.replace("_LISTA_PEDIDOS_", sb.toString());
+			text = text.replace("_TOTAL_PEDIDOS_", Constants.outDouble(total));
+			jEditorPane.setText(text);
+		} catch (IOException e) {
+			e.printStackTrace();
+			jEditorPane.setContentType("text/html");
+			jEditorPane.setText("<html>Page not found.</html>");
+		}
+
+	}
+
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub

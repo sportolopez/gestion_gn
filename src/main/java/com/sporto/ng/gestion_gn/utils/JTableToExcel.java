@@ -197,7 +197,7 @@ public class JTableToExcel {
 				WritableCell labelN ;
 				
 				String columnName = table.getModel().getColumnName(i);
-				if(columnName.equalsIgnoreCase("STOCK"))
+				if(columnName.equalsIgnoreCase("STOCK") || columnName.equalsIgnoreCase("PRECIO") )
 					labelN = new jxl.write.Number(i, j + 1, Double.parseDouble(str),format);
 				else
 					labelN = new Label(i, j + 1, str,format);

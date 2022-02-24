@@ -20,27 +20,29 @@ import javax.swing.border.BevelBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import org.springframework.data.util.Pair;
+
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.dao.MovimientoCajaDao;
+import com.sporto.ng.gestion_gn.model.CierreCaja;
 import com.sporto.ng.gestion_gn.model.Denominacion;
 import com.sporto.ng.gestion_gn.utils.ArqueoCajaExporter;
 
 public class ArqueoCajaDialog extends JDialog {
 	private JTable table;
 	private JButton btnArqueoDelDia;
-	private ArqueoCajaExporter arqueoCajaExporter;
 
 	public JButton getBtnArqueoDelDia() {
 		return btnArqueoDelDia;
 	}
 
-	public ArqueoCajaDialog(ArqueoCajaExporter arqueoCajaExporter, HomeForm homeForm) {
+	public ArqueoCajaDialog(ArqueoCajaExporter arqueoCajaExporter, HomeForm homeForm, MovimientoCajaDao movimientoCajaDao) {
 		super(homeForm);
 		URL resource = getClass().getClassLoader().getResource("icono.ico");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(resource));
 		setTitle("Arqueo de Caja");
 		setSize(new Dimension(500, 500));
 		setResizable(false);
-		this.arqueoCajaExporter = arqueoCajaExporter;
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		JLabel lblNewLabel = new JLabel("ARQUEO CAJA "+Constants.outFecha(new Date()));
 		lblNewLabel.setFont(Constants.FUENTE_TITULO);
@@ -60,6 +62,12 @@ public class ArqueoCajaDialog extends JDialog {
 		((DefaultTableModel)table.getModel()).addColumn("Columna 1");
 		((DefaultTableModel)table.getModel()).addColumn("Columna 1");
 		
+		 
+		if(arqueoCajaExporter.getMontoUltimoCierre() != null)
+			((DefaultTableModel)table.getModel()).addRow(new Object[]{"Último cierre caja",Constants.outDouble(arqueoCajaExporter.getMontoUltimoCierre())});
+		else
+			((DefaultTableModel)table.getModel()).addRow(new Object[]{"No se registro ningun cierre",Constants.outDouble(Double.valueOf(0))});
+			
 		for (int i = 0; i < Denominacion.values().length; i++) {
 			Denominacion denominacion = Denominacion.values()[i];
 			Double totalListaDenominacion = arqueoCajaExporter.getTotalListaDenominacion(denominacion);

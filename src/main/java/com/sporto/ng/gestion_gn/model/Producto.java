@@ -50,6 +50,8 @@ public class Producto {
 	private Integer egresos;
 	@Formula("(select COALESCE(sum(pp.cantidad),0) from pedido_producto pp, pedido p where p.id = pp.pedido_id && pp.producto_id = id and p.estado != 'ANULADO')")
 	private Integer bloqueado_pedido;
+	@Formula("(select COALESCE(sum(pp.cantidad),0) from pedido_producto pp, pedido p where p.id = pp.pedido_id && pp.producto_id = id and p.estado = 'EMITIDO')")
+	private Integer bloqueadoEmitido;
 	
 	public Integer getStock() {
 		return ingresos - egresos - bloqueado_pedido;

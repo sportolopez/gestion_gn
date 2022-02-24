@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -58,6 +59,13 @@ public class PrecioExcelExporter {
     private void createCell(Row row, int columnCount, Object value, CellStyle style) {
         sheet.autoSizeColumn(columnCount);
         Cell cell = row.createCell(columnCount);
+        cell.setCellStyle(style);
+        
+        CellStyle dollarStyle=workbook.createCellStyle();
+        DataFormat df = workbook.createDataFormat();
+        dollarStyle.setDataFormat(df.getFormat("$#,#0.00"));
+        
+        
         if (value instanceof Integer) {
             cell.setCellValue((Integer) value);
         } else if (value instanceof Boolean) {
@@ -66,11 +74,11 @@ public class PrecioExcelExporter {
             cell.setCellValue((long) value);
         }else if (value instanceof Double) {
             cell.setCellValue((double) value);
+            cell.setCellStyle(dollarStyle);
         }else {
         	  cell.setCellValue(value.toString());
         }
         	
-        cell.setCellStyle(style);
     }
      
     private void writeDataLines() {
@@ -87,7 +95,7 @@ public class PrecioExcelExporter {
              
             createCell(row, columnCount++, unPrecio.getProducto().getId(), style);
             createCell(row, columnCount++, unPrecio.getProducto().getDescripcion(), style);
-            createCell(row, columnCount++, Constants.outDouble(unPrecio.getPrecio()), style);
+            createCell(row, columnCount++, unPrecio.getPrecio(), style);
              
         }
     }

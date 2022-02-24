@@ -2,8 +2,10 @@ package com.sporto.ng.gestion_gn.view.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sporto.ng.gestion_gn.config.Constants;
+import com.sporto.ng.gestion_gn.dao.CierreCajaDao;
 import com.sporto.ng.gestion_gn.dao.ClienteDao;
 import com.sporto.ng.gestion_gn.dao.GastoCajaDao;
 import com.sporto.ng.gestion_gn.dao.ListaDao;
@@ -25,12 +28,14 @@ import com.sporto.ng.gestion_gn.dao.PedidoProductoDao;
 import com.sporto.ng.gestion_gn.dao.PedidoServicioDao;
 import com.sporto.ng.gestion_gn.dao.PrecioDao;
 import com.sporto.ng.gestion_gn.dao.ProductoDao;
+import com.sporto.ng.gestion_gn.model.CierreCaja;
 import com.sporto.ng.gestion_gn.model.Cliente;
 import com.sporto.ng.gestion_gn.model.EstadoPedido;
 import com.sporto.ng.gestion_gn.model.GastoCaja;
 import com.sporto.ng.gestion_gn.model.Lista;
 import com.sporto.ng.gestion_gn.model.MedioPago;
 import com.sporto.ng.gestion_gn.model.MovimientoCaja;
+import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.Precio;
 import com.sporto.ng.gestion_gn.utils.ArqueoCajaExporter;
 import com.sporto.ng.gestion_gn.utils.ExcelUtils;
@@ -59,17 +64,19 @@ public class ClienteController {
 	private HomeForm homeForm;
 	private GastoCajaDao gastoCajaDao;
 	private MovimientoCajaDao movimientoCajaDao;
+	private CierreCajaDao cierreCajaDao;
 
 	@Autowired
 	public ClienteController(ListaDao listaDao, ClienteDao clienteDao, HomeForm homeForm, PrecioDao precioDao,
 			PedidoDao pedidoDao, ProductoDao productoDao, PedidoProductoDao pedidoProductoDao,PedidoServicioDao pedidoServicioDao,
-			GastoCajaDao gastoCajaDao, MovimientoCajaDao movimientoCajaDao) {
+			GastoCajaDao gastoCajaDao, MovimientoCajaDao movimientoCajaDao, CierreCajaDao cierreCajaDao) {
 		this.clienteDao = clienteDao;
 		this.homeForm = homeForm;
 		this.precioDao = precioDao;
 		this.pedidoDao = pedidoDao;
 		this.gastoCajaDao = gastoCajaDao;
 		this.movimientoCajaDao = movimientoCajaDao;
+		this.cierreCajaDao = cierreCajaDao;
 		this.clientePanel = homeForm.getPanelClientes();
 		List<Lista> listaPrecios = listaDao.findAll();
 		pedidoDialog = new PedidoDialog(productoDao, pedidoDao, homeForm, precioDao, pedidoProductoDao, pedidoServicioDao);
@@ -109,13 +116,30 @@ public class ClienteController {
 
 		});
 
+		Date selectFechaUltimoCierre = movimientoCajaDao.selectFechaUltimoCierre();
+		Calendar instance = Calendar.getInstance();
+		instance.setTime(selectFechaUltimoCierre);
+		for (Date date = selectFechaUltimoCierre; date.before(new Date());)
+		{
+			System.out.println("Calcular para fecha: "+date);
+			ArqueoCajaExporter completarArqueo = completarArqueo(date);
+			CierreCaja build = CierreCaja.builder().fecha(convertToLocalDateViaSqlDate(date)).monto(completarArqueo.getSaldoCaja()).build();
+			cierreCajaDao.save(build);
+			instance.add(Calendar.DATE, 1);
+			date = instance.getTime();
+		}
+		
+		
 		Constants.setListas(listaDao.findAll());
+	}
+	
+	public LocalDate convertToLocalDateViaSqlDate(Date dateToConvert) {
+	    return new java.sql.Date(dateToConvert.getTime()).toLocalDate();
 	}
 
 	private void abrirArqueoCaja() {
-		ArqueoCajaExporter arqueoCajaExporter = new ArqueoCajaExporter();
-		completarExporter(arqueoCajaExporter);
-		ArqueoCajaDialog arqueoCajaDialog = new ArqueoCajaDialog(arqueoCajaExporter,homeForm);
+		ArqueoCajaExporter completarArqueo = completarArqueo();
+		ArqueoCajaDialog arqueoCajaDialog = new ArqueoCajaDialog(completarArqueo,homeForm,movimientoCajaDao);
 		arqueoCajaDialog.getBtnArqueoDelDia().addActionListener(i -> exportarArqueo());
 		arqueoCajaDialog.setVisible(true);
 	}
@@ -160,8 +184,8 @@ public class ClienteController {
 	}
 
 	protected void exportarArqueo() {
-		ArqueoCajaExporter arqueoCajaExporter = new ArqueoCajaExporter();
-		completarExporter(arqueoCajaExporter);
+		
+		ArqueoCajaExporter completarArqueo = completarArqueo();
 		
 		JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
 		jfc.setDialogTitle("Guardar como..");
@@ -174,7 +198,7 @@ public class ClienteController {
 			
 			
 			try {
-				arqueoCajaExporter.export(file);
+				completarArqueo.export(file);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -182,8 +206,10 @@ public class ClienteController {
 		}
 	}
 
-	private void completarExporter(ArqueoCajaExporter arqueoCajaExporter) {
+	private ArqueoCajaExporter completarArqueo(Date paraFecha) {
+		ArqueoCajaExporter arqueoCajaExporter = new ArqueoCajaExporter();
 		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(paraFecha);
 		List<MovimientoCaja> movimientos = movimientoCajaDao.findByFecha(
 				calendar.get(Calendar.DAY_OF_MONTH),
 				calendar.get(Calendar.MONTH) + 1, 
@@ -214,6 +240,13 @@ public class ClienteController {
 			if(cliente.getSaldo()<0)
 				arqueoCajaExporter.addClienteConDeuda(cliente.getSaldo(),cliente.getRazonSocial());
 		}
+		
+		arqueoCajaExporter.setMontoUltimoCierre(movimientoCajaDao.selectMontoUltimoCierre());
+		return arqueoCajaExporter;
+	}
+	
+	private ArqueoCajaExporter completarArqueo() {
+		return this.completarArqueo(new Date());
 	}
 
 	private void nuevoCliente() {
@@ -228,7 +261,9 @@ public class ClienteController {
 
 	private void detalleCliente(List<Lista> listas, int idCliente) {
 		Cliente cliente = clienteDao.findById(idCliente).get();
-		clienteDetalle = new ClienteDetalle(homeForm,cliente,movimientoCajaDao.findGroupByLiberado(cliente.getId()), pedidoDao.findByClienteAndEstadoIn(cliente, new EstadoPedido[]{EstadoPedido.LIBERADO,EstadoPedido.RETIRADO}), movimientoCajaDao);
+		List<MovimientoCaja> findGroupByLiberado = movimientoCajaDao.findPagosCliente(cliente.getId());
+		List<Pedido> pedidosDelCliente = pedidoDao.findByClienteAndEstadoIn(cliente, new EstadoPedido[]{EstadoPedido.LIBERADO,EstadoPedido.RETIRADO});
+		clienteDetalle = new ClienteDetalle(homeForm,cliente,findGroupByLiberado, pedidosDelCliente, movimientoCajaDao);
 		clienteDetalle.setVisible(true);
 	}
 

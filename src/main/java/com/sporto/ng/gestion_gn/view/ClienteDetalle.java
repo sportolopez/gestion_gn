@@ -45,10 +45,14 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 	private Cliente unCliente;
 	private MovimientoCajaDao movimientoCajaDao;
 	private JTextField textFieldTotal;
+	private List<MovimientoCaja> pagos;
+	private List<Pedido> pedidosRealizados;
 
 	public ClienteDetalle(HomeForm homeForm, Cliente unCliente, List<MovimientoCaja> pagos,
 			List<Pedido> pedidosRealizados, MovimientoCajaDao movimientoCajaDao) {
 		super(homeForm);
+		this.pagos = pagos;
+		this.pedidosRealizados = pedidosRealizados;
 		this.movimientoCajaDao = movimientoCajaDao;
 
 		initView();
@@ -272,6 +276,16 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 		JPanel panel_1 = new JPanel();
 		getContentPane().add(panel_1);
 		panel_1.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+		
+		JButton btnNewButton = new JButton("IMPRIMIR");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Impresora impresora = new Impresora();
+				impresora.imprimirCliente(unCliente, pagos, unCliente.getSaldo(), pedidosRealizados);
+				impresora.setVisible(true);
+			}
+		});
+		panel_1.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("CERRAR");
 		panel_1.add(btnNewButton_1);

@@ -14,6 +14,7 @@ public class ProductoTableModel extends DefaultTableModel {
 		addColumn("CATEGORIA");
 		addColumn("DESCRIPCIÓN");
 		addColumn("STOCK");
+		addColumn("STOCK BLOQUEADO");
 		addColumn("FECHA VENCIMIENTO");
 		addColumn("DETALLE");
 		addColumn("EDITAR");
@@ -26,6 +27,7 @@ public class ProductoTableModel extends DefaultTableModel {
 		lista.add(producto.getCategoria());
 		lista.add(producto.getDescripcion());
 		lista.add(producto.getStock());
+		lista.add(producto.getBloqueadoEmitido());
 		lista.add(producto.getFechaString());
 
 		lista.add(Constants.ICONO_DETALLE);
@@ -37,7 +39,7 @@ public class ProductoTableModel extends DefaultTableModel {
 	}
 
 	public boolean isCellEditable(int row, int col) {
-		if (col < 5) {
+		if (col < 6) {
 			return false;
 		} else {
 			return true;

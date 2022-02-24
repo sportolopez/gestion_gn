@@ -40,6 +40,7 @@ public class ArqueoCajaExporter {
 	private CellStyle styleBorder;
 	private CellStyle styleHEader;
 	private CellStyle style;
+	private Double montoUltimoCierre;
 	
 	
 
@@ -180,6 +181,12 @@ public class ArqueoCajaExporter {
 		double saldoCaja = d -  (double)getTotalLista(gasto);
 		return saldoCaja;
 	}
+	
+	public Double getSaldoEfectivo() {
+		double d = getTotalLista(efectivo);
+		double saldoCaja = d -  (double)getTotalLista(gasto);
+		return saldoCaja;
+	}
 
 	private void rowTotalEfectivoDenominacion(Row row,Denominacion denominacion) {
 		createCell(sheetResumen,row, 0, "Total en Billetes de "+denominacion.getStringValue(), style);
@@ -273,4 +280,14 @@ public class ArqueoCajaExporter {
 	public void addClienteConDeuda(Double saldo, String razonSocial) {
 		clientesdeudores.add(Pair.of(saldo, razonSocial));
 	}
+
+	public Double getMontoUltimoCierre() {
+		return montoUltimoCierre;
+	}
+
+	public void setMontoUltimoCierre(Double selectMontoUltimoCierre) {
+		this.montoUltimoCierre = selectMontoUltimoCierre;
+	}
+	
+	
 }

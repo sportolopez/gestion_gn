@@ -288,6 +288,7 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 		panel_1.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("CERRAR");
+		btnNewButton_1.addActionListener(getCloseAction());
 		panel_1.add(btnNewButton_1);
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
@@ -296,6 +297,14 @@ public class ClienteDetalle extends JDialog implements ActionListener {
 		tablePedidos.setDefaultRenderer(Object.class, rightRenderer);
 	}
 
+	public ActionListener getCloseAction() {
+		return new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		};
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		dispose();

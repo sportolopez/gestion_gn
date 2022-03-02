@@ -15,6 +15,7 @@ import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -38,7 +39,6 @@ import com.sporto.ng.gestion_gn.model.MedioPago;
 import com.sporto.ng.gestion_gn.model.MovimientoCaja;
 import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.PedidoProducto;
-import com.sporto.ng.gestion_gn.model.PedidoServicio;
 import com.sporto.ng.gestion_gn.model.Producto;
 import com.sporto.ng.gestion_gn.model.TipoMovimiento;
 
@@ -213,6 +213,9 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 	}
 
 	public void imprimirCliente(Cliente unCliente, List<MovimientoCaja> listaPagos, Double estadoCC,List<Pedido> listaPedidos) {
+		reimpresion = true;
+		btnImprimir.setText("IMPRIMIR");
+		
 		URL url = Impresora.class.getResource("/cliente.htm");
 		try {
 			String text = Resources.toString(url, StandardCharsets.UTF_8);
@@ -232,27 +235,49 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 			
 			int index = 0;
 			double total = 0;
+			double totalAnteriores = 0;
+			ZonedDateTime now = ZonedDateTime.now();
+			ZonedDateTime thirtyDaysAgo = now.plusDays(-60);
 			for (MovimientoCaja unMovimiento : listaPagos) {
 
-				if ((index++ % 2) == 0)
-					sb.append("<tr class='impar'>");
-				else
-					sb.append("<tr >");
-				sb.append("    <td class='desc'>" + unMovimiento.getMedioPago() + "</td>");
-				sb.append("	   <td class='total'>" + unMovimiento.getComentario() + "</td>");
-				sb.append("    <td class='unit'>$ " + Constants.outDouble(unMovimiento.getMonto()) + "</td>");
 
-				double calcularSubtotal = unMovimiento.getMonto();
-				total += calcularSubtotal;
-				sb.append("</tr>");
+				if (unMovimiento.getFecha().toInstant().isBefore(thirtyDaysAgo.toInstant())) {
+					totalAnteriores += unMovimiento.getMonto();
+					
+				}else {
+				
+					if ((index++ % 2) == 0)
+						sb.append("<tr class='impar'>");
+					else
+						sb.append("<tr >");
+					sb.append("    <td class='desc'>" + unMovimiento.getMedioPago() + "</td>");
+					sb.append("	   <td class='total'>" + unMovimiento.getComentario() + "</td>");
+					sb.append("	   <td class='total'>" +  Constants.outFecha(unMovimiento.getFecha()) + "</td>");
+					sb.append("    <td class='unit'>$ " + Constants.outDouble(unMovimiento.getMonto()) + "</td>");
+	
+					double calcularSubtotal = unMovimiento.getMonto();
+					total += calcularSubtotal;
+					sb.append("</tr>");
+				
+				}
 
 			}
+			if(totalAnteriores > 0) {
+				sb.append("<tr >");
+				sb.append("    <td class='desc'> - </td>");
+				sb.append("	   <td class='total'> Pagos anteriores a 60 dias </td>");
+				sb.append("	   <td class='total'> - </td>");
+				sb.append("    <td class='unit'>$ " + Constants.outDouble(totalAnteriores) + "</td>");				
+				sb.append("</tr>");
+			}
+				
 			text = text.replace("_LISTA_PAGOS_", sb.toString());
 			sb = new StringBuilder();
 			text = text.replace("_TOTAL_", Constants.outDouble(total));
 			text = text.replace("_DEUDA_", Constants.outDouble(estadoCC));
 
 			
+			double total_pedidos = 0;
 			for (Pedido unPedido : listaPedidos) {
 
 				if ((index++ % 2) == 0)
@@ -264,12 +289,12 @@ public class Impresora extends JDialog implements ActionListener, WindowListener
 				sb.append("	   <td class='desc'>" + unPedido.getEstado() + "</td>");
 				sb.append("	   <td class='unit'>" + Constants.outDouble(unPedido.getMonto())+ "</td>");
 
-				total += unPedido.getMonto();
+				total_pedidos += unPedido.getMonto();
 				sb.append("</tr>");
 
 			}
 			text = text.replace("_LISTA_PEDIDOS_", sb.toString());
-			text = text.replace("_TOTAL_PEDIDOS_", Constants.outDouble(total));
+			text = text.replace("_TOTALPEDIDOS_", Constants.outDouble(total_pedidos));
 			jEditorPane.setText(text);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -118,12 +118,13 @@ public class ClienteController {
 
 		Date selectFechaUltimoCierre = movimientoCajaDao.selectFechaUltimoCierre();
 		Calendar instance = Calendar.getInstance();
-		instance.setTime(selectFechaUltimoCierre);
-		for (Date date = selectFechaUltimoCierre; date.before(new Date());)
+		if(selectFechaUltimoCierre!=null)
+			instance.setTime(selectFechaUltimoCierre);
+		for (Date date = instance.getTime(); date.before(new Date());)
 		{
 			System.out.println("Calcular para fecha: "+date);
 			ArqueoCajaExporter completarArqueo = completarArqueo(date);
-			CierreCaja build = CierreCaja.builder().fecha(convertToLocalDateViaSqlDate(date)).monto(completarArqueo.getSaldoCaja()).build();
+			CierreCaja build = CierreCaja.builder().fecha(convertToLocalDateViaSqlDate(date)).monto(completarArqueo.getSaldoEfectivo()).build();
 			cierreCajaDao.save(build);
 			instance.add(Calendar.DATE, 1);
 			date = instance.getTime();

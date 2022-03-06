@@ -14,9 +14,11 @@ import javax.swing.JOptionPane;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -39,8 +41,9 @@ public class ArqueoCajaExporter {
 	private XSSFSheet gastos;
 	private CellStyle styleBorder;
 	private CellStyle styleHEader;
-	private CellStyle style;
 	private Double montoUltimoCierre;
+	private XSSFCellStyle dollarStyle;
+	private Double cierreCajaHoy;
 	
 	
 
@@ -59,7 +62,6 @@ public class ArqueoCajaExporter {
 	public ArqueoCajaExporter() {
 		workbook = new XSSFWorkbook();
 
-		style = workbook.createCellStyle();
 		styleHEader = workbook.createCellStyle();
 		styleBorder = workbook.createCellStyle();
 		XSSFFont font = workbook.createFont();
@@ -67,17 +69,22 @@ public class ArqueoCajaExporter {
 		font.setFontHeight(14);
 		fontHeader.setFontHeight(14);
 		fontHeader.setBold(true);
-		style.setFont(font);
-		style.setBorderBottom(BorderStyle.THIN);
-		style.setBorderTop(BorderStyle.THIN);
-		style.setBorderLeft(BorderStyle.THIN);
-		style.setBorderRight(BorderStyle.THIN);
 		styleHEader.setFont(fontHeader);
-		styleHEader.setBorderBottom(BorderStyle.MEDIUM);
-		styleHEader.setBorderTop(BorderStyle.MEDIUM);
 		styleBorder.setFont(font);
-		styleBorder.setBorderTop(BorderStyle.MEDIUM);
+		styleBorder.setBorderBottom(BorderStyle.THIN);
+		styleBorder.setBorderTop(BorderStyle.THIN);
+		styleBorder.setBorderRight(BorderStyle.THIN);
+		styleBorder.setBorderLeft(BorderStyle.THIN);
+        
 		
+		dollarStyle=workbook.createCellStyle();
+        dollarStyle.setFont(font);
+        dollarStyle.setBorderBottom(BorderStyle.THIN);
+        dollarStyle.setBorderTop(BorderStyle.THIN);
+        dollarStyle.setBorderRight(BorderStyle.THIN);
+        dollarStyle.setBorderLeft(BorderStyle.THIN);
+        DataFormat df = workbook.createDataFormat();
+        dollarStyle.setDataFormat(df.getFormat("$#,#0.00"));
 	}
 
 	private void writeHeaderLine() {
@@ -96,13 +103,13 @@ public class ArqueoCajaExporter {
 		styleTitulo.setFont(font);
 		styleTitulo.setAlignment(HorizontalAlignment.CENTER);
 		sheetResumen.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
-		sheetResumen.addMergedRegion(new CellRangeAddress(10, 10, 0, 6));
+		sheetResumen.addMergedRegion(new CellRangeAddress(14, 14, 0, 6));
 		banco.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 		caja.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 		gastos.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 		clientes.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
 		
-		sheetResumen.setColumnWidth(0, 25 * 256);
+		sheetResumen.setColumnWidth(0, 35 * 256);
 		banco.setColumnWidth(0, 25 * 256);
 		caja.setColumnWidth(0, 25 * 256);
 		gastos.setColumnWidth(0, 25 * 256);
@@ -145,6 +152,8 @@ public class ArqueoCajaExporter {
 	private void writeDataLines() {
 		int rowCount = 2;
 
+
+        
 		Row row = sheetResumen.createRow(rowCount++);
 		Denominacion[] values = Denominacion.values();
 		
@@ -153,22 +162,35 @@ public class ArqueoCajaExporter {
 			row = sheetResumen.createRow(rowCount++);
 		}
 
-		createCell(sheetResumen,row, 0, "Total Banco", style);
+		createCell(sheetResumen,row, 0, "TOTAL EFECTIVO", styleBorder);
+		createCell(sheetResumen,row, 1, getTotalEfectivo(), dollarStyle);
+		
+		
+		row = sheetResumen.createRow(rowCount++);
+		createCell(sheetResumen,row, 0, "Total Transferencias y Depósitos", styleBorder);
 		Double totalTransferencia = getTotalLista(transferencia);
-		createCell(sheetResumen,row, 1, totalTransferencia, style);
+		createCell(sheetResumen,row, 1, totalTransferencia, dollarStyle);
 		
 		row = sheetResumen.createRow(rowCount++);
-		createCell(sheetResumen,row, 0, "Total Gastos", style);
+		createCell(sheetResumen,row, 0, "Gastos", styleBorder);
 		Double totalGastos = getTotalLista(gasto);
-		createCell(sheetResumen,row, 1, totalGastos, style);		
+		createCell(sheetResumen,row, 1, totalGastos, dollarStyle);		
 		
 		row = sheetResumen.createRow(rowCount++);
-		createCell(sheetResumen,row, 0, "Saldo Caja", styleBorder);
-		createCell(sheetResumen,row, 1, getSaldoCaja(), styleBorder);		
+		createCell(sheetResumen,row, 0, "Ultimo Cierre Caja", styleBorder);
+		createCell(sheetResumen,row, 1, getMontoUltimoCierre(), dollarStyle);		
+		
+		row = sheetResumen.createRow(rowCount++);
+		createCell(sheetResumen,row, 0, "TOTAL GENERAL", styleBorder);
+		createCell(sheetResumen,row, 1, getTotalGeneral(), dollarStyle);
+		
+		row = sheetResumen.createRow(rowCount++);
+		createCell(sheetResumen,row, 0, "Cierre de hoy", styleBorder);
+		createCell(sheetResumen,row, 1, getCierreCajaHoy(), dollarStyle);		
 
-		row = sheetResumen.createRow(11);
-		createCell(sheetResumen,row, 0, "Total Deudas de clientes", style);
-		createCell(sheetResumen,row, 1, getTotalLista(clientesdeudores), style);	
+		row = sheetResumen.createRow(15);
+		createCell(sheetResumen,row, 0, "Total Deudas de clientes", styleBorder);
+		createCell(sheetResumen,row, 1, getTotalLista(clientesdeudores), dollarStyle);	
 
 		cargarMovimientos(banco,transferencia);
 		cargarMovimientos(caja,efectivo);
@@ -189,9 +211,9 @@ public class ArqueoCajaExporter {
 	}
 
 	private void rowTotalEfectivoDenominacion(Row row,Denominacion denominacion) {
-		createCell(sheetResumen,row, 0, "Total en Billetes de "+denominacion.getStringValue(), style);
+		createCell(sheetResumen,row, 0, "Total en Billetes de "+denominacion.getStringValue(), styleBorder);
 		Double totalEfectivo = getTotalListaDenominacion(denominacion);
-		createCell(sheetResumen,row, 1, totalEfectivo, style);
+		createCell(sheetResumen,row, 1, totalEfectivo, dollarStyle);
 	}
 
 	private void cargarMovimientos(XSSFSheet caja,Collection<Pair<Double, String>> movimientos ) {
@@ -211,8 +233,8 @@ public class ArqueoCajaExporter {
 			row = caja.createRow(rowCount++);
 			int columnCount = 0;
 
-			createCell(caja, row, columnCount++, unMovimiento.getSecond(), style);
-			createCell(caja, row, columnCount++, unMovimiento.getFirst(), style);
+			createCell(caja, row, columnCount++, unMovimiento.getSecond(), styleBorder);
+			createCell(caja, row, columnCount++, unMovimiento.getFirst(), dollarStyle);
 
 		}
 	}
@@ -284,9 +306,20 @@ public class ArqueoCajaExporter {
 	public Double getMontoUltimoCierre() {
 		return montoUltimoCierre;
 	}
+	public Double getTotalGeneral() {
+		return getTotalBanco() + getTotalEfectivo() - getTotalGastos() + getMontoUltimoCierre();
+	}
 
 	public void setMontoUltimoCierre(Double selectMontoUltimoCierre) {
 		this.montoUltimoCierre = selectMontoUltimoCierre;
+	}
+
+	public Double getCierreCajaHoy() {
+		return cierreCajaHoy;
+	}
+
+	public void setCierreCajaHoy(Double selectCierreCaja) {
+		this.cierreCajaHoy = selectCierreCaja;
 	}
 	
 	

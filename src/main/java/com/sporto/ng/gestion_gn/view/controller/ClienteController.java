@@ -116,22 +116,15 @@ public class ClienteController {
 
 		});
 
-		Date selectFechaUltimoCierre = movimientoCajaDao.selectFechaUltimoCierre();
-		Calendar instance = Calendar.getInstance();
-		if(selectFechaUltimoCierre!=null)
-			instance.setTime(selectFechaUltimoCierre);
-		for (Date date = instance.getTime(); date.before(new Date());)
-		{
-			System.out.println("Calcular para fecha: "+date);
-			ArqueoCajaExporter completarArqueo = completarArqueo(date);
-			CierreCaja build = CierreCaja.builder().fecha(convertToLocalDateViaSqlDate(date)).monto(completarArqueo.getSaldoEfectivo()).build();
-			cierreCajaDao.save(build);
-			instance.add(Calendar.DATE, 1);
-			date = instance.getTime();
-		}
-		
+
 		
 		Constants.setListas(listaDao.findAll());
+	}
+	
+	private Date yesterday() {
+	    final Calendar cal = Calendar.getInstance();
+	    cal.add(Calendar.DATE, -1);
+	    return cal.getTime();
 	}
 	
 	public LocalDate convertToLocalDateViaSqlDate(Date dateToConvert) {
@@ -139,10 +132,27 @@ public class ClienteController {
 	}
 
 	private void abrirArqueoCaja() {
-		ArqueoCajaExporter completarArqueo = completarArqueo();
-		ArqueoCajaDialog arqueoCajaDialog = new ArqueoCajaDialog(completarArqueo,homeForm,movimientoCajaDao);
+		ArqueoCajaExporter arqueoHoy = completarArqueo();
+		
+		
+		Date yesterday = movimientoCajaDao.selectFechaUltimoCierre();
+		
+		ArqueoCajaExporter arqueoAyer = completarArqueo(yesterday);
+		
+		double monto = arqueoHoy.getSaldoEfectivo()+arqueoAyer.getSaldoEfectivo();
+		CierreCaja build = CierreCaja.builder()
+				.fecha(convertToLocalDateViaSqlDate(new Date()))
+				.monto(monto).build();
+		cierreCajaDao.save(build);
+		
+		
+		ArqueoCajaDialog arqueoCajaDialog = new ArqueoCajaDialog(arqueoHoy,homeForm,movimientoCajaDao);
 		arqueoCajaDialog.getBtnArqueoDelDia().addActionListener(i -> exportarArqueo());
 		arqueoCajaDialog.setVisible(true);
+		
+		
+
+		
 	}
 
 	private void egresoDinero() {
@@ -243,6 +253,7 @@ public class ClienteController {
 		}
 		
 		arqueoCajaExporter.setMontoUltimoCierre(movimientoCajaDao.selectMontoUltimoCierre());
+		arqueoCajaExporter.setCierreCajaHoy(movimientoCajaDao.selectCierreCaja(new Date()));
 		return arqueoCajaExporter;
 	}
 	

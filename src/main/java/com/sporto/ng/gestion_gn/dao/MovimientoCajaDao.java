@@ -33,7 +33,7 @@ public interface MovimientoCajaDao extends CrudRepository<MovimientoCaja, Intege
 	@Query(value="insert into cierre_caja (fecha,monto) values (:fecha,:monto) ",nativeQuery = true)
 	List<MovimientoCaja> insertCierreCaja(@Param(value = "fecha") Date fecha,@Param(value = "monto")  Double monto);
 	
-	@Query(value="select monto from cierre_caja where fecha =?1 ", nativeQuery = true)
+	@Query(value="select monto from cierre_caja where fecha =DATE(?1) ", nativeQuery = true)
 	Double selectCierreCaja(Date fech);
 
 	@Query(value="select monto from cierre_caja cc where fecha < DATE(sysdate()) order by fecha desc limit 1 ", nativeQuery = true)

@@ -1,16 +1,8 @@
 package com.sporto.ng.gestion_gn.view.model;
 
-import java.awt.print.PageFormat;
-import java.awt.print.Paper;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.text.MessageFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,13 +10,10 @@ import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 
 import com.sporto.ng.gestion_gn.config.Constants;
-import com.sporto.ng.gestion_gn.model.Pedido;
 import com.sporto.ng.gestion_gn.model.Producto;
-import com.sporto.ng.gestion_gn.utils.MyTablePrintable;
 
 public class PedidoProductoTable extends JTable {
 	TableRowSorter<PedidoProductoTableModel> tableRowSorter;

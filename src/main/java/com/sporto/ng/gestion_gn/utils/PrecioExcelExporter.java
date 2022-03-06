@@ -9,6 +9,8 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -44,15 +46,16 @@ public class PrecioExcelExporter {
          
         styleTitulo.setFont(font);
         styleTitulo.setAlignment(HorizontalAlignment.CENTER);
-        sheet.addMergedRegion(new CellRangeAddress(0,0,0,2)); 
+        sheet.addMergedRegion(new CellRangeAddress(0,0,0,3)); 
         Row row = sheet.createRow(0);
         createCell(row,0,"Lista "+listPrecios.get(0).getLista().getNombre() + " - Fecha: "+Constants.FORMATO_FECHA.format(new Date()),styleTitulo);
         
         Row titulos = sheet.createRow(1);
          
         createCell(titulos, 0, "Id Producto", style);      
-        createCell(titulos, 1, "Descripcion", style);       
-        createCell(titulos, 2, "Precio", style);    
+        createCell(titulos, 1, "Descripción", style);       
+        createCell(titulos, 2, "Categoria", style);       
+        createCell(titulos, 3, "Precio", style);    
          
     }
      
@@ -62,9 +65,15 @@ public class PrecioExcelExporter {
         cell.setCellStyle(style);
         
         CellStyle dollarStyle=workbook.createCellStyle();
+        XSSFFont font = workbook.createFont();
+        font.setFontHeight(14);
+        dollarStyle.setFont(font);
+        dollarStyle.setBorderBottom(BorderStyle.THIN);
+        dollarStyle.setBorderTop(BorderStyle.THIN);
+        dollarStyle.setBorderRight(BorderStyle.THIN);
+        dollarStyle.setBorderLeft(BorderStyle.THIN);
         DataFormat df = workbook.createDataFormat();
         dollarStyle.setDataFormat(df.getFormat("$#,#0.00"));
-        
         
         if (value instanceof Integer) {
             cell.setCellValue((Integer) value);
@@ -88,13 +97,17 @@ public class PrecioExcelExporter {
         XSSFFont font = workbook.createFont();
         font.setFontHeight(14);
         style.setFont(font);
-                 
+        style.setBorderBottom(BorderStyle.THIN);
+        style.setBorderTop(BorderStyle.THIN);
+        style.setBorderRight(BorderStyle.THIN);
+        style.setBorderLeft(BorderStyle.THIN);
         for (Precio unPrecio : listPrecios) {
             Row row = sheet.createRow(rowCount++);
             int columnCount = 0;
              
             createCell(row, columnCount++, unPrecio.getProducto().getId(), style);
             createCell(row, columnCount++, unPrecio.getProducto().getDescripcion(), style);
+            createCell(row, columnCount++, unPrecio.getProducto().getCategoria(), style);
             createCell(row, columnCount++, unPrecio.getPrecio(), style);
              
         }

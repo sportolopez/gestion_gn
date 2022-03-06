@@ -58,8 +58,11 @@ public class ArqueoCajaDialog extends JDialog {
 		table.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		table.setRowHeight(40);
 		table.setFont(Constants.FUENTE);
+		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		((DefaultTableModel) table.getModel()).addColumn("Columna 1");
 		((DefaultTableModel) table.getModel()).addColumn("Columna 1");
+		table.getColumnModel().getColumn(0).setPreferredWidth(27);
+		table.getColumnModel().getColumn(1).setPreferredWidth(120);
 
 		Double totalEfectivo = Double.valueOf(0);
 		for (int i = 0; i < Denominacion.values().length; i++) {
@@ -68,33 +71,36 @@ public class ArqueoCajaDialog extends JDialog {
 			totalEfectivo += totalListaDenominacion;
 			ArrayList<Object> lista = new ArrayList<Object>();
 			lista.add("Total en Billetes de " + denominacion.getStringValue());
-			lista.add(Constants.outDouble(totalListaDenominacion));
+			lista.add("$ "+Constants.outDouble(totalListaDenominacion));
 			((DefaultTableModel) table.getModel()).addRow(lista.toArray());
 		}
 
 		((DefaultTableModel) table.getModel())
-				.addRow(new Object[] { "TOTAL EFECTIVO", Constants.outDouble(totalEfectivo) });
+				.addRow(new Object[] { "TOTAL EFECTIVO", "$ "+Constants.outDouble(totalEfectivo) });
 		table.setDefaultRenderer(Object.class, new BoldRenderer());
 
 
 
 		((DefaultTableModel) table.getModel())
-				.addRow(new Object[] { "Transferencias y Depósito", Constants.outDouble(arqueoCajaExporter.getTotalBanco()) });
+				.addRow(new Object[] { "Transferencias y Depósito","$ "+ Constants.outDouble(arqueoCajaExporter.getTotalBanco()) });
 		((DefaultTableModel) table.getModel())
-		.addRow(new Object[] { "Gastos", Constants.outDouble(arqueoCajaExporter.getTotalGastos()) });
-		((DefaultTableModel) table.getModel()).addRow(new Object[] { "TOTAL GENERAL",
-				Constants.outDouble(arqueoCajaExporter.getTotalBanco() + totalEfectivo - arqueoCajaExporter.getTotalGastos()) });
-//		((DefaultTableModel) table.getModel())
-//				.addRow(new Object[] { "SALDO CAJA", Constants.outDouble(arqueoCajaExporter.getSaldoCaja()) });
-
-		table.setDefaultRenderer(Object.class, new BoldRenderer());
-
+		.addRow(new Object[] { "Gastos",  "$ "+Constants.outDouble(arqueoCajaExporter.getTotalGastos()) });
 		if (arqueoCajaExporter.getMontoUltimoCierre() != null)
-			((DefaultTableModel) table.getModel()).addRow(new Object[] { "Último cierre caja",
+			((DefaultTableModel) table.getModel()).addRow(new Object[] { "Último cierre caja","$ "+
 					Constants.outDouble(arqueoCajaExporter.getMontoUltimoCierre()) });
 		else
 			((DefaultTableModel) table.getModel())
-					.addRow(new Object[] { "No se registro ningun cierre", Constants.outDouble(Double.valueOf(0)) });
+			.addRow(new Object[] { "No se registro ningun cierre", "$ "+Constants.outDouble(Double.valueOf(0)) });
+
+		
+		double value = arqueoCajaExporter.getTotalBanco() + totalEfectivo - arqueoCajaExporter.getTotalGastos() + arqueoCajaExporter.getMontoUltimoCierre();
+		
+		((DefaultTableModel) table.getModel()).addRow(new Object[] { "TOTAL GENERAL","$ "+Constants.outDouble(value) });
+
+		((DefaultTableModel) table.getModel()).addRow(new Object[] { "Cierre de Hoy","$ "+Constants.outDouble(movimientoCajaDao.selectCierreCaja(new Date())) });
+
+		table.setDefaultRenderer(Object.class, new BoldRenderer());
+
 		
 		
 		table.getColumnModel().getColumn(0).setMinWidth(200);

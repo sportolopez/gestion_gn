@@ -136,10 +136,11 @@ public class ClienteController {
 		
 		
 		Date yesterday = movimientoCajaDao.selectFechaUltimoCierre();
-		
+		if(yesterday == null)
+			yesterday = yesterday();
 		ArqueoCajaExporter arqueoAyer = completarArqueo(yesterday);
 		
-		double monto = arqueoHoy.getSaldoEfectivo()+arqueoAyer.getSaldoEfectivo();
+		double monto = arqueoHoy.getMontoUltimoCierre()+arqueoHoy.getSaldoEfectivo();
 		CierreCaja build = CierreCaja.builder()
 				.fecha(convertToLocalDateViaSqlDate(new Date()))
 				.monto(monto).build();
@@ -252,7 +253,12 @@ public class ClienteController {
 				arqueoCajaExporter.addClienteConDeuda(cliente.getSaldo(),cliente.getRazonSocial());
 		}
 		
-		arqueoCajaExporter.setMontoUltimoCierre(movimientoCajaDao.selectMontoUltimoCierre());
+		Double selectMontoUltimoCierre = movimientoCajaDao.selectMontoUltimoCierre();
+		if(selectMontoUltimoCierre == null)
+			selectMontoUltimoCierre =Double.parseDouble("0");
+		arqueoCajaExporter.setMontoUltimoCierre(selectMontoUltimoCierre);
+		//
+		
 		arqueoCajaExporter.setCierreCajaHoy(movimientoCajaDao.selectCierreCaja(new Date()));
 		return arqueoCajaExporter;
 	}

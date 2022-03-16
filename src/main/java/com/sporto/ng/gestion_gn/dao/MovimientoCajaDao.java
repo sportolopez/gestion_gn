@@ -29,10 +29,6 @@ public interface MovimientoCajaDao extends CrudRepository<MovimientoCaja, Intege
 	@Query(value="select monto, fecha, cliente_id, id,comentario, medio_pago, tipo_movimiento, denominacion from movimiento_caja M where M.cliente_id =?1 and M.fecha = ?2", nativeQuery = true)
 	List<MovimientoCaja> findLiberado(int cliente_id, String fecha);
 
-	@Modifying
-	@Query(value="insert into cierre_caja (fecha,monto) values (:fecha,:monto) ",nativeQuery = true)
-	List<MovimientoCaja> insertCierreCaja(@Param(value = "fecha") Date fecha,@Param(value = "monto")  Double monto);
-	
 	@Query(value="select monto from cierre_caja where fecha =DATE(?1) ", nativeQuery = true)
 	Double selectCierreCaja(Date fech);
 

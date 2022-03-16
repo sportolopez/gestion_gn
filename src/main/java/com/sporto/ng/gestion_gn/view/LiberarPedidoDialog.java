@@ -209,7 +209,7 @@ public class LiberarPedidoDialog extends JDialog {
 						double denominacion = Double.parseDouble(denominacionString);
 						parseDouble = cantidadBilletesDouble * denominacion ;
 					}else {
-						denominacionString = "";
+						//denominacionString = "";
 						parseDouble = cantidadBilletesDouble;
 					}
 						

@@ -177,25 +177,29 @@ public class ArqueoCajaExporter {
 		createCell(sheetResumen,row, 1, totalGastos, dollarStyle);		
 		
 		row = sheetResumen.createRow(rowCount++);
-		createCell(sheetResumen,row, 0, "Ultimo Cierre Caja", styleBorder);
-		createCell(sheetResumen,row, 1, getMontoUltimoCierre(), dollarStyle);		
+		createCell(sheetResumen,row, 0, "Arqueo", styleBorder);
+		createCell(sheetResumen,row, 1, getArqueoHoy(), dollarStyle);		
+		
+		row = sheetResumen.createRow(rowCount++);
+		createCell(sheetResumen,row, 0, "Caja de Ayer", styleBorder);
+		createCell(sheetResumen,row, 1, getMontoUltimoCierre(), dollarStyle);
 		
 		row = sheetResumen.createRow(rowCount++);
 		createCell(sheetResumen,row, 0, "TOTAL GENERAL", styleBorder);
-		createCell(sheetResumen,row, 1, getTotalGeneral(), dollarStyle);
-		
-		row = sheetResumen.createRow(rowCount++);
-		createCell(sheetResumen,row, 0, "Cierre de hoy", styleBorder);
 		createCell(sheetResumen,row, 1, getCierreCajaHoy(), dollarStyle);		
 
 		row = sheetResumen.createRow(15);
 		createCell(sheetResumen,row, 0, "Total Deudas de clientes", styleBorder);
-		createCell(sheetResumen,row, 1, getTotalLista(clientesdeudores), dollarStyle);	
+		createCell(sheetResumen,row, 1, getTotalDeudores(), dollarStyle);	
 
 		cargarMovimientos(banco,transferencia);
 		cargarMovimientos(caja,efectivo);
 		cargarMovimientos(gastos,gasto);
 		cargarMovimientos(clientes,clientesdeudores,"CLIENTE");
+	}
+
+	public Double getTotalDeudores() {
+		return getTotalLista(clientesdeudores);
 	}
 
 	public Double getSaldoCaja() {
@@ -308,6 +312,10 @@ public class ArqueoCajaExporter {
 	}
 	public Double getTotalGeneral() {
 		return getTotalBanco() + getTotalEfectivo() - getTotalGastos() + getMontoUltimoCierre();
+	}
+	
+	public Double getArqueoHoy() {
+		return getTotalBanco() + getTotalEfectivo() - getTotalGastos();
 	}
 
 	public void setMontoUltimoCierre(Double selectMontoUltimoCierre) {

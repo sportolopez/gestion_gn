@@ -85,19 +85,20 @@ public class ArqueoCajaDialog extends JDialog {
 				.addRow(new Object[] { "Transferencias y Depósito","$ "+ Constants.outDouble(arqueoCajaExporter.getTotalBanco()) });
 		((DefaultTableModel) table.getModel())
 		.addRow(new Object[] { "Gastos",  "$ "+Constants.outDouble(arqueoCajaExporter.getTotalGastos()) });
+		
+		((DefaultTableModel) table.getModel()).addRow(new Object[] { "Arqueo","$ "+Constants.outDouble(arqueoCajaExporter.getArqueoHoy()) });
+		
 		if (arqueoCajaExporter.getMontoUltimoCierre() != null)
-			((DefaultTableModel) table.getModel()).addRow(new Object[] { "Último cierre caja","$ "+
+			((DefaultTableModel) table.getModel()).addRow(new Object[] { "Caja de Ayer","$ "+
 					Constants.outDouble(arqueoCajaExporter.getMontoUltimoCierre()) });
 		else
 			((DefaultTableModel) table.getModel())
 			.addRow(new Object[] { "No se registro ningun cierre", "$ "+Constants.outDouble(Double.valueOf(0)) });
 
 		
-		double value = arqueoCajaExporter.getTotalBanco() + totalEfectivo - arqueoCajaExporter.getTotalGastos() + arqueoCajaExporter.getMontoUltimoCierre();
 		
-		((DefaultTableModel) table.getModel()).addRow(new Object[] { "TOTAL GENERAL","$ "+Constants.outDouble(value) });
-
-		((DefaultTableModel) table.getModel()).addRow(new Object[] { "Cierre de Hoy","$ "+Constants.outDouble(movimientoCajaDao.selectCierreCaja(new Date())) });
+		((DefaultTableModel) table.getModel()).addRow(new Object[] { "TOTAL GENERAL","$ "+Constants.outDouble(movimientoCajaDao.selectCierreCaja(new Date())) });
+		((DefaultTableModel) table.getModel()).addRow(new Object[] { "Total Deudas de clientes","$ "+ Constants.outDouble(arqueoCajaExporter.getTotalDeudores()) });
 
 		table.setDefaultRenderer(Object.class, new BoldRenderer());
 

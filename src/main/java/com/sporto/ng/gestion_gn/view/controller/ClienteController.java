@@ -138,7 +138,6 @@ public class ClienteController {
 		Date yesterday = movimientoCajaDao.selectFechaUltimoCierre();
 		if(yesterday == null)
 			yesterday = yesterday();
-		ArqueoCajaExporter arqueoAyer = completarArqueo(yesterday);
 		
 		double monto = arqueoHoy.getMontoUltimoCierre()+arqueoHoy.getSaldoEfectivo();
 		CierreCaja build = CierreCaja.builder()

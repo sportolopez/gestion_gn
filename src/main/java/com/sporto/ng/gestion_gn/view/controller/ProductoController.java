@@ -98,7 +98,7 @@ public class ProductoController {
 			}
 		});
 
-		int columnCount = 6;
+		int columnCount = 8;
 
 		Action botonDetalle = null;
 		Action botonDelete = null;

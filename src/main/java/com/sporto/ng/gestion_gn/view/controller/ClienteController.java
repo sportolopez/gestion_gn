@@ -241,7 +241,7 @@ public class ClienteController {
 				calendar.get(Calendar.YEAR));
 		
 		for (GastoCaja gastosCaja : gastos) {
-			arqueoCajaExporter.addGasto(gastosCaja.getMonto(), gastosCaja.getComentario());
+			arqueoCajaExporter.addGasto(gastosCaja.getMonto(), gastosCaja.getComentario() + " - " + gastosCaja.getDetalle());
 		}
 		
 		

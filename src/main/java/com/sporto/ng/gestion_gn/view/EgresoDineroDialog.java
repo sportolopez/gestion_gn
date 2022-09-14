@@ -42,6 +42,7 @@ public class EgresoDineroDialog extends JDialog {
 	private JTextField totalPagos;
 	private PagoTable tablePagos;
 	private GastoCajaDao gastoCajaDao;
+	private JTextField textFieldDetalle;
 
 	public EgresoDineroDialog(GastoCajaDao gastoCaja,
 			JFrame owner) {
@@ -92,6 +93,7 @@ public class EgresoDineroDialog extends JDialog {
 
 		List<String> findMotivosEgreso = gastoCajaDao.findMotivosEgreso();
 		pagoComentario = new JComboBox<String>(findMotivosEgreso.toArray(new String[findMotivosEgreso.size()]));
+		//pagoComentario = new JComboBox<String>();
 		panelPagosInputs.add(pagoComentario);
 
 		JButton agregarStockBtn_1 = new JButton("REGISTRAR ");
@@ -109,12 +111,20 @@ public class EgresoDineroDialog extends JDialog {
 				MovimientoCaja unMovimientoPago = MovimientoCaja.builder()
 						.comentario(pagoComentario.getSelectedItem().toString()).fecha(new Date())
 						.medioPago((MedioPago) pagoMedioPago.getSelectedItem()).monto(parseDouble)
+						.detalleGasto(textFieldDetalle.getText())
 						.tipoMovimiento(TipoMovimiento.INGRESO).build();
 				tablePagos.addPago(unMovimientoPago);
 				limpiarCampos();
 				totalPagos.setText(tablePagos.getTotal().toString());
 			}
 		});
+		
+		JLabel lblNewLabel_3_1_2_1_1 = new JLabel("DETALLE:");
+		panelPagosInputs.add(lblNewLabel_3_1_2_1_1);
+		
+		textFieldDetalle = new JTextField();
+		textFieldDetalle.setColumns(15);
+		panelPagosInputs.add(textFieldDetalle);
 		panelPagosInputs.add(agregarStockBtn_1);
 
 		JScrollPane scrollPanePagos = new JScrollPane();
@@ -174,7 +184,7 @@ public class EgresoDineroDialog extends JDialog {
 	protected void limpiarCampos() {
 		pagoComentario.setSelectedIndex(0);
 		montoPago.setText("");
-
+		textFieldDetalle.setText("");
 	}
 
 	public JButton getBotonGuardar() {

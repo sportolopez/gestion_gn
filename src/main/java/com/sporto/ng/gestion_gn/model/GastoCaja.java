@@ -29,5 +29,6 @@ public class GastoCaja {
 	private Date fecha;
 	private Double monto;
 	private String comentario;
+	private String detalle;
 	
 }

@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,5 +39,7 @@ public class MovimientoCaja {
 	private Date fecha;
 	private Double monto;
 	private String comentario;
+	@Transient
+	private String detalleGasto;
 	private String denominacion;	
 }

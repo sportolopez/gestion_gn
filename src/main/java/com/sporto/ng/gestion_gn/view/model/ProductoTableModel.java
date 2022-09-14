@@ -9,13 +9,18 @@ import com.sporto.ng.gestion_gn.model.Producto;
 
 public class ProductoTableModel extends DefaultTableModel {
 
+	public static final int COL_DETALLE = 8;
+	public static final int COL_EDITAR = 9;
+	
 	public ProductoTableModel() {
 		addColumn("CÓDIGO");
 		addColumn("CATEGORIA");
 		addColumn("DESCRIPCIÓN");
 		addColumn("STOCK");
 		addColumn("STOCK BLOQUEADO");
-		addColumn("FECHA VENCIMIENTO");
+		addColumn("VENCIMIENTO");
+		addColumn("ULT. COMPRA");
+		addColumn("ULT. OC");
 		addColumn("DETALLE");
 		addColumn("EDITAR");
 		addColumn("ELIMINAR");
@@ -29,7 +34,8 @@ public class ProductoTableModel extends DefaultTableModel {
 		lista.add(producto.getStock());
 		lista.add(producto.getBloqueadoEmitido());
 		lista.add(producto.getFechaString());
-
+		lista.add(producto.getFechaUltimoRemito());
+		lista.add(producto.getUltimo_remito());
 		lista.add(Constants.ICONO_DETALLE);
 		lista.add(Constants.ICONO_EDITAR);
 		lista.add(Constants.ICONO_ELIMINAR);
@@ -39,7 +45,7 @@ public class ProductoTableModel extends DefaultTableModel {
 	}
 
 	public boolean isCellEditable(int row, int col) {
-		if (col < 6) {
+		if (col < 8) {
 			return false;
 		} else {
 			return true;

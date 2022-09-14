@@ -81,7 +81,9 @@ public class PagoTable extends JTable {
 		for (int i = 0; i < getRowCount(); i++) {
 			GastoCaja unMov = GastoCaja.builder().comentario(getValueAt(i, PagoTableModel.COLUMN_COMENTARIO).toString())
 					.fecha(new Date())
-					.monto(Constants.parseDouble(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString())).build();
+					.monto(Constants.parseDouble(getValueAt(i, PagoTableModel.COLUMN_MONTO).toString()))
+					.detalle(getValueAt(i, PagoTableModel.COLUMN_DETALLE).toString())
+					.build();
 			listMovimientos.add(unMov);
 		}
 		return listMovimientos;

@@ -181,11 +181,11 @@ public class ProductoPanel extends JPanel {
 		tableProductos.setModel(productoTableModel);
 		tableProductos.getColumnModel().getColumn(0).setMaxWidth(100);
 		tableProductos.getColumnModel().getColumn(0).setPreferredWidth(50);
-		tableProductos.getColumnModel().getColumn(1).setMaxWidth(200);
-		tableProductos.getColumnModel().getColumn(1).setPreferredWidth(130);
+		tableProductos.getColumnModel().getColumn(1).setMaxWidth(150);
+		tableProductos.getColumnModel().getColumn(1).setPreferredWidth(150);
 		tableProductos.getColumnModel().getColumn(3).setMaxWidth(100);
 		tableProductos.getColumnModel().getColumn(3).setPreferredWidth(80);
-		tableProductos.getColumnModel().getColumn(4).setMaxWidth(200);
+		tableProductos.getColumnModel().getColumn(4).setMaxWidth(150);
 		tableProductos.getColumnModel().getColumn(4).setPreferredWidth(150);
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
@@ -200,22 +200,22 @@ public class ProductoPanel extends JPanel {
 		panelBotones.remove(panelBotoneraStock);
 		panelBotones.add(panelBotonesProducto, BorderLayout.WEST);
 		lblTitulo.setText("PRODUCTOS");
-		tableProductos.getColumnModel().getColumn(6).setMaxWidth(100);
-		tableProductos.getColumnModel().getColumn(6).setPreferredWidth(100);
-		tableProductos.getColumnModel().getColumn(7).setMaxWidth(100);
-		tableProductos.getColumnModel().getColumn(7).setPreferredWidth(100);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_DETALLE).setMaxWidth(100);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_DETALLE).setPreferredWidth(100);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_EDITAR).setMaxWidth(100);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_EDITAR).setPreferredWidth(100);
 	}
 	
 	public void showStock() {
 		panelBotones.remove(panelBotonesProducto);
 		panelBotones.add(panelBotoneraStock, BorderLayout.WEST);
 		lblTitulo.setText("STOCK");
-		tableProductos.getColumnModel().getColumn(6).setMinWidth(0);
-		tableProductos.getColumnModel().getColumn(6).setMaxWidth(0);
-		tableProductos.getColumnModel().getColumn(6).setPreferredWidth(0);
-		tableProductos.getColumnModel().getColumn(7).setMinWidth(0);
-		tableProductos.getColumnModel().getColumn(7).setMaxWidth(0);
-		tableProductos.getColumnModel().getColumn(7).setPreferredWidth(0);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_DETALLE).setMinWidth(0);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_DETALLE).setMaxWidth(0);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_DETALLE).setPreferredWidth(0);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_EDITAR).setMinWidth(0);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_EDITAR).setMaxWidth(0);
+		tableProductos.getColumnModel().getColumn(ProductoTableModel.COL_EDITAR).setPreferredWidth(0);
 
 	}
 

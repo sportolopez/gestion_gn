@@ -52,6 +52,10 @@ public class Producto {
 	private Integer bloqueado_pedido;
 	@Formula("(select COALESCE(sum(pp.cantidad),0) from pedido_producto pp, pedido p where p.id = pp.pedido_id && pp.producto_id = id and p.estado = 'EMITIDO')")
 	private Integer bloqueadoEmitido;
+	@Formula("(select COALESCE(ms.remito,0) from movimiento_stock ms where ms.producto_id = id order by ms.fecha desc limit 1)")
+	private Integer ultimo_remito;
+	@Formula("(select COALESCE(ms.fecha,0) from movimiento_stock ms where ms.producto_id = id order by ms.fecha desc limit 1)")
+	private Date fecha_ultimo_remito;	
 	
 	public Integer getStock() {
 		return ingresos - egresos - bloqueado_pedido;
@@ -62,6 +66,13 @@ public class Producto {
 			return "";
 		} else
 			return Constants.FORMATO_FECHA.format(getFechaVencimiento());
+	}
+	
+	public String getFechaUltimoRemito() {
+		if (fecha_ultimo_remito == null) {
+			return "";
+		} else
+			return Constants.FORMATO_FECHA.format(getFecha_ultimo_remito());
 	}
 	
 	public String getDescripcionCombo() {

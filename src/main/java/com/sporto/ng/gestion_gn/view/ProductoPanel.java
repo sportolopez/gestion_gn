@@ -162,7 +162,7 @@ public class ProductoPanel extends JPanel {
 					    file = new File(file.toString() + ".xls");
 					}
 					String heading = "Stock";
-					JTableToExcel.export(file, heading, "", tableProductos,5);
+					JTableToExcel.export(file, heading, "", tableProductos,8);
 				}
 			}
 		});

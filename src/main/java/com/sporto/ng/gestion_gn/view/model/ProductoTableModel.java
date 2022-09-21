@@ -35,7 +35,7 @@ public class ProductoTableModel extends DefaultTableModel {
 		lista.add(producto.getBloqueadoEmitido());
 		lista.add(producto.getFechaString());
 		lista.add(producto.getFechaUltimoRemito());
-		lista.add(producto.getUltimo_remito());
+		lista.add(producto.getUltima_oc());
 		lista.add(Constants.ICONO_DETALLE);
 		lista.add(Constants.ICONO_EDITAR);
 		lista.add(Constants.ICONO_ELIMINAR);
